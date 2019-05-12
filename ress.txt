@@ -1,0 +1,19 @@
+sub Ress() 
+   VAR n
+   Dim ress[2] 
+   ress[1] = '0x0192' 
+   ress[2] = '0x0193'  
+   for n = 1 To 2 
+      if uo.countground(ress[n]) then 
+         uo.msg('2')
+         wait(500)
+         uo.msg('1')
+         uo.waittargetground(ress[n]) 
+         uo.usetype('0x0E21') 
+         uo.print('resurrecting')
+         return
+      end if
+   next 
+   uo.waittargetobject('laststatus')
+   uo.usetype('0x0E21')    
+end sub

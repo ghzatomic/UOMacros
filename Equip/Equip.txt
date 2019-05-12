@@ -1,0 +1,38 @@
+;www.tksguild.com.br
+;Conheça o portal de UO da TkS Guild.
+
+sub equip()
+   uo.fontcolor(UO.Random(100))
+   uo.say("JASPION")
+   var i
+   dim jaspion[23]
+   jaspion [1] = 0x1541
+   jaspion [2] = 0x1414
+   jaspion [3] = 0x1411
+   jaspion [4] = 0x1410
+   jaspion [5] = 0x1415
+   jaspion [6] = 0x1413
+   jaspion [7] = 0x1545
+   jaspion [8] = 0x1711
+   jaspion [9] = 0x153B
+   jaspion [10] = 0x1F09
+   jaspion [11] = 0x204E
+   jaspion [12] = 0x1F03
+   jaspion [13] = 0x204E
+   jaspion [14] = 0x1088
+   jaspion [15] = 0x1087
+   jaspion [16] = 0x1086
+   jaspion [17] = 0x20f6
+   jaspion [18] = 0x1412
+   jaspion [19] = 0x108A
+   jaspion [20] = 0x211F
+   jaspion [21] = 0x1515
+   jaspion [22] = 0x170B
+   jaspion [23] = 0x2684
+   for i = 1 to 23
+      if uo.count(jaspion[i])>=1 then
+         uo.usetype(jaspion[i])
+      endif
+   next
+endsub
+EndSuB

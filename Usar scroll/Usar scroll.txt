@@ -1,0 +1,18 @@
+;www.tksguild.com.br
+;Conheça o portal de UO da TkS Guild.
+
+sub usarscroll()
+   if uo.count("0x1F57")>0 then
+      uo.waittargetlast()
+      uo.useType("0x1F57")
+   else
+      if uo.count("0x1F5F")>0 then
+         uo.waittargetlast()
+         uo.useType("0x1F5F")
+      else
+         uo.waittargetlast()
+         uo.cast("Explosion")
+      endif
+   endif
+endif
+end sub

@@ -1,0 +1,114 @@
+var Dbag, hammer, color, ingi, fail=0
+var Tbag = '0x0E76'
+var dagger = '0x0F51'
+var sunduk = '0x404CA4F5'
+
+sub main()
+   uo.ignore('0x4055C04D')
+   uo.filterspeech('clear')
+   uo.findtype('0x13E3',-1,'my')
+   if uo.findcount() then
+      hammer=uo.getserial('finditem')
+   else
+      uo.msg('hammer not found')
+      return
+   endif
+   uo.addobject('ingi')
+   while uo.targeting()
+      wait(500)
+   wend
+   color=uo.getcolor('ingi')
+   ingi=uo.getgraphic('ingi')
+   uo.cancelmenu()
+   if color=='0x0000' && ingi<>'0x1BE3' && ingi<>'0x1BF5' && ingi<>'0x1BE9' then
+      uo.automenu('Blacksmithing','Weapons')
+      uo.automenu('Weapons','Swords & Blades')
+      uo.automenu('Swords & Blades','dagger')
+   else
+      uo.automenu('Blacksmithing','Armor & Weapons')
+      uo.automenu('Armor & Weapons','Weapons')
+      uo.automenu('Weapons','Swords & Blades')
+      uo.automenu('Swords & Blades','Dagger')
+   endif   
+   getbag()
+   while 1
+      if uo.count(ingi,color)<10 then
+         uo.findtype(ingi,color,sunduk)
+         if uo.findcount() then
+            uo.moveitem('finditem','100','backpack')
+            checklag()
+            wait(700)
+         endif
+      endif
+      checklag()
+      uo.usetype(ingi)
+      waitforchange()
+      if fail>=5 then
+         wait(10000)
+         fail=0
+      endif
+      uo.findtype(dagger,-1,'backpack')
+      if uo.findcount() then
+         uo.moveitem('finditem',0,Dbag)
+         checklag()
+         checkdbag()
+      endif
+   wend
+endsub
+sub waitforchange()
+   var n
+   for n=0 to 100
+      if uo.injournal('You put') then
+         return
+      endif
+      if uo.injournal('You have failed') then
+         fail=fail+1
+         return
+      endif
+      wait(500)
+   next
+endsub
+sub checkdbag()
+   uo.findtype(-1,-1,Dbag)
+   if uo.findcount()>254 then
+      uo.ignore(Dbag)
+      getbag()
+   endif
+endsub
+sub getbag()
+   var flag=0
+   repeat
+      uo.print('Ищем мешок')
+      uo.findtype(Tbag,-1,Sunduk)
+      if uo.findcount() then
+         Dbag=uo.getserial('finditem')
+         uo.useobject(Dbag)
+         checklag()
+         wait(700)
+         uo.findtype(-1,-1,Dbag)
+         if uo.findcount()>254 then
+            uo.ignore(Dbag)
+         else
+            uo.moveitem(Dbag,0,sunduk,18,148,0)
+            checklag()
+            wait(700)
+            flag=1
+         endif
+      endif
+   until flag==1
+endsub 
+sub checklag() 
+   repeat
+      UO.DeleteJournal() 
+      UO.Click('backpack') 
+   until backpack()==1
+endsub 
+sub backpack()
+   var n
+   for n=0 to 200
+      if uo.injournal('a backpack') then
+         return 1
+      endif
+      wait(200)
+   next
+endsub 

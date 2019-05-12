@@ -1,0 +1,101 @@
+;www.tksguild.com.br
+;Conheça o portal de UO da TkS Guild.
+
+sub Armas()
+   # Feito por Meian
+   var i
+   dim arma[80]
+   ; Escudos ; 68 a 80
+   arma[1] = 0x1B7A ; Froswood Wooden Shield
+   arma[2] = 0x1B72 ; Bronze Shield
+   arma[3] = 0x1B76 ; Hearter Shield 1
+   arma[4] = 0x1B77 ; Hearter Shield 2
+   arma[5] = 0x1B7B ; Metal Shield
+   arma[6] = 0x1B74 ; Metal Kit Shield 1
+   arma[7] = 0x1B75 ; Metal kit Shield 2
+   arma[8] = 0x1B78 ; Tear Kit Shield 1
+   arma[9] = 0x1B79 ; Tear Kit Shield 2
+   arma[10] = 0x1BC3 ; Chaos Shield
+   arma[11] = 0x1BC4 ; Order Shield 1
+   arma[12] = 0x1BC5 ; Order Shield 2
+   ; Espadas e Lâminas ; 1 a 22
+   arma[13] = 0x0F51 ; Dagger 1
+   arma[14] = 0x0F52 ; Dagger 2
+   arma[15] = 0x0F5E ; Broadsword 1
+   arma[16] = 0x0F5F ; Broadsword 2
+   arma[17] = 0x13B7 ; Longsword 1
+   arma[18] = 0x13B8 ; Longsword 2
+   arma[19] = 0x13B9 ; Vikingsword 1
+   arma[20] = 0x13BA ; Vikingsword 2
+   arma[21] = 0x13B5 ; Scimitar 1
+   arma[22] = 0x13B6 ; Scimitar 2
+   arma[23] = 0x13FE ; Katana 1
+   arma[24] = 0x13FF ; Katana 2
+   arma[25] = 0x1400 ; Kryss 1
+   arma[26] = 0x1401 ; Kryss 2
+   arma[27] = 0x1440 ; Cutlass 1
+   arma[28] = 0x1441 ; Cutlass 2
+   arma[29] = 0x26BB ; Boneharvester 1
+   arma[30] = 0x26C5 ; Boneharvester 2
+   arma[31] = 0x26C1 ; Crescentblade 1
+   arma[32] = 0x26CB ; Crescentblade 2
+   arma[33] = 0x0f60 ; Longsword vanq 1
+   arma[34] = 0x0f61 ; Longsword vanq 2
+   ; Machados ; 23 a 36
+   arma[35] = 0x0F49 ; Axe 1
+   arma[36] = 0x0F4A ; Axe 2
+   arma[37] = 0x0F45 ; Executioneraxe 1
+   arma[38] = 0x0F46 ; Executioneraxe 2
+   arma[39] = 0x0F47 ; Battleaxe 1
+   arma[40] = 0x0F48 ; Battleaxe 2
+   arma[41] = 0x13FA ; Large Battleaxe 1
+   arma[42] = 0x13FB ; Large Battleaxe 2
+   arma[43] = 0x0F4B ; Double Battleaxe 1
+   arma[44] = 0x0F4C ; Double battleaxe 2
+   arma[45] = 0x13AF ; War Axe 1
+   arma[46] = 0x13B0 ; War Axe 2
+   arma[47] = 0x1442 ; Two Handedaxe 1
+   arma[48] = 0x1443 ; two Handedaxe 2
+   ; Maças e Martelos ; 37 a 48
+   arma[49] = 0x0F5C ; Mace 1
+   arma[50] = 0x0F5D ; Mace 2
+   arma[51] = 0x1406 ; WarMace 1
+   arma[52] = 0x1407 ; WarMace 2
+   arma[53] = 0x143A ; Maul 1
+   arma[54] = 0x143B ; Maul 2
+   arma[55] = 0x1438 ; War Hammer 1
+   arma[56] = 0x1439 ; War Hammer 2
+   arma[57] = 0x143C ; Hammer Pick 1
+   arma[58] = 0x143D ; Hammer Pick 2
+   arma[59] = 0x13B3 ; Scepter 1
+   arma[60] = 0x26C6 ; Sceptr 2
+   ; Armas de 2 Mãos ;  49 a 67
+   arma[61] = 0x0F4D ; Bardiche 1
+   arma[62] = 0x0F4E ; Bardiche 2
+   arma[63] = 0x143E ; Halberd 1
+   arma[64] = 0x143F ; Halberd 2
+   arma[65] = 0x0F62 ; Spear 1
+   arma[66] = 0x0F63 ; Spear 2
+   arma[67] = 0x1402 ; Short Spear 1
+   arma[68] = 0x1403 ; Short Spear 2
+   arma[69] = 0x1404 ; War Fork 1
+   arma[70] = 0x1405 ; War Fork 2
+   arma[71] = 0x26BA ; Scythe 1 
+   arma[72] = 0x26C4 ; Scythe 2
+   arma[73] = 0x0E87 ; Pitchfork
+   arma[74] = 0x13B4 ; Club
+   arma[75] = 0x26BD ; BladedStaff 1
+   arma[76] = 0x26BF ; Double Bladed Staff 1
+   arma[77] = 0x26C9 ; Double Bladed Staff 2
+   arma[78] = 0x26C0 ; Lance 1
+   arma[79] = 0x26CA ; Lance 2
+   arma[80] = 0x0E88 ; Pitchfork
+   for i = 1 to 80
+      if uo.count(arma[i])>=1 then
+         uo.usetype(arma[i])
+         wait(150)
+         ;uo.fontcolor(UO.Random(100))
+         ;uo.msg('This is Sparta!!')
+      endif
+   next
+endsub

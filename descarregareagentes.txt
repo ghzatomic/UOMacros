@@ -1,0 +1,37 @@
+sub unloadregs()
+   VAR n, q, c
+   Dim Req[50] ; Requirements
+   Req[0]='0x0F7A' ; regi 
+   Req[1]='0x0F7B' ; regi  
+   Req[2]='0x0F86' ; regi  
+   Req[3]='0x0F88' ; regi  
+   Req[4]='0x0F8D' ; regi 
+   Req[5]='0x0F84' ; regi 
+   Req[6]='0x0F85' ; regi 
+   Req[7]='0x0F8C' ; regi
+   Req[8]='0x0F0E' ; gh
+   Req[9]='0x0F0E' ; mana
+   Req[10]='0x0F0E' ; refresh
+   Req[11]='0x0E21' ; bandages
+   Req[12]='0x1F52' ; paralyze scrolls
+   Req[13]='0x0F0E' ; poison
+   Req[14]='0x0F3F' ; arrows
+   Req[15]='0x0F0E' ; empty bottles
+   Req[16]='0x0E20' ; bloody bandages
+   Req[17]='0x1F5F' ; fs   
+   Req[18]='0x1BFB' ; bolts
+   Req[19]='0x0F03' ; Antifreeze
+   if (uo.getserial('backpack') <> uo.getserial('lastcontainer')) then
+      c=uo.getserial('lastcontainer')
+      for n=0 to 19
+         uo.findtype(Req[n],-1,'my')
+         while uo.findcount()
+            uo.moveitem('finditem',0,c)
+            checklag()
+            wait(700)
+            uo.findtype(Req[n],-1,'my')
+         wend
+      next
+   endif
+   uo.print(' -= done =- ')
+endsub

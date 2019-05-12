@@ -1,0 +1,104 @@
+VAR Chest='0x4033008D' ; ИД сундука где все логи
+VAR TDagger='0x0F51' ; Тип даггера
+VAR TLogs='0x1BDD' ; Тип логов
+VAR TTorch='0x0F64' ; Тип торчей
+VAR TShaft='0x1BD4' ; Тип шафтов
+VAR CLogs='0x0000' ; Цвет логов
+VAR TorchBag='0x400220CF'
+
+; В руке или паке даггер, в сундуке логи и запускаем !!!
+
+sub BowCraft_shaft()
+   uo.useobject(Chest)
+   wait(200)
+   while UO.SkillVal('Bowcraft') < 650
+      UO.FindType(TLogs,CLogs,'backpack')
+      if not uo.findcount() then
+         uo.findtype(TLogs,CLogs,Chest)
+         if uo.findcount() then
+            uo.moveitem('finditem',2,'backpack',44,121,0)
+         endif
+      endif
+      wait(300)
+      uo.findtype(TLogs,CLogs,'backpack')
+      if uo.findcount() then
+         uo.moveitem('finditem',1,'backpack',44,65,0)
+      endif   
+      wait(300)
+      uo.Waittargettype(TLogs)
+      uo.Usetype(TDagger)
+      uo.WaitMenu('What do you want to carve the wood into?','shaft')
+      wait(3100)
+      if uo.Journal(0)=='World is saving now...' then
+         wait(70000)
+      endif 
+      uo.findtype(TShaft,-1,'backpack')
+      if uo.getquantity('finditem')>25 then
+         uo.moveitem('finditem',0,Chest)
+         wait(1000)
+      endif
+   wend
+end sub    
+
+
+sub BowCraft_torch()
+   VAR L
+   dim ColLog[13]
+   ColLog[0]=12         ; count
+   ColLog[1]='0x047C'    ; Oak Logs 
+   ColLog[2]='0x0279'    ; Red Tree Logs 
+   ColLog[3]='0x096B'    ; Dark Tree Logs 
+   ColLog[4]='0x0237'    ; Swamp Logs 
+   ColLog[5]='0x0482'    ; Silver Leaf Logs 
+   ColLog[6]='0x010F'    ; Keranit Logs 
+   ColLog[7]='0x0014'    ; Perit Logs 
+   ColLog[8]='0x03C1'    ; Petrified Logs 
+   ColLog[9]='0x0085'    ; Dragon Tree Logs 
+   ColLog[10]='0x04C2' ; Vampire Tree Logs 
+   ColLog[11]='0x0033' ; Eridan Logs 
+   ColLog[12]='0x002B' ; Hellios Logs
+   
+   uo.useobject(Chest)
+   wait(2000)
+   for L=1 to ColLog[0]
+      uo.findtype(TLogs,ColLog[L],Chest)
+      while uo.findcount()
+         uo.moveitem('finditem',50,'backpack')
+         wait(1000)
+         uo.findtype(TLogs,ColLog[L],'backpack')
+         while uo.findcount()
+            uo.waittargetobject('finditem')
+            uo.usetype(TDagger)
+            uo.waitmenu('What do you want to carve the wood into?','Items','Items','torch')
+            uo.deletejournal()
+            YouPut()
+            uo.findtype(TLogs,ColLog[L],'backpack')
+         wend
+         DropTorch()
+         uo.findtype(TLogs,ColLog[L],Chest)
+      wend
+   next      
+end sub
+
+Sub YouPut()
+   var n
+   for n=0 to 100
+      if uo.injournal('You put the torch in your pack.|You fail to create the item') then
+         return
+      else 
+         if uo.injournal('World is saving now...') then
+            wait(70000)
+         endif
+         wait(100)
+      endif
+   next
+endsub
+
+Sub DropTorch()
+   uo.findtype(TTorch,-1,'backpack')
+   while uo.findcount()
+      uo.moveitem('finditem',0,TorchBag)
+      wait(1000)
+      uo.findtype(TTorch,-1,'backpack')
+   wend
+endsub 

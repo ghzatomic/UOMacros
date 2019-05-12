@@ -1,0 +1,60 @@
+if not @findobject 'scrollcontainer'
+  headmsg 'Selecione o container'
+  promptalias 'scrollcontainer'
+endif
+if counttype '0xe34' '0' 'backpack' < 1
+  useobject 'scrollcontainer'
+  pause 900
+  if @movetype 0xe34 'scrollcontainer' 'backpack' 0 0 0 'any' 500
+    pause 2000
+    replay
+  else
+    headmsg 'Acabou Blank Scroll!'
+    pause 3000
+    stop
+  endif
+endif
+if counttype '0xf8d' '0' 'backpack' < 1
+  useobject 'scrollcontainer'
+  pause 900
+  if @movetype 0xf8d 'scrollcontainer' 'backpack' 0 0 0 'any' 500
+    pause 2000
+    replay
+  else
+    headmsg 'Acabou Spiders Silk!'
+    pause 3000
+    stop
+  endif
+endif
+if counttype '0xf8c' '0' 'backpack' < 1
+  useobject 'scrollcontainer'
+  pause 900
+  if @movetype 0xf8c 'scrollcontainer' 'backpack' 0 0 0 'any' 500
+    pause 2000
+    replay
+  else
+    headmsg 'Acabou Sufurous Ash!'
+    pause 3000
+    stop
+  endif
+endif
+if mana < 40
+  @clearjournal
+  useskill 'meditation'
+  pause 2000
+  if @injournal 'Voce perdeu sua' 'system'
+    replay
+  endif
+  while not mana >= maxmana 'self'
+    pause 1000
+  endwhile
+endif
+clearautomenu
+pause 100
+usetype! '0xe34' '0' 'backpack'
+@automenu '' 'Seventh Circle' 'Spell Circle 7' 'Flamestrike'
+pause '3000'
+while @findtype '0x1f5f' '0' 'backpack'
+  moveitem! 'found' 'scrollcontainer'
+  pause 500
+endwhile

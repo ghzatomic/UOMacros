@@ -1,0 +1,96 @@
+sub repair()
+   var n, h
+   VAR Torso=uo.objatlayer('Torso')
+   VAR Legs=uo.objatlayer('Legs')
+   VAR Arms=uo.objatlayer('Arms')
+   VAR Gloves=uo.objatlayer('Gloves')
+   VAR Hat=uo.objatlayer('Hat')
+   VAR Neck=uo.objatlayer('Neck')
+   VAR Lhand=uo.objatlayer('Lhand')
+
+   if uo.count('0x13E3') then
+      h=uo.getserial('_0x13E3')
+   else
+      uo.msg('hammer not found! terminating..')
+      return
+   endif
+   
+   if Torso<>'' then
+      uo.moveitem(Torso,-1,'backpack')
+      wait(400)
+      uo.deletejournal()
+      uo.waittargetobject(Torso)
+      uo.useobject(h)
+      repeat
+         wait(100)
+      until uo.injournal("You can't think of a way to use that item|You repair the")      
+      uo.useobject(Torso)
+   endif
+   if Legs<>'' then
+      uo.moveitem(Legs,-1,'backpack')
+      wait(400)
+      uo.deletejournal()
+      uo.waittargetobject(Legs)
+      uo.useobject(h)
+      repeat
+         wait(100)
+      until uo.injournal("You can't think of a way to use that item|You repair the")      
+      uo.useobject(Legs)
+   endif
+   if Arms<>'' then
+      uo.moveitem(Arms,-1,'backpack')
+      wait(400)
+      uo.deletejournal()
+      uo.waittargetobject(Arms)
+      uo.useobject(h)
+      repeat
+         wait(100)
+      until uo.injournal("You can't think of a way to use that item|You repair the")      
+      uo.useobject(Arms)
+   endif
+   if Gloves<>'' then
+      uo.moveitem(Gloves,-1,'backpack')
+      wait(400)
+      uo.deletejournal()
+      uo.waittargetobject(Gloves)
+      uo.useobject(h)
+      repeat
+         wait(100)
+      until uo.injournal("You can't think of a way to use that item|You repair the")      
+      uo.useobject(Gloves)
+   endif
+   if Hat<>'' then
+      uo.moveitem(Hat,-1,'backpack')
+      wait(400)
+      uo.deletejournal()
+      uo.waittargetobject(Hat)
+      uo.useobject(h)
+      repeat
+         wait(100)
+      until uo.injournal("You can't think of a way to use that item|You repair the")      
+      uo.useobject(Hat)
+   endif
+   if Neck<>'' then
+      uo.moveitem(Neck,-1,'backpack')
+      wait(400)
+      uo.deletejournal()
+      uo.waittargetobject(Neck)
+      uo.useobject(h)
+      repeat
+         wait(100)
+      until uo.injournal("You can't think of a way to use that item|You repair the")      
+      uo.useobject(Neck)
+   endif
+   if Lhand<>'' then
+      uo.moveitem(Lhand,-1,'backpack')
+      wait(400)
+      uo.deletejournal()
+      uo.waittargetobject(Lhand)
+      uo.useobject(h)
+      repeat
+         wait(100)
+      until uo.injournal("You can't think of a way to use that item|You repair the")      
+      uo.useobject(Lhand)
+   endif
+   uo.print(' -= done =- ')
+endsub

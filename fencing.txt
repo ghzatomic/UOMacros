@@ -1,0 +1,165 @@
+VAR weap = '0x0EC3'         #Тип оружия
+VAR shit = '0x1B76'         #Тип щита(если качаем Парринг)
+var opponent = '0x0055C05A'
+var chest = '0x400F9F07'
+var othodimX=1508
+var othodimY=209
+var oponentX=1508
+var oponentY=208
+sub main() 
+   uo.useobject(chest)
+   wait(1000)
+   while not uo.Dead()
+      if uo.GetHp(opponent) <> uo.GetMaxHp(opponent) then 
+         uo.WarMode(false) 
+         Walk(othodimX,othodimY) 
+         checklag()
+         while Not UO.InJournal('does not')
+            band()
+            uo.WaitTargetObject(opponent) 
+            uo.UseType('0x0E21') 
+            wait(3500) 
+         wend 
+      end if 
+      if uo.GetHp('self') <> uo.GetMaxHp('self') then 
+         uo.WarMode(false) 
+         Walk(othodimX,othodimY)
+         while uo.life < uo.str
+            band()
+            uo.WaitTargetObject('self') 
+            uo.UseType('0x0E21') 
+            wait(3500) 
+         wend 
+      end if
+      if uo.count('0x0E20')>0 then
+         uo.WaitTargettype('0x1008') 
+         uo.UseType('0x0E20')
+         uo.WarMode(true)     
+      endif
+      wait(1000)
+      uo.findtype(weap,-1,'my')
+      if not uo.findcount() then
+         uo.useobject(chest)
+         wait(2000)
+         uo.findtype(weap,-1,chest)
+         uo.moveitem('finditem')
+         wait(1000)
+      endif
+      uo.usetype(weap)
+      wait(100)
+      uo.usetype(shit)
+      wait(100)
+      uo.Attack(opponent) 
+      wait(100) 
+      Walk(oponentX,oponentY) 
+      while (uo.GetHp(opponent) > uo.GetMaxHp(opponent)/3) && (uo.Life > 80) 
+         wait(500) 
+      wend 
+   wend 
+end sub 
+sub band()
+   if uo.count('0x0E21')<5 then
+      uo.findtype('0x0E21',-1,chest)
+      if uo.findcount() then
+         uo.moveitem('finditem','50','backpack')
+         checklag()
+         wait(1000)
+      endif
+   endif
+endsub
+sub Walk(x,y) 
+   go: 
+   while not uo.getX() == x || not uo.getY() == y 
+      if not uo.getX() == x then 
+         if uo.getX() > x then 
+            uo.press(36) 
+         else 
+            uo.press(34) 
+         endif 
+      endif 
+      if not uo.getY() == y && uo.getX() == x then 
+         if uo.getY() > y then 
+            uo.press(33) 
+         else 
+            uo.press(35) 
+         endif 
+      endif 
+      checklag() 
+   wend 
+   checklag() 
+   if not uo.getX() == x || not uo.getY() == y then 
+      goto go 
+   endif 
+endsub  
+sub checklag() 
+   repeat
+      UO.DeleteJournal() 
+      UO.Click('backpack') 
+   until backpack()==1
+endsub 
+sub backpack()
+   var n
+   for n=0 to 200
+      if uo.injournal('a backpack') then
+         return 1
+      endif
+      wait(200)
+   next
+endsub 
+sub Reconnector() 
+var ReconnectTime, RFlag 
+ReconnectTime = '0' 
+RFlag = 1 
+Repeat 
+While (UO.ObjAtLayer('Bpack') == '') 
+if RFlag Then 
+ReconnectTime = MakeTime() 
+RFlag = 0 
+endif 
+UO.Say('') 
+Wait(3000) 
+UO.Say('') 
+Wait(3000) 
+UO.Say('') 
+Wait(3000) 
+UO.LDblClick(357,164) 
+UO.LClick(616,459) 
+Wait(3000) 
+WEnd 
+Wait(3000) 
+if (RFlag == 0) and (ReconnectTime <> '0') Then 
+UO.Exec('terminate main') 
+UO.Exec('exec main') 
+UO.TextOpen() 
+UO.TextPrint('Disconnected & Reconnected @ '+ReconnectTime) 
+RFlag = 1 
+ReconnectTime = '0' 
+endif 
+Until false 
+end sub 
+
+sub MakeTime() 
+VAR D, T, Ret, i 
+Ret = STR(UO.Time()) 
+T = "" 
+For i = 0 To Len(Ret) 
+T = Ret[Len(Ret)-i] + T 
+If (I == 2) OR (I == 4) Then 
+T = ":" + T 
+EndIf 
+Next 
+Ret = STR(UO.Date()) 
+D = "" 
+For i = 0 To Len(Ret) 
+D = Ret[Len(Ret)-i] + D 
+If (I == 2) OR (I == 4) Then 
+D = "." + D 
+EndIf 
+Next 
+Ret = T + " @ " + D 
+RETURN Ret 
+end sub
+sub main2()
+uo.findtype('0x1DB8',-1,'my')
+uo.moveitem('finditem')
+endsub

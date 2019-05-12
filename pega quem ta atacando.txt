@@ -1,0 +1,12 @@
+sub attack()
+   var enemy=uo.journalserial(uo.injournal('is attacking you')-1)
+   if enemy<>'0x00000000' then
+      if uo.getnotoriety(enemy)<>1 then
+         uo.attack(enemy)
+         uo.print(uo.getname(enemy))
+      else
+         uo.print(uo.getname(enemy)+'синий')
+      endif
+   endif
+   uo.deletejournal()
+endsub

@@ -1,0 +1,108 @@
+sub testshop2()
+   uo.msg('bye')
+   wait(500)
+   uo.msg('buy')
+   wait(500)
+   
+   var BuyItemsCount = 8 
+   var BuyDelay = 300 
+   
+   dim BuyType[20], BuyColor[20], BuyCount[20]
+   
+   #1:
+   BuyType[0] = 'bm' 
+   BuyColor[0] = 0
+   BuyCount[0] = 50 
+   
+   #2:
+   BuyType[1] = 'bp'
+   BuyColor[1] = 0
+   BuyCount[1] = 50
+   
+   # 3:
+   BuyType[2] = 'ga'
+   BuyColor[2] = 0
+   BuyCount[2] = 50
+   
+   BuyType[3] = 'gs'
+   BuyColor[3] = 0
+   BuyCount[3] = 50
+   
+   BuyType[4] = 'mr'
+   BuyColor[4] = 0
+   BuyCount[4] = 50
+   
+   BuyType[5] = 'ns'
+   BuyColor[5] = 0
+   BuyCount[5] = 50
+   
+   BuyType[6] = 'sa'
+   BuyColor[6] = 0
+   BuyCount[6] = 50
+   
+   BuyType[7] = 'ss'
+   BuyColor[7] = 0
+   BuyCount[7] = 50
+   
+   if BuyItemsCount < 1 then
+      uo.print('Pouco Item ....')
+      return
+   endif
+   
+   var list = uo.GetShopList() #
+   
+   if not list.IsBuyList() then
+      uo.print('Não é compra.')
+      return
+   endif
+   
+   if not list.InClient() then
+      uo.print('Lista nao ta no client.')
+      return
+   endif
+   
+   var i = 0, j = 0, ReplyCount = 0, want = 0, count = list.Count()
+   
+   if count then
+      count = count - 1
+      
+      var reply = VendorReply(list.Serial(), BuyItemsCount) #
+      
+      BuyItemsCount = BuyItemsCount - 1
+      
+      for i = 0 to count
+         for j = 0 to BuyItemsCount
+            
+            want = BuyCount[j] - uo.Count(BuyType[j], BuyColor[j])
+            
+            if want > 0 && list.ItemGraphic(i) == uo.GetGraphic(BuyType[j]) then
+               if BuyColor[j] == -1 || list.ItemColor(i) == uo.GetGraphic(BuyColor[j]) then
+                  
+                  if want > list.ItemCount(i) then
+                     want = list.ItemCount(i)
+                  endif
+                  
+                  if want > 0 then #
+                     reply.ItemSerial(ReplyCount, list.ItemSerial(i))
+                     reply.ItemCount(ReplyCount, want)
+                     
+                     ReplyCount = ReplyCount + 1
+                  endif
+               endif
+            endif
+         next
+      next
+      
+      if ReplyCount then
+         uo.print('ReplyCount = ' + str(ReplyCount) + ' waiting ' + str(BuyDelay * ReplyCount) + ' ms')
+         wait(BuyDelay * ReplyCount)
+         
+         reply.Count(ReplyCount) 
+         uo.SendShopReply(reply) 
+      else
+         uo.print('Nao montou o protocolo de compra')
+      endif
+   else
+      uo.print('Nao vai comprar nada')
+   endif
+end sub

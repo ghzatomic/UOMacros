@@ -1,0 +1,48 @@
+sub main() 
+   var s, n
+   Dim staff[2]
+   staff[1]='0x13F8'
+   staff[2]='0x13F9'
+   for n=1 to 2
+      uo.findtype(staff[n],-1,'my')
+      if uo.findcount() then
+         s=uo.getserial('finditem')
+      endif
+   next
+   uo.addobject('thebeast') 
+   while uo.targeting() 
+      wait(500) 
+   wend   
+   while not uo.dead() 
+      uo.msg('all release') 
+      checklag()
+      #uo.useskill('Spirit Speak') 
+      uo.waittargetobject('thebeast') 
+      uo.useobject(s) 
+      tamingresult() 
+   wend 
+endsub 
+sub tamingresult() 
+   var n 
+   for n=0 to 200
+      wait(400)    
+      if uo.injournal('It seems|fail to tame|see the creature|already tame')  then 
+         return 
+      endif 
+   next 
+endsub 
+sub checklag() 
+   repeat
+      UO.DeleteJournal() 
+      UO.Click('backpack') 
+   until backpack()==1
+endsub 
+sub backpack()
+   var n
+   for n=0 to 200
+      if uo.injournal('a backpack') then
+         return 1
+      endif
+      wait(200)
+   next
+endsub

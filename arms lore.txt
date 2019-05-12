@@ -1,0 +1,27 @@
+sub main()
+   uo.addobject('arms')
+   while uo.targeting()
+      wait(500)
+   wend
+   while 1
+      checklag()
+      uo.waittargetobject('arms')
+      uo.useskill('Arms Lore')
+      wait(5000)
+   wend
+endsub 
+sub checklag() 
+   repeat 
+      UO.DeleteJournal() 
+      UO.Click('backpack') 
+   until backpack()==1 
+endsub 
+sub backpack() 
+   var n 
+   for n=0 to 200 
+      if uo.injournal('a backpack') then 
+         return 1 
+      endif 
+      wait(200) 
+   next 
+endsub

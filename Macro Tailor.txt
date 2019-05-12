@@ -1,0 +1,56 @@
+sub sellcaio()
+   uo.msg('sell')
+   var list = uo.GetShopList()
+   var vendorx
+   var vendory
+   var i,count 
+   wait(1500)
+   count = list.Count()
+   uo.print(str(list.Count()))
+   for i = 1 to count
+      uo.print(str(i))
+      vendorx = VendorReply(list.Serial(), list.Count())
+      vendorx.ItemSerial(i-1, list.ItemSerial(i-1)) 
+      vendorx.Count(100) 
+      
+      uo.SendShopReply(vendorx) 
+   next
+end sub
+
+sub macro()
+   uo.Automenu('C',"H")
+   uo.Automenu('Colth',"Headwear")             
+   uo.Automenu('Headwear','skullcap')
+   var loop;
+   for loop=0 to 5 
+      guards()
+      uo.textclear()
+      uo.usetype("HAG")
+      UO.FindType('RTI','-1','my')
+      uo.waittargetobject('finditem')                   
+      wait(5500)
+   next
+   guards()
+   sellcaio()
+   guards()
+   wait(1000)
+   sellcaio()
+   wait(1000)
+   macro()
+end sub
+
+sub guards()
+   ;uo.print(str(uo.getHP()))
+   if uo.getHP()<=99  then
+      uo.msg("guards !")
+   end if
+   
+end sub
+
+sub debug()
+   ;uo.msg("guards !")
+   uo.waitmenu('C',3,"H",2)
+   uo.Automenu('C',"H")
+   uo.Automenu('Colth',"Headwear")             
+   uo.Automenu('Headwear','skullcap')
+end sub

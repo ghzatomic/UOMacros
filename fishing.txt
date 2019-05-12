@@ -1,0 +1,80 @@
+sub main() 
+   var x
+   while 1
+      submain()
+      x=uo.getx()
+      uo.msg('Back')
+      checklag()
+      repeat
+         wait(100)
+      until uo.getx() > x+8
+      uo.msg('Stop')
+      submain()
+      x=uo.getx()
+      uo.msg('Forward')
+      checklag()
+      repeat
+         wait(100)
+      until uo.getx() < x-8
+      uo.msg('Stop')
+   wend
+end sub 
+sub submain()
+   var mx, my, mz, i, j
+   mx = UO.GetX('self') 
+   my = UO.GetY('self') 
+   mz = UO.GetZ('self')    
+   for i = mx-4 to mx+4 
+      for j = my-4 to my+4 
+         Tohide() 
+         UO.Print('Ловим в координатах: '+str(mx-i)+' '+str(my-j)) 
+         fishing(i,j,mz)
+      next 
+   next 
+endsub
+sub fishing(mx,my,mz)
+   var n
+   for n=0 to 10
+      checklag()
+      uo.waittargettile('1341',mx,my,mz)
+      uo.usetype('0x0DBF')
+      if waitforfish()==1 then
+         return
+      endif
+   next
+endsub
+sub waitforfish()
+   var n
+   for n=0 to 100
+      if uo.injournal('no fish here|fishing in water|You pull out') then
+         return 1
+      endif
+      if uo.injournal('but fail') then
+         return
+      endif
+      wait(1000)      
+   next
+endsub
+sub Tohide()
+   while not uo.Hidden()
+      uo.warmode(0)
+      uo.Print('Пытаемся уйти в хайд...')
+      uo.UseSkill('Hiding')
+      wait(4000)
+   wend
+end sub
+sub CheckLag() 
+   repeat
+      UO.DeleteJournal() 
+      UO.Click('backpack') 
+   until backpack()==1
+endsub 
+sub backpack()
+   var n
+   for n=0 to 200
+      if uo.injournal('a backpack') then
+         return 1
+      endif
+      wait(200)
+   next
+endsub

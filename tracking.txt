@@ -1,0 +1,23 @@
+sub main()
+   while 1
+      checklag()
+      uo.waitmenu('Tracking','Anything')
+      uo.useskill('Tracking')
+      wait(5000)
+   wend
+endsub
+sub checklag() 
+   repeat 
+      UO.DeleteJournal() 
+      UO.Click('backpack') 
+   until backpack()==1 
+endsub 
+sub backpack() 
+   var n 
+   for n=0 to 200 
+      if uo.injournal('a backpack') then 
+         return 1 
+      endif 
+      wait(200) 
+   next 
+endsub

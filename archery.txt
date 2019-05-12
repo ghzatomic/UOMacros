@@ -1,0 +1,125 @@
+   var opponent = '0x002F1DBE'
+   VAR Chest = '0x400F9F07'
+   
+sub main()
+   uo.set('finddistance','2')
+   uo.useobject(Chest)
+   wait(2000)
+   while not uo.Dead()
+      if uo.GetHp(opponent) <> uo.GetMaxHp(opponent) then
+         uo.WarMode(false)
+         checklag()
+         while Not UO.InJournal('does not')
+            band()
+            uo.WaitTargetObject(opponent)
+            uo.UseType('0x0E21')
+            wait(3500)
+         wend
+      end if
+      if uo.count('0x0E20')>0 then
+         uo.WaitTargettype('0x1008') 
+         uo.UseType('0x0E20')
+         uo.WarMode(true)     
+      endif
+      wait(1000)
+      uo.usetype('0x13B2')
+      wait(1000)
+      uo.Attack(opponent)
+      wait(500)
+      while uo.GetHp(opponent) > uo.GetMaxHp(opponent)/3
+         wait(500)
+         if uo.count('0x0F3F')<5 then
+            uo.findtype('0x0F3F',-1,Chest)
+            if uo.findcount() then
+               uo.moveitem('finditem','100','backpack')
+               checklag()
+               wait(1000)
+               uo.Attack(opponent)
+            endif
+         endif
+         uo.findtype('0x0F3F',-1,'ground')
+         if uo.findcount() then
+            uo.moveitem('finditem',0,'backpack')
+            wait(500)
+         endif
+      wend
+   wend
+end sub
+Sub band()
+   if not uo.count('0x0E21')>0 then
+      uo.findtype('0x0E21',-1,Chest)
+      if uo.findcount() then
+         uo.moveitem('finditem','50','backpack')
+         wait(1000)
+      endif
+   endif
+endsub
+sub Reconnector() 
+var ReconnectTime, RFlag 
+ReconnectTime = '0' 
+RFlag = 1 
+Repeat 
+While (UO.ObjAtLayer('Bpack') == '') 
+if RFlag Then 
+ReconnectTime = MakeTime() 
+RFlag = 0 
+endif 
+UO.Say('') 
+Wait(3000) 
+UO.Say('') 
+Wait(3000) 
+UO.Say('') 
+Wait(3000) 
+UO.LDblClick(357,164) 
+UO.LClick(616,459) 
+Wait(3000) 
+WEnd 
+Wait(3000) 
+if (RFlag == 0) and (ReconnectTime <> '0') Then 
+UO.Exec('terminate main') 
+UO.Exec('exec main') 
+UO.TextOpen() 
+UO.TextPrint('Disconnected & Reconnected @ '+ReconnectTime) 
+RFlag = 1 
+ReconnectTime = '0' 
+endif 
+Until false 
+end sub 
+
+sub MakeTime() 
+VAR D, T, Ret, i 
+Ret = STR(UO.Time()) 
+T = "" 
+For i = 0 To Len(Ret) 
+T = Ret[Len(Ret)-i] + T 
+If (I == 2) OR (I == 4) Then 
+T = ":" + T 
+EndIf 
+Next 
+Ret = STR(UO.Date()) 
+D = "" 
+For i = 0 To Len(Ret) 
+D = Ret[Len(Ret)-i] + D 
+If (I == 2) OR (I == 4) Then 
+D = "." + D 
+EndIf 
+Next 
+Ret = T + " @ " + D 
+RETURN Ret 
+end sub
+
+sub checklag() 
+   repeat
+      UO.DeleteJournal() 
+      UO.Click('backpack') 
+   until backpack()==1
+endsub 
+sub backpack()
+   var n
+   for n=0 to 200
+      if uo.injournal('a backpack') then
+         return 1
+      endif
+      wait(200)
+   next
+endsub 

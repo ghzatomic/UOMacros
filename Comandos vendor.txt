@@ -1,0 +1,19 @@
+lista var = VendorList () - criar uma folha. Criar-se que ele não precisa ter essa função (após a descrição da classe)
+list.Serial () - obter o número de série do fornecedor
+list.Count () - Obtém o número de itens na folha
+list.IsBuyList () - comprar folha Cell /
+list.InClient () - Gump deixou um cliente ou tenha sido tratado Inject, ignorando o cliente. (Enquanto que não está a funcionar adequadamente)
+list.ItemSerial (índice) - o número de série do número de sequência de objecto (de 0 a list.Count () - 1)
+list.ItemGraphic (índice) - o tipo de objecto
+list.ItemColor (índice) - o tema da cor
+list.ItemPrice (índice) - o assunto do preço
+list.ItemCount (índice) - a quantidade disponível
+list.ItemName (índice) - o nome do objeto
+
+var resposta = VendorReply (VendorSerial, MaxCount) - criar um corpo de resposta para fazer compras. Aceita parâmetros: número de série do fornecedor com quem atuamos e ao nível sub itens máximas na resposta (list.Count ())
+reply.Count (contagem) - para especificar o número real de itens na resposta. É dada após a formação da lista.
+reply.ItemSerial (índice, em série) - Seleccionar objecto no referido número de sequência em série (de 0 a MaxCount - 1)
+reply.ItemCount (Index, Count) - defina o número de itens
+
+lista var = UO.GetShopList) (- obter VendorList () classe
+UO.SendShopReply (VendorReply) - enviar um pedido de pré-formados para a compra / venda no servidor

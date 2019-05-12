@@ -1,0 +1,27 @@
+sub main()
+   uo.addobject('vendor')
+   while uo.targeting()
+      wait(500)
+   wend
+   while 1
+      checklag()
+      uo.waittargetobject('vendor')
+      uo.useskill('Begging')
+      wait(2500)
+   wend
+endsub 
+sub CheckLag() 
+   repeat
+      UO.DeleteJournal() 
+      UO.Click('backpack') 
+   until backpack()==1
+endsub 
+sub backpack()
+   var n
+   for n=0 to 200
+      if uo.injournal('a backpack') then
+         return 1
+      endif
+      wait(200)
+   next
+endsub

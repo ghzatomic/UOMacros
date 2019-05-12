@@ -1,0 +1,936 @@
+; 7 - Auxiliares ; {
+
+; 7.00 - Sobrevivência ; {
+; 7.00.000 - Recuperar ; {
+Sub Recuperar(guardas)
+var verif
+If UO.InJournal(msgAtacado) Or UO.Life<UO.Str Or UO.Poisoned() Then
+   If guardas==1 Then
+      UO.Exec('exec Guardas')
+   End If
+   PM('Estou sendo atacado! Estou na posição '+str(UO.GetX())+','+str(UO.GetY())+','+str(UO.GetZ()))
+   CancelarWarMode()
+   ApagaDoJournal(msgBloqueioMagery)
+   While ((UO.Life<UO.Str And (UO.Count(typeBandage)>0 Or Not UO.InJournal(msgBloqueioMagery))) Or (UO.Poisoned() And Not UO.InJournal(msgBloqueioMagery))) And Not UO.Dead()
+      While UO.Poisoned() And Not UO.InJournal(msgBloqueioMagery)
+         While UO.Poisoned() And UO.Mana<m23
+            CancelarWarMode()
+            EsperaMeditacao(m23)
+         WEnd
+         If UO.Poisoned() And UO.Mana>=m23 Then
+            Cast(n23,m23,d23,s23,p23,'s')
+            EsperaMagia()
+         End If
+      WEnd
+      If UO.Life<UO.Str And (UO.Count(typeBandage)>0 Or Not UO.InJournal('An anti-magic field disturbs the spells.')) Then
+         If UO.Count(typeBandage)>0 Then
+            If UO.GetGlobal('Bandage')=='1' Then
+               verif=(delayBandage+5)*1000
+               Repeat
+                  Wait(100)
+                  If UO.InJournal(msgSalvandoMundo) Then
+                     verif=verif+30000
+                     ApagaDoJournal(msgSalvandoMundo)
+                  End If
+                  verif=verif-100
+               Until UO.GetGlobal('Bandage')<>'1' Or verif<=0
+               If verif<=0 Then
+                  ReiniciarDelayBandage()
+               End If
+            Else
+               ApagaDoJournal(msgUsandoHealing+'|'+msgUsouHealing+'|'+msgFalhaHealing+'|'+msgEsperaSkill+'|'+msgBloqueioHealing)
+               UO.BandageSelf()
+               EsperaBandage()
+            End If
+         Else
+            While UO.Mana<m14 And Not UO.Poisoned()
+               CancelarWarMode()
+               EsperaMeditacao(m14)
+            WEnd
+            If UO.Mana>=m14 And Not UO.Poisoned() Then
+               Cast(n14,m14,d14,s14,p14,'s')
+               EsperaMagia()
+            End If
+         End If
+      End If
+   WEnd
+   CancelarWarMode()
+End If
+End Sub
+;      ; }
+; 7.00.001 - Chamar Guardas ; {
+Sub Guardas()
+var antiflood=0
+If UO.InJournal(msgAtacado) Then
+   UO.Msg(msgGuardas)
+   ApagaDoJournal(msgAtacado)
+   Wait(delayGuardas*1000)
+End If
+While UO.Life<UO.Str Or UO.Poisoned() Or UO.Dead()
+   If antiflood<=0 then
+      antiflood=delayGuardas*1000
+      UO.Msg(msgGuardas)
+   End If
+   Wait(100)
+   antiflood=antiflood-100
+WEnd
+End Sub
+;      ; }
+; 7.00.002 - Alimentar Personagem ; {
+Sub Comer(tipo)
+If tipo<>'0x0000' Then
+   If UO.Count(tipo)>0 Then
+      var t=25
+      UO.Msg('.fome')
+      Wait(100)
+      EsperaSalvarMundo()
+      EsperaAtraso()
+      If TextoMeuServidor(msgFomeVazio) And Not UO.Dead() Then
+         Repeat
+            UO.UseType(tipo)
+            t=t-1
+            Wait(100)
+            EsperaSalvarMundo()
+         Until TextoMeuServidor(msgFomeCheio) Or UO.Count(tipo)<=0 Or t<=0 Or UO.Dead()
+      End If
+      If TextoMeuServidor(msgFomeCheio) Or UO.Count(tipo)<=0 Or UO.Dead() Then
+         ApagaDoJournal(msgFomeVazio+'|'+msgFomeCheio)
+      End If
+   End If
+End If
+End Sub
+;      ; }
+; 7.00.003 - Reviver ; {
+Sub Reviver()
+var c
+While UO.Dead()
+   UO.LClick(xBotaoHelp,yBotaoHelp)
+   EsperaGump('text', 0, gumpHelpPage0, 1)
+   If usarGump==1 Then
+      UO.LClick(xBotaoHelpRoom-xGumpHelp+UO.LastGump('x'),yBotaoHelpRoom-yGumpHelp+UO.LastGump('y'))
+   Else
+      UO.LClick(xBotaoHelpRoom,yBotaoHelpRoom)
+   End If
+   EsperaGump('text', 10, gumpHelpRoom10, 1)
+   If usarGump==1 Then
+      UO.LClick(xBotaoConfirmaHelpRoom-xGumpHelp+UO.LastGump('x'),yBotaoConfirmaHelpRoom-yGumpHelp+UO.LastGump('y'))
+   Else
+      UO.LClick(xBotaoConfirmaHelpRoom,yBotaoConfirmaHelpRoom)
+   End If
+   EsperaGump('text', 0, gumpHelpRoomConfirma0, delayHelpRoomMorto+2.5)
+   If usarGump==1 Then
+      UO.LClick(xBotaoAceitaHelpRoom-xGumpAceitaHelpRoom+UO.LastGump('x'),yBotaoAceitaHelpRoom-yGumpAceitaHelpRoom+UO.LastGump('y'))
+   Else
+      UO.LClick(xBotaoAceitaHelpRoom,yBotaoAceitaHelpRoom)
+   End If
+   c=(delayHelpRoomConfirma+2.5)*1000
+   Repeat
+      Wait(10)
+      c=c-10
+   Until Not UO.Dead() Or c<=0
+WEnd
+End Sub
+;      ; }
+;   ; }
+
+; 7.01 - Esperas ; {
+; 7.01.000 - Espera Atraso de Comunicação ; {
+Sub EsperaAtraso()
+var ping=0
+ApagaDoJournal('backpack')
+UO.Click('backpack')
+Repeat
+   Wait(1)
+   ping=ping+1
+Until UO.InJournal('backpack')
+If modoDebug==1 then
+   UO.CharPrint(corCharPrintDebug,'Atraso Debug: '+str(ping)+'ms')
+End If
+return ping
+End Sub
+;      ; }
+; 7.01.001 - Espera Salvar Mundo ; {
+Sub EsperaSalvarMundo()
+var debug=0
+If TextoMeuServidor(msgSalvandoMundo) Then
+   Repeat
+      Wait(10)
+      debug=debug+10
+   Until UO.InJournal(msgSalvouMundo) Or debug>=delaySave*1000
+End If
+ApagaDoJournal(msgSalvandoMundo+'|'+msgSalvouMundo)
+End If
+If modoDebug==1 then
+   UO.CharPrint(corCharPrintDebug,'Salvar Mundo Debug: '+str(debug/1000)+'s')
+End If
+End Sub
+;      ; }
+; 7.01.002 - Espera Usar Bandage ; {
+Sub EsperaBandage()
+var d=delayBandage*1000
+var debug=0
+While Not UO.Injournal(msgUsandoHealing+'|'+msgFalhaHealing+'|'+msgEsperaSkill+'|'+msgBloqueioHealing+'|'+msgNaoUsouHealing)
+   Wait(10)
+WEnd
+Repeat
+   If TextoMeuServidor(msgSalvandoMundo) And Not TextoMeuServidor(msgSalvouMundo) Then
+      Wait(10)
+      If modoDebug==1 Then
+         UO.CharPrint(corCharPrintDebug,'Bandage Desconsiderando delay por estar salvando o mundo')
+      End If
+   Else
+      Wait(10)
+      d=d-10
+      debug=debug+10
+   End If
+Until d<=0 Or TextoMeuServidor(msgUsouHealing+'|'+msgFalhaHealing+'|'+msgEsperaSkill+'|'+msgBloqueioHealing+'|'+msgNaoUsouHealing) Or UO.Dead()
+If d<=0 Or TextoMeuServidor(msgFalhaHealing+'|'+msgEsperaSkill+'|'+msgBloqueioHealing) Then
+   ApagaDoJournal(msgUsandoHealing+'|'+msgUsouHealing+'|'+msgFalhaHealing+'|'+msgEsperaSkill+'|'+msgBloqueioHealing+'|'+msgNaoUsouHealing)
+   return false
+Else
+   If modoDebug==1 And Not TextoMeuServidor(msgNaoUsouHealing) Then
+      UO.CharPrint(corCharPrintDebug,'Bandage Debug: '+str(debug/1000)+'s')
+   End If
+   ApagaDoJournal(msgUsandoHealing+'|'+msgUsouHealing+'|'+msgFalhaHealing+'|'+msgEsperaSkill+'|'+msgBloqueioHealing+'|'+msgNaoUsouHealing)
+   return true
+End If
+End Sub
+;      ; }
+; 7.01.003 - Espera Magia ; {
+Sub EsperaMagia()
+var mana=UO.Mana
+var vida=UO.Life
+var debug=0
+EsperaAtraso()
+If Not TextoMeuServidor(msgFalhaAlvo+'|'+msgFalhaAlvoMagery+'|'+msgBloqueioMagery+'|'+msgBloqueioRecall+'|'+msgFaltaMagery) Then
+   Repeat
+      If UO.Mana>mana then
+         mana=UO.Mana
+      End If
+      If UO.Life>vida Then
+         vida=UO.Life
+      End If
+      Wait(10)
+      debug=debug+10
+   Until UO.Mana<mana Or UO.Life<vida Or TextoMeuServidor(msgFalhaMagery+'|'+msgBloqueioMagery+'|'+msgBloqueioRecall+'|'+msgFalhaAlvo+'|'+msgFalhaAlvoMagery+'|'+msgFaltaMagery) Or UO.Dead()
+End If
+If UO.Mana<mana Then
+   If modoDebug==1 then
+      UO.CharPrint(corCharPrintDebug,'Magia Debug: '+str(debug/1000)+'s')
+   End If
+   return true
+End If
+If TextoMeuServidor(msgFalhaMagery+'|'+msgBloqueioMagery+'|'+msgBloqueioRecall+'|'+msgFalhaAlvo+'|'+msgFalhaAlvoMagery+'|'+msgFaltaMagery) Or UO.Dead() Then
+   CancelarWarMode()
+   ApagaDoJournal(msgFalhaMagery+'|'+msgBloqueioMagery+'|'+msgBloqueioRecall+'|'+msgFalhaAlvo+'|'+msgFalhaAlvoMagery+'|'+msgFaltaMagery)
+End If
+return false
+End Sub
+;      ; }
+; 7.01.004 - Espera Meditação ; {
+Sub EsperaMeditacao(v)
+If UO.Mana<v And UO.Mana<UO.Int Then
+   var debug=0
+   ApagaDoJournal(msgUsandoMeditation+'|'+msgUsouMeditation+'|'+msgNaoUsouMeditation+'|'+msgFalhaMeditation)
+   UO.UseSkill('Meditation')
+   If modoDebug==1 Then
+      Repeat
+         Wait(10)
+      Until UO.InJournal(msgUsandoMeditation)
+   End If
+   Repeat
+      Wait(10)
+      debug=debug+10
+   Until UO.Mana>=v OR UO.Mana>=UO.Int Or TextoMeuServidor(msgUsouMeditation+'|'+msgNaoUsouMeditation+'|'+msgFalhaMeditation)
+   If TextoMeuServidor(msgFalhaMeditation) Then
+      CancelarWarMode()
+      ApagaDoJournal(msgFalhaMeditation)
+      return false
+   Else
+      If UO.Mana>=UO.Int Then
+         Repeat
+            Wait(10)
+            debug=debug+10
+         Until TextoMeuServidor(msgUsouMeditation+'|'+msgNaoUsouMeditation+'|'+msgFalhaMeditation)
+      End If
+      If modoDebug==1 Then
+         UO.CharPrint(corCharPrintDebug,'Meditação Debug: '+str(debug/1000)+'s')
+      End If
+      return true
+   End If
+Else
+   return true
+End If
+End Sub
+;      ; }
+; 7.01.005 - Espera Alvo ; {
+Sub EsperaAlvo()
+var debug=0
+While UO.Targeting()
+   Wait(10)
+   debug=debug+10
+WEnd
+If modoDebug==1 then
+   UO.CharPrint(corCharPrintDebug,'Alvo Debug: '+str(debug/1000)+'s')
+End If
+End Sub
+;      ; }
+; 7.01.006 - Espera Gump ; {
+Sub EsperaGump(t,p,i,d)
+d=d*1000
+var debug=0
+If usarGump==1 Then
+   If t=='text' Or t=='serial' Or t=='gumpid' Then
+      Repeat
+         Wait(100)
+         d=d-100
+         debug=debug+100
+         EsperaSalvarMundo()
+      Until d<=0 Or (UO.LastGump('replyed')==0 And ContemTexto(UO.LastGump(t,p),i))
+   Else
+      Repeat
+         Wait(100)
+         d=d-100
+         debug=debug+100
+         EsperaSalvarMundo()
+      Until d<=0 Or (UO.LastGump('replyed')==0 And UO.LastGump(t)==i)
+   End If
+   If modoDebug==1 then
+      UO.CharPrint(corCharPrintDebug,'Gump Debug: '+str(debug)+'ms')
+   End If
+Else
+   EsperaSalvarMundo()
+   Wait(d)
+End If
+End Sub
+;      ; }
+; 7.01.007 - Espera Fechar Gump ; {
+Sub EsperaFecharGump(t,p,i,d)
+d=d*1000
+var debug=0
+If usarGump==1 Then
+   If t=='text' Or t=='serial' Or t=='gumpid' Then
+      Repeat
+         Wait(100)
+         d=d-100
+         debug=debug+100
+         EsperaSalvarMundo()
+      Until d<=0 Or UO.LastGump('replyed')<>0 Or Not ContemTexto(UO.LastGump(t,p),i)
+   Else
+      Repeat
+         Wait(100)
+         d=d-100
+         debug=debug+100
+         EsperaSalvarMundo()
+      Until d<=0 Or UO.LastGump('replyed')<>0 Or UO.LastGump(t)<>i
+   End If
+   If modoDebug==1 then
+      UO.CharPrint(corCharPrintDebug,'Gump Debug: '+str(debug)+'ms')
+   End If
+Else
+   EsperaSalvarMundo()
+   Wait(d)
+End If
+End Sub
+;      ; }
+; 7.01.008 - Espera Resposta em Texto de Alguém ; {
+Sub EsperaResposta(alvo,tempomax)
+tempomax=tempomax*1000
+ApagaDoJournal(UO.GetName(alvo))
+Repeat
+   Repeat
+      Wait(100)
+      tempomax=tempomax-100
+   Until UO.InJournal(UO.GetName(alvo)) Or tempomax<=0
+   If UO.InJournal(UO.GetName(alvo)) And Not UO.JournalSerial(UO.InJournal(UO.GetName(alvo))-1)==UO.GetSerial(alvo) Then
+      UO.SetJournalLine(UO.InJournal(UO.GetName(alvo))-1,'')
+   End If
+Until UO.JournalSerial(UO.InJournal(UO.GetName(alvo))-1)==UO.GetSerial(alvo) Or tempomax<=0
+If tempomax>0 Or UO.JournalSerial(UO.InJournal(UO.GetName(alvo))-1)==UO.GetSerial(alvo) Then
+   If Len(UO.Journal(UO.InJournal(UO.GetName(alvo))-1))>=Len(UO.GetName(alvo))+2 Then
+      return Right(UO.Journal(UO.InJournal(UO.GetName(alvo))-1),Len(UO.Journal(UO.InJournal(UO.GetName(alvo))-1))-Len(UO.GetName(alvo))-2)
+   End If
+End If
+return ''
+End Sub
+;      ; }
+;   ; }
+
+; 7.02 - Utilitários ; {
+; 7.02.000 - Cancelamento com Warmode ; {
+Sub CancelarWarMode()
+var debug=0
+If UO.WarMode()==0 Then
+   UO.WarMode(1)
+   ApagaDoJournal('backpack')
+   UO.Click('backpack')
+   Repeat
+      Wait(1)
+      debug=debug+1
+   Until UO.WarMode()==1 Or UO.InJournal('backpack')
+   UO.WarMode(0)
+   Repeat
+      Wait(1)
+      debug=debug+1
+   Until UO.WarMode()==0
+Else
+   UO.WarMode(0)
+   Repeat
+      Wait(1)
+      debug=debug+1
+   Until UO.WarMode()==0
+End If
+If modoDebug==1 then
+   UO.CharPrint(corCharPrintDebug,'WarMode Debug: '+str(debug)+'ms')
+End If
+End Sub
+;      ; }
+; 7.02.001 - Seleção de Alvo para Próxima Ação ; {
+Sub UsaAlvo(alvo)
+If alvo=='c' Or alvo=='cancel' Then
+   If UO.Waiting() Then
+      UO.CancelTarget()
+   End If
+Else
+   If alvo=='s' Or alvo=='self' Then
+      UO.WaitTargetSelf()
+   Else
+      If alvo=='sg' Or alvo=='selfground' Then
+         UO.WaitTargetTile('#0x400',UO.GetX(),UO.GetY(),UO.GetZ())
+      Else
+         If alvo=='l' Or alvo=='lasttarget' Then
+            UO.WaitTargetLast()
+         Else
+            If alvo=='lg' Or alvo=='lasttargetground' Then
+               UO.WaitTargetTile('#0x400',UO.GetX('lasttarget'),UO.GetY('lasttarget'),UO.GetZ('lasttarget'))
+            Else
+               If Left(alvo,2)=='o ' Then
+                  UO.WaitTargetObject(Right(alvo,10))
+               Else
+                  If Left(alvo,2)=='og' Then
+                     UO.WaitTargetTile('#0x400',UO.GetX(Right(alvo,10)),UO.GetY(Right(alvo,10)),UO.GetZ(Right(alvo,10)))
+                  End If
+               End If
+            End If
+         End If
+      End If
+   End If
+End If
+End Sub
+;      ; }
+; 7.02.002 - Abrir Banco ; {
+Sub Bank()
+var placa='0x00000000'
+UO.IgnoreReset()
+UO.Set('finddistance',5)
+UO.FindType(typePlaca,corQualquer,'ground')
+While UO.FindCount()>0
+   If UO.GetDistance('finditem')<UO.GetDistance(placa) Or placa=='0x00000000' Then
+      placa=UO.GetSerial('finditem')
+   End If
+   UO.Ignore('finditem')
+   UO.FindType(typePlaca,corQualquer,'ground')
+WEnd
+If placa=='0x00000000' Then
+   If UO.GetNotoriety('self')<=1 Then
+      UO.Msg(msgBanco+' '+msgGuardas)
+   Else
+      UO.Msg(msgBanco)
+   End If
+Else
+   UO.UseObject(placa)
+   EsperaGump('text',6,gumpPlacaCasa6,1)
+   If usarGump==1 Then
+      UO.LClick(xBotaoPlacaBanco-xGumpPlacaCasa+UO.LastGump('x'),yBotaoPlacaBanco-yGumpPlacaCasa+UO.LastGump('y'))
+   Else
+      UO.LClick(xBotaoPlacaBanco,yBotaoPlacaBanco)
+   End If
+End If
+EsperaAtraso()
+UO.IgnoreReset()
+End Sub
+;      ; }
+; 7.02.003 - Caminhar Até Posição ou Próximo; {
+Sub Caminhar(x,y,dist)
+var c=0
+var cx
+var cy
+var limite=3000
+var dir
+var loop
+Dim Anda[8]
+Anda[0]=33   ; N ;
+Anda[1]=39   ; NE ;
+Anda[2]=34   ; E ;
+Anda[3]=40   ; SE ;
+Anda[4]=35   ; S ;
+Anda[5]=37   ; SW ;
+Anda[6]=36   ; W ;
+Anda[7]=38   ; NW ;
+While (UO.GetX()>x+dist Or UO.GetX()<x-dist Or UO.GetY()>y+dist Or UO.GetY()<y-dist) And c<10 And limite>0
+   cx=UO.GetX()
+   cy=UO.GetY()
+   If (UO.GetX()<=x+dist And UO.GetX()>=x-dist) And UO.GetY()>y+dist Then
+      dir=0
+   End If
+   If UO.GetX()<x-dist And UO.GetY()>y+dist Then
+      dir=1
+   End If
+   If UO.GetX()<x-dist And (UO.GetY()<=Y+dist And UO.GetY()>=Y-dist) Then
+      dir=2
+   End If
+   If UO.GetX()<x-dist And UO.GetY()<y-dist Then
+      dir=3
+   End If
+   If (UO.GetX()<=x+dist And UO.GetX()>=x-dist) And UO.GetY()<y-dist Then
+      dir=4
+   End If
+   If UO.GetX()>x+dist And UO.GetY()<y-dist Then
+      dir=5
+   End If
+   If UO.GetX()>x+dist And (UO.GetY()<=Y+dist And UO.GetY()>=Y-dist) Then
+      dir=6
+   End If
+   If UO.GetX()>x+dist And UO.GetY()>y+dist Then
+      dir=7
+   End If
+   EsperaSalvarMundo()
+   If c<=5 Then
+      UO.Press(Anda[dir])
+      Wait(100)
+   Else
+      dir=UO.Random(8)
+      For loop=0 to UO.Random(5)+2
+         UO.Press(Anda[dir])
+         Wait(100)
+      Next
+   End If
+   If UO.GetX()==cx And UO.GetY()==cy Then
+      c=c+1
+   Else
+      c=0
+   End If
+   limite=limite-1
+WEnd
+End Sub
+;      ; }
+; 7.02.004 - Contar Item por Tipo e Local ; {
+Sub ContarItem(tipo,cor,local)
+var cont=0
+UO.IgnoreReset()
+If local=='ground' Then
+   UO.Set('finddistance',distPegaChao)
+End If
+UO.FindType(tipo,cor,local)
+While UO.FindCount()>0
+   cont=cont+UO.GetQuantity('finditem')
+   UO.Ignore('finditem')
+   UO.FindType(tipo,cor,local)
+WEnd
+UO.IgnoreReset()
+return cont
+End Sub
+;      ; }
+; 7.02.005 - Mover Item por Tipo e Local ; {
+Sub MoverItem(tipo,cor,localDe,localPara,modo,quant)
+var contDe=ContarItem(tipo,cor,localDe)
+var contPara=ContarItem(tipo,cor,localPara)
+var movidoDe=0
+var movidoPara=0
+var antesDe
+var antesPara
+var mover=0
+var pesoitem=10
+If modo=='obter' Then
+   If (quant-contPara)>contDe Then
+      quant=contDe
+   Else
+      quant=quant-contPara
+   End If
+Else
+   If modo=='sobrar' Then
+      quant=contDe-quant
+   Else
+      If quant>contDe Then
+         quant=contDe
+      End If
+   End If
+End If
+var loop=quant*2
+While movidoPara<quant And movidoDe<quant And loop>0 And (localPara<>UO.GetSerial('backpack') Or UO.Weight<40+(UO.Str*3.5)-pesoitem)
+   antesDe=contDe
+   antesPara=contPara
+   UO.FindType(tipo,cor,localDe)
+   If UO.FindCount()>0 Then
+      pesoitem=UO.Weight
+      If movidoPara>=movidoDe Then
+         mover=quant-movidoPara
+      Else
+         mover=quant-movidoDe
+      End If
+      If localPara=='ground' Then
+         UO.Drop(mover,UO.GetX()-2+UO.Random(5),UO.GetY()-2+UO.Random(3)+UO.Random(2),UO.GetZ(),'finditem')
+      Else
+         UO.MoveItem('finditem',mover,localPara)
+      End If
+      Wait(1500)
+      EsperaAtraso()
+      EsperaSalvarMundo()
+      pesoitem=(UO.Weight-pesoitem)/mover
+   End If
+   contDe=ContarItem(tipo,cor,localDe)
+   contPara=ContarItem(tipo,cor,localPara)
+   movidoDe=movidoDe-contDe+antesDe
+   movidoPara=movidoPara+contPara-antesPara
+   loop=loop-1
+WEnd
+End Sub
+;      ; }
+; 7.02.006 - Sair da Help Room ; {
+Sub SairHelpRoom()
+While UO.GetX()>=posHelpRoomW And UO.GetX()<=posHelpRoomE And UO.GetY()>=posHelpRoomN And UO.GetY()<=posHelpRoomS
+   If UO.GetY()<yHelpRoomGate Then
+      If UO.GetX()<xHelpRoomGate Then
+         Caminhar(xHelpRoomGate-5,yHelpRoomGate-1,1)
+      Else
+         Caminhar(xHelpRoomGate+5,yHelpRoomGate-1,1)
+      End If
+   End If
+   Caminhar(xHelpRoomGate,yHelpRoomGate+1+UO.Random(2),0)
+   If UO.GetY()>yHelpRoomGate And UO.GetX()==xHelpRoomGate Then
+      UO.Press(33)
+      Wait(100)
+      UO.Press(33)
+      Wait(100)
+      UO.Press(33)
+      Wait(100)
+      UO.Press(33)
+   End If
+   Wait(100)
+WEnd
+End Sub
+;      ; }
+; 7.02.007 - Mandar Mensagem Privada (PM) ; {
+Sub PM(t)
+If pmAviso1<>'' Then
+   UO.Msg('.pm '+pmAviso1)
+   EsperaGump('text',1,gumpPM1,1)
+   UO.Say(t)
+   Wait(Len(t)*2)
+   If usarGump==1 Then
+      UO.LClick(xBotaoPM-xGumpPM+UO.LastGump('x'),yBotaoPM-yGumpPM+UO.LastGump('y'))
+   Else
+      UO.LClick(xBotaoPM,yBotaoPM)
+   End If
+End If
+If pmAviso2<>'' Then
+   UO.Msg('.pm '+pmAviso2)
+   EsperaGump('text',1,gumpPM1,1)
+   UO.Say(t)
+   Wait(Len(t)*2)
+   If usarGump==1 Then
+      UO.LClick(xBotaoPM-xGumpPM+UO.LastGump('x'),yBotaoPM-yGumpPM+UO.LastGump('y'))
+   Else
+      UO.LClick(xBotaoPM,yBotaoPM)
+   End If
+End If
+End Sub
+;      ; }
+; 7.02.008 - Pega a vida do Inimigo (%) ; {
+Sub VerificaVida(a)
+var vida=0
+If UO.GetSerial(a)==UO.GetSerial('self') Then
+   vida=UO.Str
+   If vida>0 Then
+      vida=UO.Life/vida
+   End If
+Else
+   vida=UO.GetHP(a)
+   If vida>0 Then
+      vida=vida/UO.GetMaxHP(a)
+   End If
+End If
+return int(100*vida)
+End Sub
+;      ; }
+;   ; }
+
+; 7.03 - Textos ; {
+; 7.03.000 - Contém Texto ; {
+Sub ContemTexto(t1,t2)
+var tmaior=t1
+var tmenor=t2
+If Len(t1)<Len(t2) Then
+   tmaior=t2
+   tmenor=t1
+End If
+If Len(tmenor)<=0 Then
+   return true
+End If
+var pos=Len(tmaior)-Len(tmenor)
+While pos>=0
+   If Mid(tmaior,pos,Len(tmenor))==tmenor Then
+      return true
+   End If
+   pos=pos-1
+WEnd
+return false
+End Sub
+;      ; }
+; 7.03.001 - Apaga Linha do Journal ; {
+Sub ApagaDoJournal(t)
+While UO.InJournal(t)
+   UO.SetJournalLine(UO.InJournal(t)-1,'')
+WEnd
+End Sub
+;      ; }
+; 7.03.002 - Texto Meu ou do Servidor ; {
+Sub TextoMeuServidor(t)
+While UO.InJournal(t)
+   If UO.JournalSerial(UO.InJournal(t)-1)==UO.GetSerial('self') Or UO.JournalSerial(UO.InJournal(t)-1)=='0xFFFFFFFF' Then
+      return true
+   Else
+      UO.SetJournalLine(UO.InJournal(t)-1,'')
+   End If
+WEnd
+return false
+End Sub
+;      ; }
+; 7.03.003 - Dono do Texto ; {
+Sub TextoDono(t)
+var d='0x00000000'
+If UO.InJournal(t) Then
+   d=UO.JournalSerial(UO.InJournal(t)-1)
+   UO.SetJournalLine(UO.InJournal(t)-1,'')
+End If
+return d
+End Sub
+;      ; }
+; 7.03.004 - Procura Texto Entre Posição Inicial e Texto Final ; {
+Sub TextoPosTxt(texto,p,t)
+If p>Len(texto) Then
+   p=Len(texto)
+End If
+If p<0 Then
+   p=0
+End If
+var pos=p
+While pos<=Len(texto)-Len(t) And Mid(texto,pos,Len(t))<>t And Len(t)>0
+   pos=pos+1
+WEnd
+If pos>Len(texto)-Len(t) Then
+   pos=Len(texto)-p
+End If
+return Mid(texto,p,pos-p)
+End Sub
+;      ; }
+; 7.03.005 - Procura Texto Entre Texto Inicial e Texto Final ; {
+Sub TextoTxtTxt(texto,ti,tf)
+var pos=0
+While pos<=Len(texto)-Len(ti) And Mid(texto,pos-Len(ti),Len(ti))<>ti And Len(ti)>0
+   pos=pos+1
+WEnd
+var posi=pos
+While pos<=Len(texto)-Len(tf) And Mid(texto,pos-Len(tf),Len(tf))<>tf And Len(tf)>0
+   pos=pos+1
+WEnd
+If pos>Len(texto)-Len(tf) Then
+   pos=Len(texto)-posi
+End If
+return Mid(texto,posi,pos-posi)
+End Sub
+;      ; }
+; 7.03.006 - Procura Texto Entre Texto Inicial e Posição Final ; {
+Sub TextoTxtPos(texto,t,p)
+var pos=0
+While pos<=Len(texto)-Len(t) And Mid(texto,pos-Len(t),Len(t))<>t And Len(t)>0
+   pos=pos+1
+WEnd
+If pos>p Then
+   return ''
+End If
+return Mid(texto,pos,p-pos)
+End Sub
+;      ; }
+; 7.03.007 - Substituir Texto ; {
+Sub Substituir(texto,torig,tsubs)
+If ContemTexto(texto,torig) Then
+   texto=TextoPosTxt(texto,0,torig)+tsubs+TextoTxtPos(texto,torig,Len(texto))
+End If
+return texto
+End Sub
+;      ; }
+;   ; }
+
+; 7.04 - Números ; {
+; 7.04.000 - Módulo ; {
+Sub Modulo(n)
+If n<0 Then
+   return -n
+End If
+return n
+End Sub
+;      ; }
+; 7.04.001 - Resto da Divisão de Inteiros ; {
+Sub Mod(n,div)
+If div<>0 Then
+   return int((n/div-int(n/div))*div)
+Else
+   return 0
+End If
+End Sub
+;      ; }
+; 7.04.002 - Potência ; {
+Sub Potencia(nbase,bexp)
+var inv=0
+var resp=nbase
+If bexp==0 Then
+   return 1
+End If
+If bexp==1 Then
+   return nbase
+End If
+If bexp<0 Then
+   inv=1
+   bexp=-bexp
+End If
+While bexp>1
+   resp=resp*nbase
+   bexp=bexp-1
+WEnd
+If inv==1 Then
+   If resp<>0 Then
+      return 1/resp
+   Else
+      return 0
+   End If
+End If
+return resp
+End Sub
+;      ; }
+; 7.04.003 - Segundos para Horas, Minutos e Segundos ; {
+Sub Hora(seg)
+var hora=0
+var min=0
+var resp=''
+seg=int(seg)
+While seg<0
+   seg=seg+(24*60*60)
+WEnd
+While seg>(24*60*60)
+   seg=seg-(24*60*60)
+WEnd
+If seg>60*60 Then
+   hora=int(seg/(60*60))
+   seg=seg-int(seg/(60*60))*60*60
+End If
+If seg>60 Then
+   min=int(seg/60)
+   seg=seg-int(seg/60)*60
+End If
+If hora<10 Then
+   resp=resp+'0'
+End If
+resp=resp+str(hora)+':'
+If min<10 Then
+   resp=resp+'0'
+End If
+resp=resp+str(min)+':'
+If seg<10 Then
+   resp=resp+'0'
+End If
+resp=resp+str(seg)
+return resp
+End Sub
+;      ; }
+; 7.04.004 - Formatar Dinheiro ; {
+Sub Dinheiro(n)
+var msg='gp'
+var aux
+While n>=1000
+   msg=str(Mod(n,1000))+msg
+   If Mod(n,1000)<100 and n/1000>=1 Then
+      msg='0'+msg
+   End If
+   If Mod(n,1000)<10 and n/1000>=1 Then
+      msg='0'+msg
+   End If
+   msg='.'+msg
+   n=int(n/1000)
+WEnd
+return str(n)+msg
+End Sub
+;      ; }
+;   ; }
+
+; 7.05 - Arquivo ; {
+; 7.05.000 - Escrever Novo Arquivo ; {
+Sub ArquivoNovo(nome,texto)
+var a=file(nome)
+a.open()
+a.create()
+safe call a.writeln(texto)
+a.close()
+End Sub
+;      ; }
+; 7.05.001 - Adicionar a Arquivos ; {
+Sub ArquivoAdicionar(nome,texto)
+var a=file(nome)
+a.open()
+var t=''
+var aux=safe call a.readString()
+While aux<> msgFimArquivo
+   t=t+aux
+   aux=safe call a.readString()
+WEnd
+safe call a.writeln(texto)
+a.close()
+End Sub
+;      ; }
+; 7.05.002 - Ler Arquivo ; {
+Sub ArquivoLer(nome,p)
+var a=file(nome)
+var t=''
+var aux=''
+var i
+a.open()
+If p<=0 Then
+   aux=safe call a.readString()
+   While aux<> msgFimArquivo
+      t=t+aux
+      aux=safe call a.readString()
+   WEnd
+Else
+   If p>=2 Then
+      For i=2 to p
+         safe call a.readString()
+      Next
+   End If
+   t=safe call a.readString()
+End If
+a.close()
+return t
+End Sub
+;      ; }
+; 7.05.003 - Apresentar Todo o Arquivo ; {
+Sub ArquivoApresentar(nome)
+var a=file(nome)
+var t=''
+UO.TextOpen()
+UO.TextClear()
+a.open()
+UO.TextPrint('Arquivo '+nome+':')
+UO.TextPrint('')
+t=safe call a.readString()
+While t<> msgFimArquivo
+   UO.TextPrint(t)
+   t=safe call a.readString()
+WEnd
+a.close()
+UO.TextPrint('')
+UO.TextPrint('Fim do arquivo!')
+End Sub
+;      ; }
+;   ; }
+
+; ; }

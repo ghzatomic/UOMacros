@@ -1,0 +1,430 @@
+//---------------------------------------------------
+// Macro de Mining
+// Funcoes: RuneBank, Anti-PK (stealth + ress), Miningwalk,
+// Prioriza ore e Restock
+// Para TFG Shard 2018
+// ------------------------------------------
+// 1- Ter DOIS bau no banco. Um para guardar minerios
+// e outro para pegar PICKAXE e REAGentes.
+// 2- Ter runebook com a primeira runa para o banco
+// e a segunda runa para mina.
+// * Retorna com 230 a menos que o máximo de capacidade
+// para diminuir prejuízo com PK.
+// * Ter magia recall no spellbook e +40 de INT
+// * Ter 100.0 em Hiding.
+// * Prioriza Iron, Silver, Verite, Gold, BloodR, BlackR,
+// Mytheril, Order, Chaos e Adamantium.
+// -----------------------------------------------------------
+//
+// CONFIGURACOES
+//
+if not listexists 'Pos_X'
+  createlist 'Pos_X'
+endif
+@clearlist 'Pos_X'
+pushlist! 'Pos_X' -1
+pushlist! 'Pos_X' 0
+pushlist! 'Pos_X' 1
+if not listexists 'Pos_Y'
+  createlist 'Pos_Y'
+endif
+@clearlist 'Pos_Y'
+pushlist! 'Pos_Y' -1
+pushlist! 'Pos_Y' 0
+pushlist! 'Pos_Y' 1
+if not listexists 'Directions'
+  createlist 'Directions'
+endif
+@clearlist 'Directions'
+pushlist! 'Directions' 'Southeast'
+pushlist! 'Directions' 'North'
+pushlist! 'Directions' 'Northwest'
+pushlist! 'Directions' 'East'
+pushlist! 'Directions' 'South'
+pushlist! 'Directions' 'Southwest'
+pushlist! 'Directions' 'West'
+pushlist! 'Directions' 'Northeast'
+if not listexists 'RunXY'
+  createlist 'RunXY'
+endif
+@clearlist 'RunXY'
+pushlist! 'RunXY' 'East'
+pushlist! 'RunXY' 'South'
+pushlist! 'RunXY' 'Southeast'
+pushlist! 'RunXY' 'North'
+pushlist! 'RunXY' 'Northwest'
+pushlist! 'RunXY' 'Southwest'
+pushlist! 'RunXY' 'West'
+pushlist! 'RunXY' 'Northeast'
+if not @findalias 'runebookmining'
+  msg '.recall set'
+  headmsg 'Pause para SELECIONAR runebook com a Runa 1 no Banco e Runa 2 na Mina.'
+  pause 7150
+  setalias 'runebookmining' 'last'
+endif
+if not @findalias 'bankitens'
+  msg 'banker bank'
+  headmsg 'Selecione o bau para RESTOCK de Pickaxes e REAGS.' '33'
+  promptalias 'bankitens'
+endif
+if not @findalias 'bankminerios'
+  msg 'banker bank'
+  headmsg 'Selecione o bau onde GUARDAR MINERIOS' '33'
+  promptalias 'bankminerios'
+endif
+if dead 'self'
+  //
+  // Ress + Bank Minoc
+  //
+  helpbutton
+  waitforgump 0x496 15000
+  replygump 0x496 7
+  waitforgump 0x497 15000
+  replygump 0x497 8
+  waitforgump 0x47b 15000
+  pause 36000
+  while not @findobject 0x4004f736
+    headmsg 'Nao esta na Help Room' 33
+    pause 2000
+  endwhile
+  while stam < 2
+    headmsg '*Esperando Stamina recuperar*'
+    pause 4000
+  endwhile
+  turn "North"
+  run "North"
+  run "North"
+  run "North"
+  run "North"
+  turn "West"
+  run "West"
+  run "West"
+  run "West"
+  run "West"
+  run "West"
+  turn "North"
+  run "North"
+  run "North"
+  run "North"
+  turn "West"
+  run "West"
+  run "West"
+  run "West"
+  run "West"
+  run "West"
+  run "West"
+  run "West"
+  run "West"
+  run "West"
+  run "West"
+  run "West"
+  run "West"
+  run "West"
+  turn "South"
+  run "South"
+  run "South"
+  run "South"
+  run "South"
+  run "South"
+  run "South"
+  run "South"
+  turn "East"
+  run "East"
+  run "East"
+  run "East"
+  run "East"
+  while not inregion 'town' 'self'
+    headmsg 'Caminho interditado' 33
+    headmsg 'Entre no Gate de Minoc.' 171
+    pause 8000
+  endwhile
+  turn "East"
+  run "East"
+  run "East"
+  run "East"
+  run "East"
+  run "East"
+  run "East"
+  run "East"
+  run "East"
+  run "East"
+  run "East"
+  run "East"
+  run "East"
+  run "East"
+  run "East"
+  run "East"
+  run "East"
+  run "East"
+  run "East"
+  run "East"
+  run "East"
+  run "East"
+  run "East"
+  run "East"
+  run "East"
+  run "East"
+  run "East"
+  run "East"
+  run "East"
+  turn "North"
+  walk "North"
+  walk "North"
+  walk "North"
+  turn "East"
+  run "East"
+  run "East"
+  run "East"
+  run "East"
+  run "East"
+  run "East"
+  run "East"
+  run "East"
+  run "East"
+  run "East"
+  run "East"
+  run "East"
+  run "East"
+  resync
+  pause 2000
+endif
+//
+// Guardar
+//
+if diffweight < 230 or not @findtype '0xe85' 'any' 'backpack'
+  while not inregion 'town' 'self'
+    msg '.recall 1,1'
+    pause 7150
+  endwhile
+endif
+if inregion 'town' 'self'
+  headmsg 'Guardando minerios'
+  msg 'banker bank'
+  while @movetype 0x19b9 'backpack' 'bankminerios' 0 0 0 'any'
+    pause 1000
+  endwhile
+  while @movetype 0xf13 'backpack' 'bankminerios' 0 0 0 'any'
+    pause 1000
+  endwhile
+  while @movetype 0xf16 'backpack' 'bankminerios' 0 0 0 'any'
+    pause 1000
+  endwhile
+  while @movetype 0xf11 'backpack' 'bankminerios' 0 0 0 'any'
+    pause 1000
+  endwhile
+  while @movetype 0xf26 'backpack' 'bankminerios' 0 0 0 'any'
+    pause 1000
+  endwhile
+  while @movetype 0xf18 'backpack' 'bankminerios' 0 0 0 'any'
+    pause 1000
+  endwhile
+  while @movetype 0xf0f 'backpack' 'bankminerios' 0 0 0 'any'
+    pause 1000
+  endwhile
+  while @movetype 0xf10 'backpack' 'bankminerios' 0 0 0 'any'
+    pause 1000
+  endwhile
+  while @movetype 0xf15 'backpack' 'bankminerios' 0 0 0 'any'
+    pause 1000
+  endwhile
+  while @movetype 0x19b7 'backpack' 'bankminerios' 0 0 0 'any'
+    pause 1000
+  endwhile
+  while @movetype 0x19b8 'backpack' 'bankminerios' 0 0 0 'any'
+    pause 1000
+  endwhile
+  while @movetype 0x19ba 'backpack' 'bankminerios' 0 0 0 'any'
+    pause 1000
+  endwhile
+  while @movetype 0x19b7 'backpack' 'bankminerios' 0 0 0 'any'
+    pause 1000
+  endwhile
+  while @movetype 0x19bef 'backpack' 'bankminerios' 0 0 0 'any'
+    pause 1000
+  endwhile
+endif
+//
+// Restock
+//
+if inregion 'town' 'self'
+  msg 'banker bank'
+  pause 250
+  useobject 'bankitens'
+ pause 250
+  if @counttype '0xe85' 'any' 'bankitens' > 2
+    while @counttype '0xe85' 'any' 'backpack' < 3
+      useobject 'bankitens'
+      @movetype '0xe85' 'bankitens' 'backpack' 0 0 0 'any'
+      pause 1000
+      headmsg 'Restock de Pickaxe'
+    endwhile
+  else
+    headmsg '*Sem Pickaxe*'
+    stop
+  endif
+  if @counttype '0xf7a' 'any' 'bankitens' > 1
+    if @counttype '0xf7a' 'any' 'backpack' < 100
+      useobject 'bankitens'
+      @movetype 0xf7a 'bankitens' 'backpack' 0 0 0 'any' 2
+      pause 1000
+      headmsg 'Restock de Reag'
+    endif
+  else
+    stop
+    headmsg '*Sem reagente*'
+  endif
+  if @counttype '0xf7b' 'any' 'bankitens' > 1
+    if @counttype '0xf7b' 'any' 'backpack' < 100
+      useobject 'bankitens'
+      @movetype 0xf7b 'bankitens' 'backpack' 0 0 0 'any' 2
+      pause 1000
+      headmsg 'Restock de Reag'
+    endif
+  else
+    stop
+    headmsg '*Sem reagente*'
+  endif
+  if @counttype '0xf86' 'any' 'bankitens' > 1
+    if @counttype '0xf86' 'any' 'backpack' < 100
+      msg 'banker bank'
+      useobject 'bankitens'
+      @movetype 0xf86 'bankitens' 'backpack' 0 0 0 'any' 2
+      pause 1000
+      headmsg 'Restock de Reag'
+    endif
+  else
+    headmsg '*Sem reagente*'
+    stop
+  endif
+endif
+//
+// Minerar
+//
+while mana < 40
+  useskill 'meditation'
+  pause 3150
+endwhile
+if inregion 'town' 'self'
+  @clearjournal
+  pause 500
+  msg '.recall 1,2'
+  pause 7150
+  if @injournal 'blocked' 'system'
+    pause 10000
+    @clearjournal
+    replay
+  endif
+endif
+for 0 to 2
+  for 0 to 'RunXY'
+    for 0 to 'Directions'
+      for 0 to 'Pos_X'
+        for 0 to 'Pos_Y'
+          ///
+          //Checar se ta vivo e se tem PK perto
+          ///
+          getenemy 'Murderer' 'Criminal' 'humanoid' 'closest'
+          while @inrange 'Enemy' '15'
+            headmsg '*Aguardando PK sair*' 33
+            warmode 'on'
+            pause 150
+            warmode 'off'
+            pause 7000
+          endwhile
+          if dead 'self'
+            replay
+          endif
+          //
+          @unsetalias 'quit'
+          while not @findalias 'quit'
+            if not @useobject! 'righthand'
+              usetype! 0xe85 'any' 'backpack'
+            endif
+            waitfortarget 5000
+            clearjournal
+            targettileoffset 'Pos_X[]' 'Pos_Y[]' 0
+            @settimer 't_timeout' 0
+            while @timer 't_timeout' < 15000
+              ///
+              //Checar se ta vivo e se tem PK perto
+              ///
+              getenemy 'Murderer' 'Criminal' 'humanoid' 'closest'
+              while @inrange 'Enemy' '15'
+                headmsg '*Aguardando PK sair*' 33
+                warmode 'on'
+                pause 150
+                warmode 'off'
+                pause 7000
+              endwhile
+              if dead 'self'
+                replay
+              endif
+              //
+              //
+              // Selecionar ores
+              //
+              if @injournal 'You put the Rusty' 'system' or @injournal 'You put the Ceramic' 'system'
+                @setalias 'quit' 'self'
+              elseif @injournal 'You put the Old Copper' 'system' or @injournal 'You put the Dull Copper' 'system'
+                @setalias 'quit' 'self'
+              elseif @injournal 'You put the Bronze' 'system' or @injournal 'You put the Shadow' 'system'
+                @setalias 'quit' 'self'
+              elseif @injournal 'You put the Agapite' 'system' or @injournal 'You put the Rose' 'system'
+                @setalias 'quit' 'self'
+              elseif @injournal 'You put the Valorite' 'system' or @injournal 'You put the Copper' 'system'
+                @setalias 'quit' 'self'
+              endif
+              if @injournal 'You put' 'system' or @injournal 'You loosen' 'system'
+                break
+              elseif @injournal 'You cannot' 'system' or @injournal 'yourself' 'system'
+                @setalias 'quit' 'self'
+                break
+              elseif @injournal 'You decide not to mine' 'system' or @injournal 'Try mining elsewhere' 'system'
+                @setalias 'quit' 'self'
+                break
+              elseif @injournal 'There is no ore' 'system' or @injournal 'There is nothing' 'system'
+                @setalias 'quit' 'self'
+                break
+              elseif @injournal 'no line of sight' 'system'
+                @setalias 'quit' 'self'
+                break
+              endif
+            endwhile
+            @clearjournal
+            if not hidden 'self'
+              while not hidden 'self'
+                useskill 'Hiding'
+                pause 3500
+              endwhile
+              pause 750
+              if hidden 'self'
+                while not @injournal 'You begin to move' 'system'
+                  useskill 'Stealth'
+                  pause 3500
+                  if @injournal 'You are not hidden well enough' 'system'
+                    while not hidden 'self'
+                      useskill 'Hiding'
+                      pause 3500
+                    endwhile
+                  endif
+                endwhile
+              endif
+            endif
+            if diffweight < 230
+              replay
+            endif
+            if not @findtype '0xe85' 'any' 'backpack'
+              replay
+            endif
+          endwhile
+        endfor
+      endfor
+      for 4
+        walk 'Directions[]'
+      endfor
+    endfor
+    for 8
+      walk 'RunXY[]'
+    endfor
+  endfor
+  // by tork

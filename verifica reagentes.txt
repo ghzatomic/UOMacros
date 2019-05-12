@@ -1,0 +1,103 @@
+sub RegCheck()
+   VAR n, q, c
+   Dim Req[50] ; Requirements
+   Req[0]='0x0F7A' ; regi bp
+   Req[1]='0x0F7B' ; regi bm 
+   Req[2]='0x0F86' ; regi mr 
+   Req[3]='0x0F88' ; regi ns 
+   Req[4]='0x0F8D' ; regi ss
+   Req[5]='0x0F84' ; regi ga
+   Req[6]='0x0F85' ; regi gs
+   Req[7]='0x0F8C' ; regi sa
+   Req[8]='0x0F0E' ; gh
+   Req[9]='0x0F0E' ; mana
+   Req[10]='0x0F0E' ; refresh
+   Req[11]='0x0E21' ; bandages
+   Req[12]='0x1F52' ; paralyze scrolls
+   Req[13]='0x0F0E' ; poison
+   Req[14]='0x0F3F' ; arrows
+   Req[15]='0x0F0E' ; empty bottles
+   Req[16]='0x0E20' ; bloody bandages
+   Req[17]='0x1F5F' ; fs
+   Req[18]='0x1BFB' ; bolts
+   Req[19]='0x0F03' ; Antifreeze
+   Req[20]='0x0F0E' ; Invisibility
+   Req[21]='0x1F50' ; Magic Reflection
+   
+   Dim Qnt[50] ; Quantity
+   Qnt[0]=25 ; regi
+   Qnt[1]=25 ; regi
+   Qnt[2]=55 ; regi
+   Qnt[3]=45 ; regi
+   Qnt[4]=55 ; regi
+   Qnt[5]=55 ; regi
+   Qnt[6]=25 ; regi
+   Qnt[7]=25 ; regi
+   Qnt[8]=15 ; gh
+   Qnt[9]=15 ; mana
+   Qnt[10]=10 ; refresh
+   Qnt[11]=100 ; bandages
+   Qnt[12]=20 ; paralyze scrolls
+   Qnt[13]=3 ; poison
+   Qnt[14]=0 ; arrows
+   Qnt[15]=0 ; empty bottles
+   Qnt[16]=0 ; bloody bandages
+   Qnt[17]=10 ; fs
+   Qnt[18]=50 ; bolts
+   Qnt[19]=3 ; Antifreeze
+   Qnt[20]=0 ; Invisibility
+   Qnt[21]=0 ; Magic Reflection
+   
+   Dim Clr[50] ; Color
+   Clr[0]='0x0000' ; regi
+   Clr[1]='0x0000' ; regi
+   Clr[2]='0x0000' ; regi
+   Clr[3]='0x0000' ; regi
+   Clr[4]='0x0000' ; regi
+   Clr[5]='0x0000' ; regi
+   Clr[6]='0x0000' ; regi
+   Clr[7]='0x0000' ; regi
+   Clr[8]='0x09BB' ; gh
+   Clr[9]='0x09DF' ; mana
+   Clr[10]='0x0997' ; refresh
+   Clr[11]='0x0000' ; bandages
+   Clr[12]='0x0000' ; paralyze scrolls
+   Clr[13]='0x0998' ; poison
+   Clr[14]='0x0000' ; arrows
+   Clr[15]='0x0000' ; empty bottles
+   Clr[16]='0x0000' ; bloody bandages
+   Clr[17]='0x0000' ; fs
+   Clr[18]='0x0000' ; bolts
+   Clr[19]='0x09CF' ; Antifreeze
+   Clr[20]='0x0631' ; Invisibility
+   Clr[21]='0x0000' ; Magic Reflection
+   
+   if (uo.getserial('backpack') <> uo.getserial('lastcontainer')) then
+      c=uo.getserial('lastcontainer')
+      for n=0 to 21
+         while uo.count(Req[n],Clr[n])<>Qnt[n]
+            q=Qnt[n]-uo.count(Req[n],Clr[n])
+            if q>0 then
+               uo.findtype(Req[n],Clr[n],c)
+               if uo.findcount() then
+                  uo.moveitem('finditem',STR(q),'backpack',141,134,0)
+                  checklag()
+                  wait(600)
+               else
+                  uo.msg(' item Req('+str(n)+') NOT FOUND ')
+                  return
+               endif
+            else
+               q=-q            
+               uo.findtype(Req[n],Clr[n],'backpack')   
+               if uo.findcount() then
+                  uo.moveitem('finditem',STR(q),c)
+                  checklag()
+                  wait(600)
+               endif
+            endif
+         wend
+      next
+   endif
+   uo.print(' -= done =- ')
+endsub

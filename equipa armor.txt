@@ -1,0 +1,57 @@
+sub armor()
+   var n
+   Dim Loot[10]
+   Loot[1]='0x1415'  ; Plate Mail
+   Loot[2]='0x1416'  ; Plate Mail
+   Loot[3]='0x141A'  ; Platemail Legs
+   Loot[4]='0x1411'  ; Platemail Legs
+   Loot[5]='0x1418'  ; Platemail Gauntlets
+   Loot[6]='0x1414'  ; Platemail Gauntlets
+   Loot[7]='0x1419' ; Platemail Helm
+   Loot[8]='0x1412' ; Platemail Helm
+   Loot[9]='0x1410'  ; Platemail Arms
+   Loot[10]='0x1413' ; Platemail Gorget
+   if uo.objatlayer('Torso') then
+      VAR Torso=uo.objatlayer('Torso')
+      VAR Legs=uo.objatlayer('Legs')
+      VAR Arms=uo.objatlayer('Arms')
+      VAR Gloves=uo.objatlayer('Gloves')
+      VAR Hat=uo.objatlayer('Hat')
+      VAR Neck=uo.objatlayer('Neck')
+      VAR Lhand=uo.objatlayer('Lhand')
+      uo.moveitem(Torso,0,'lastcontainer')
+      wait(666)
+      uo.moveitem(Legs,0,'lastcontainer')
+      wait(666)
+      uo.moveitem(Arms,0,'lastcontainer')
+      wait(666)
+      uo.moveitem(Gloves,0,'lastcontainer')
+      wait(666)
+      uo.moveitem(Hat,0,'lastcontainer')
+      wait(666)
+      uo.moveitem(Neck,0,'lastcontainer')
+      wait(666)      
+   else
+      for n=1 to 8
+         uo.findtype(Loot[n],-1,'lastcontainer')
+         if uo.findcount() then
+            uo.equip('Neck','finditem')
+            wait(666)
+         else
+            uo.findtype(Loot[n+1],-1,'lastcontainer')
+            if uo.findcount() then
+            uo.equip('Neck','finditem')
+               wait(666)
+            endif
+         endif
+         n=n+1
+      next
+      for n=9 to 10
+         uo.findtype(Loot[n],-1,'lastcontainer')
+         if uo.findcount() then
+            uo.equip('Neck','finditem')
+            wait(666)   
+         endif
+      next
+   endif
+endsub

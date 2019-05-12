@@ -1,0 +1,63 @@
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+#++++++++++++++-= Auto Attack Men\Women =-++++++++++++++++ 
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+#+++++++++++++-= Auto Attack all players =-+++++++++++++++ 
+sub StartAttack1() ;биндим для атаки всех чаров 
+StartAttack(1) 
+end sub 
+#++++++++++-= Auto Attack PK players only =-+++++++++++++++ 
+sub StartAttack0() ;биндим для атаки только ПК,серых и вражественной гильдии 
+StartAttack(0) 
+end sub 
+
+sub StartAttack(status) 
+UO.Ignore("self") 
+Var FindOK=false,temp,mess,t=0,k,a 
+DIM Friend[50] 
+VAR endlist=4; последнее число в списке друзей 
+Friend[0]="fdsafas" 
+Friend[1]="SENYA" 
+Friend[2]="Gurza" 
+Friend[3]="ALF" 
+Friend[4]="Flatra" 
+uo.set('finddistance','20') 
+for t=0 to 1 
+repeat 
+uo.findtype("0x019"+str(t),"-1","ground") 
+temp=0 
+for k=0 to endlist 
+if Uo.GetName("finditem")==Friend[k] and uo.findcount()<>0 then 
+UO.Ignore("finditem") 
+k=endlist 
+temp=1 
+end if 
+next 
+if temp==0 and uo.findcount()<>0 then 
+if status==0 and uo.getnotoriety("finditem")>2 then 
+UO.addobject('Enemy',uo.getserial("finditem")) 
+Uo.print ("Curent target = "+uo.getname('Enemy')) 
+uo.ignore('Enemy') 
+a = uo.getserial('finditem') 
+uo.attack( a ) 
+
+return 
+else 
+if status==1 then 
+UO.addobject('Enemy',uo.getserial("finditem")) 
+Uo.print("Curent target = "+uo.getname('Enemy')) 
+uo.ignore('Enemy') 
+a = uo.getserial('finditem') 
+uo.attack( a ) 
+return 
+else 
+uo.ignore("finditem") 
+end if 
+end if 
+end if 
+until uo.findcount()==0 
+if uo.findcount()==0 then 
+UO.IgnoreReset() 
+end if 
+next 
+end sub 

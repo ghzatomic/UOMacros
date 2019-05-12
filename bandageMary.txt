@@ -1,0 +1,124 @@
+sub healpassive() ; Funcao q permite que você se heale, ao perder life, Usa-se Bandagens 
+   UO.Set( 'injectecho', '1' )
+   
+   while NOT UO.Dead() 
+      uo.deletejournal()
+      if UO.InJournal("You are frozen ") then
+         uo.print("Desparaliza")
+         desparaliza()
+         wait(2000)
+      end if
+      #if (Uo.Poisoned()) then 
+      #   curarse()
+      #end if
+      if uo.mana < 30 then
+         tomaMana();
+      endif
+      if (UO.Life < UO.str)  then
+         executaHeal()
+         
+         wait(200)
+         #Armas1()
+         #wait(3800)          
+      end if
+      
+      if UO.Stamina < 40 then
+         agilidade()
+      endif 
+      wait(20)
+   wend 
+end sub 
+
+sub desparaliza()
+   if (uo.mana<4) then
+      uo.usetype('0x0F02','0x0000')
+   else
+      uo.waittargettype('0x0F02','0x0000')
+      uo.print("Saindo de paralize")
+      uo.cast('Clumsy')
+   end if
+end sub
+
+sub curarse()
+   uo.print("cura")
+   uo.waittargetself()
+   uo.cast('cure')
+end sub
+
+
+sub executaHeal()
+   
+   if (UO.Life < 20)  then
+      if uo.count("0x0F82","0x017F")>0 then
+         uo.print("Socorro !! bebendo potion")
+         uo.usetype("0x0F82","0x017F")
+      else
+         uo.print("Aplicando bandage")
+         UO.bandageself()
+         wait(4800)
+      end if  
+   else
+      uo.print("Aplicando bandage")
+      UO.bandageself()
+      wait(4800)
+   end if
+   
+end sub
+
+sub tomaMana()
+   if uo.mana < 30 then   
+      uo.print("Refiling : "+str(uo.count("0x0F82","0x0532")))
+      uo.print("Refresh : "+str(uo.count("0x0F0E","0x0480")))
+      if uo.mana < 40 and uo.mana > 10 then 
+         if uo.count("0x0F0E","0x0480")>0 then
+            uo.print("Tomando refresh")
+            tomarTotalManaRefresh();
+         else
+            uo.print("Tomando refiling")
+            tomarTotalManaRefiling();
+         end if
+      else
+         if uo.count("0x0F82","0x0532")>0 then
+            uo.print("Tomando refiling")
+            tomarTotalManaRefiling();
+         else
+            if (uo.count("0x0F0E","0x0480") > 0) then 
+               uo.print("Tomando refresh")
+               tomarTotalManaRefresh();
+            else
+               meditar();
+            end if
+         end if
+         
+      end if
+   end if
+end sub
+
+sub meditar()
+   
+   var medit = 0	   
+   uo.print("Meditando")  
+   uo.Useskill('Meditation') 
+   if UO.InJournal("You attempt a meditative trance") then
+      medit=1
+      uo.print("Medit OK !") 
+   end if
+   if UO.InJournal("Voce perdeu sua concentracao") then
+      medit=0
+      uo.print("Reiniciando a medit") 
+   end if
+   
+end sub
+
+sub agilidade()
+   uo.usetype(0x0F0E)
+end sub
+
+sub tomarTotalManaRefresh()     
+   uo.usetype(0x0F0E,0x0480)   
+end sub
+
+sub tomarTotalManaRefiling()     
+   uo.usetype(0x0F82,0x0532)   
+end sub
+
