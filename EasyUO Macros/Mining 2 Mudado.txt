@@ -1,0 +1,310 @@
+;-----------------------------------------------------
+; MACRO DE MINING EM MINOC
+; HELLFIRE
+; By BlackBeard
+;------------------------------
+
+initEvents
+for %i 1 12
+set %ore . %i #TRUE
+
+; configurações
+set %pickaxe NPF_QPF
+event macro 8 7
+set #contposx -1
+set #contposy 620
+
+;começa mineração
+mining:
+if ( #weight >= #maxweight - 8 )
+{
+gosub volta
+}
+
+set #ltargetid 0
+set #ltargetz 001
+set #ltargetkind 2
+gosub %cont1 1
+
+Set %cont1 %cont1 + 1
+
+if ( %cont1 > 7 )
+{
+Set %cont1 0
+goto caminha
+}
+goto mine
+
+mine:
+set %tempo 0
+if ( #hits < #maxhits )
+{
+gosub guards
+}
+
+finditem NPF_QPF
+set #lobjectid #findid
+event macro 17 0
+target
+event macro 22 0
+goto jornal
+
+jornal:
+deletejournal
+scanjournal 1
+if ( iron ) in #journal
+{
+finditem DWJ C_ , #backpackid
+for #FINDINDEX 1 #FINDCNT
+{
+if ( #findcol = 0 )
+{
+if ( #findstack > 100 )
+{
+event Drag #FINDID
+wait 15
+msg 10$
+Exevent DropG #CHARPOSX #CHARPOSY #CHARPOSZ
+}
+}
+}
+wait 20
+goto mining
+}
+if (false)
+{
+finditem DWJ C_ , #backpackid
+for #FINDINDEX 1 #FINDCNT
+{
+if ( #findcol = 1601 ) + ( #findcol = 2001 ) + ( #findcol = 1024 ) + ( #findcol = 28 ) + ( #findcol = 1904 ) + ( #FINDCOL = 1301 ) + ( #FINDCOL = 1953 )
+{
+Exevent Drag #FINDID #FINDSTACK
+wait 10
+Exevent DropG #CHARPOSX #CHARPOSY #CHARPOSZ
+}
+}
+goto mining
+}
+if ( Tente_minerar ) in #journal
+{
+wait 50
+goto mining
+}
+if ( nao_ha_nada ) in #journal
+{
+wait 20
+goto mining
+}
+if ( isto_esta_muito ) in #journal
+{
+wait 20
+goto mining
+}
+if ( Voce_nao_tem_uma_linha_de_visao ) in #journal
+{
+wait 20
+goto mining
+}
+if ( Voce_pos ) in #journal
+{
+
+goto mine
+}
+if ( Muito_distante ) in #journal
+{
+goto mining
+}
+if ( Voce_nao ) in #journal
+{
+goto mine
+}
+if ( Voce_tem_que_aguardar ) in #journal
+{
+wait 80
+goto mine
+}
+if ( O_alvo ) in #journal
+{
+goto mine
+}
+if You_notice in #journal
+{
+gosub guards
+gosub heal
+}
+if TRYING_TO_STEAL in #journal
+{
+gosub guards
+gosub heal
+}
+if ATTACKING_YOU in #journal
+{
+gosub guards
+gosub heal
+}
+
+if HITS_YOU in #journal
+{
+gosub guards
+gosub heal
+}
+set %tempo %tempo + 1
+if %tempo = 400
+{
+goto mining
+}
+goto jornal
+
+caminha:
+gosub %funcao 2
+move #ltargetx #ltargety 0 2s
+Set %funcao %funcao + 1
+if ( %funcao > 7 )
+{
+Set %funcao 0
+}
+goto mining
+
+sub 0
+set #ltargetx #charposx
+set #ltargety #charposy - %1
+return
+
+sub 1
+set #ltargetx #charposx + %1
+set #ltargety #charposy - %1
+return
+
+sub 2
+set #ltargetx #charposx + %1
+set #ltargety #charposy
+return
+
+sub 3
+set #ltargetx #charposx + %1
+set #ltargety #charposy + %1
+return
+
+sub 4
+set #ltargetx #charposx
+set #ltargety #charposy + %1
+return
+
+sub 5
+set #ltargetx #charposx - %1
+set #ltargety #charposy + %1
+return
+
+sub 6
+set #ltargetx #charposx - %1
+set #ltargety #charposy
+return
+
+sub 7
+set #ltargetx #charposx - %1
+set #ltargety #charposy - %1
+return
+
+sub heal
+
+finditem ZLF
+if #findkind = -1 3
+   {
+      event sysmessage All out of bandages
+      pause
+   }
+   set #lobjectid #findid
+   event macro 17
+   target 5s
+   event macro 23
+   wait 3s
+}
+
+return
+
+sub guards
+
+wait 2s
+event macro 13 14 ;detect hidden
+gosub susto
+wait 2s
+msg guards $
+gosub heal
+wait 2s
+
+return
+
+sub susto
+set %random #random % 15
+if %random < 2
+  {
+  msg :S $
+  return
+  }
+if %random < 4
+  {
+  msg no flagra ueahuaehu $
+  return
+  }
+if %random < 6
+  {
+  msg OPA OPA OPA OPA OPA OPAAAAAA $
+  return
+  }
+if %random < 8
+  {
+  msg olha olha olha.... $
+  return
+  }
+if %random < 11
+  {
+  msg eae? ta se divertindo? $
+  return
+  }
+if %random < 13
+  {
+  msg ahhh para vai $
+  return
+  }
+if %random < 16
+  {
+  msg OE OE OE OOOOE! $
+  return
+  }
+return
+
+sub volta
+;move 5302 1908 0
+;move 5286 1912 0
+;move 5271 1926 0
+goto inicio
+
+inicio:
+wait 1s
+set #nextCPosX 10
+set #nextCPosY 10
+msg $bank$
+wait 1s
+finditem DWJ_EWJ_GWJ_BVF_UVF_EVF_OVF_VUF_HVF_FVF_GVF_TZF
+event drag #findid
+wait 1s
+key enter
+wait 1s
+click 55 130 p
+wait 2s
+if ( #findkind = -1 )
+{
+goto ida
+}
+else
+goto inicio
+
+
+;banco/mina
+ida:
+;move 5286 1912 0
+;move 5302 1908 0
+;event PathFind 5322 1907
+goto mining
+
+

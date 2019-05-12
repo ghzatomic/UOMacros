@@ -1,0 +1,98 @@
+//setting aliases 
+if not @findalias 'init1'
+  sysmsg 'Target a restock container' 232
+  promptalias 'fletch_restock' 0x42d175f5  
+  sysmsg 'Target the trash barrel' 232
+  @setalias 'init1' 'self'
+  promptalias 'trash1' 0x4249518f
+endif
+if not listexists 'craftbows'
+  createlist 'craftbows'
+  pushlist 'craftbows' 0x13b2
+  pushlist 'craftbows' 0xf50
+  pushlist 'craftbows' 0x26c2
+  pushlist 'craftbows' 0x13fd
+  pushlist 'craftbows' 0x26c3
+endif
+//Tinker skill check
+if skill 'Tinkering' < 45
+  sysmsg 'Tinkering skill is too low, train it first' 232
+  stop
+endif
+// check for ingots
+if counttype 0x1bf2 0 'backpack' < 10
+  movetype 0x1bf2 'fletch_restock' 'backpack'[(0 0 0)] 0 45
+  pause 650
+endif
+//craft tinker kits
+//=================
+while @counttype 0x1eb8 0 'backpack' < 3
+  usetype! 0x1eb8
+  waitforgump 0x38920abd 2000
+  @replygump 0x38920abd 8
+  waitforgump 0x38920abd 2000
+  @replygump 0x38920abd 23
+  waitforgump 0x38920abd 2000
+endwhile
+//check for fletching kits
+while @counttype 0x1022 0 'backpack' < 3
+  usetype 0x1eb8
+  waitforgump 0x38920abd 2000
+  @replygump 0x38920abd 8
+  waitforgump 0x38920abd 2000
+  @replygump 0x38920abd 142
+  waitforgump 0x38920abd 2000
+endwhile
+//check backpack for boards
+if counttype 0x1bd7 0 'backpack' < 40
+  movetype 0x1bd7 'fletch_restock' 'backpack'[(0 0 0)] 0 245
+  pause 650
+endif
+// Crafting bows
+If skill 'Bowcraft' > 90
+usetype 0x1022
+waitforgump 0x38920abd 1500
+replygump 0x38920abd 15
+waitforgump 0x38920abd 1500
+replygump 0x38920abd 30
+waitforgump 0x38920abd 1500
+elseif skill 'Bowcraft' > 80 and skill 'Bowcraft' < 90
+usetype 0x1022
+waitforgump 0x38920abd 1500
+replygump 0x38920abd 15
+waitforgump 0x38920abd 1500
+replygump 0x38920abd 16
+elseif skill 'Bowcraft' > 70 and skill 'Bowcraft' < 80
+usetype 0x1022
+waitforgump 0x38920abd 1500
+replygump 0x38920abd 15
+waitforgump 0x38920abd 1500
+replygump 0x38920abd 23
+elseif skill 'Bowcraft'> 60 and skill 'Bowcraft' < 70
+usetype 0x1022
+waitforgump 0x38920abd 1500
+replygump 0x38920abd 15
+waitforgump 0x38920abd 1500
+replygump 0x38920abd 9
+elseif skill 'Bowcraft' < 60
+usetype 0x1022
+waitforgump 0x38920abd 1500
+replygump 0x38920abd 15
+waitforgump 0x38920abd 1500
+replygump 0x38920abd 2
+else
+usetype 0x1022
+waitforgump 0x38920abd 1500
+replygump 0x38920abd 21
+endif
+//Handling trash
+for 0 to 'craftbows'
+while @findtype craftbows[] 'any' 'backpack'
+  moveitem 'found' 'trash1'
+  pause 650
+endwhile
+endfor
+if skill 'Bowcraft' = 100
+ sysmsg 'Congrats!!' 232
+ stop
+endif

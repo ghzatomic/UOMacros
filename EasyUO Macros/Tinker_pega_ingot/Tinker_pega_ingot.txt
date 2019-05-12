@@ -1,0 +1,157 @@
+; =====================================================================
+; Macro Tinker por Technoghost
+; Servidor: HellFire
+; Distribuição: Gratúita
+;Resolução do Monitor: 1024 x 768 
+;Resolução do UO: 800x600
+;Deixe seu UO o maximo possivel no canto superior esquerdo da tela (A janela interna do UO no caso )
+;O macro funciona em BRITAIN comece o macro no npc tinker.
+
+; ========================CONFIGURAÇÕES INICIAIS -=====================
+
+initevents
+wait 1s
+event sysmessage Conheca o portal de UO da TkS Guild.
+event sysmessage  www.tksguild.com.br
+
+;===============Configura as variaveis===============
+set %Tinker_Tools GTL
+set %Food  YLI_RGG
+set %ingot RMK
+set %gold POF
+set %gears RCG
+;===============================================
+
+Inicio:
+
+;Abre bag
+event macro 8 7
+wait 1s
+contpos 806 308
+
+finditem %ingot
+if #findkind = 0
+{
+goto faz_item
+}
+else
+{
+goto pega_ingot
+}
+
+
+
+faz_item:
+finditem %Tinker_Tools
+set #LObjectID  #FindID
+event macro 17 0
+wait 3s
+click 57 63 d
+wait 3s
+click 106 56 d
+wait 5s
+finditem %gears
+if #findkind = 0
+{
+goto Vender
+}
+else
+}
+goto Inicio
+}
+
+
+Vender:
+msg Antonia sell$
+wait 1s
+click 236 78 d
+wait 3s
+click 309 423 d
+wait 3s
+finditem %gears
+if #findkind = 0
+{
+goto Vender
+}
+else
+}
+goto Inicio
+}
+
+
+
+pega_ingot:
+move 1425 1659 a
+move 1425 1658 a
+move 1429 1658 a
+click 352 255 d ; <<<< Abre a porta do npc
+move 1435 1658 a
+move 1435 1678 a
+
+;Abre Bag
+event macro 8 7
+wait 1s
+contpos 806 308
+
+;Abre banco
+msg bank$
+wait 2s
+contpos 604 6
+
+;Guarda Ouro
+finditem %gold
+event drag #findid
+wait 1s
+msg $
+wait 1s
+click 716 159 d ; <<<<< Posicao de uma bag pra guardar o ouro no seu banco
+wait 1s
+
+;Pega Iron
+click 716 159  d ; <<<<<<<<<<< Posicao de uma bag ira conter iron ingots
+wait 1s
+finditem %ingot
+event drag #findid
+wait 2s 
+msg 200 $
+wait 1s 
+click 931 414 d
+wait 1s 
+goto volta_tinker
+
+
+volta_tinker:
+finditem %Food
+set #LObjectID  #FindID
+event macro 17 0
+wait 1s
+
+finditem %Food
+set #LObjectID  #FindID
+event macro 17 0
+wait 1s
+
+finditem %Food
+set #LObjectID  #FindID
+
+
+event macro 17 0
+
+
+
+wait 1s
+
+finditem %Food
+set #LObjectID  #FindID
+event macro 17 0
+wait 1s
+
+move 1435 1658 a
+move 1433 1658 a
+click 385 212 d ; <<<<<<<< Abre a porta do npc  de novo hehe
+move 1425 1657 a
+move 1425 1660 a
+goto Inicio
+
+
+

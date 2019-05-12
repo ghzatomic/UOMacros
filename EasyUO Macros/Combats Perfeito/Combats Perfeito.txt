@@ -1,0 +1,1074 @@
+;   =============================================================================================== 
+; Script Name: Piece of Cake Sparring 
+; Author: una 
+; Version:  V 1.36 
+; Client Tested with: 4.0.2a 
+; EUO version tested with: V1.42.0081 /82 
+; Shard OSI / FS: OSI 
+; Update release: Thur 20 May 04 
+; FirstPublic Release: 13, 4 -04 
+; Global Variables Used: *903 
+; Purpose: Train ANY weapons skill with NPC sparring partner, It heals you and him, KEEPS HIM ALIVE 100% guaranteed. 
+;=============================================================================================== 
+
+;************************************************************************************************************************************* 
+;*UPDATE BOX 
+;* V. 1.01    |    wed 14 april 04 Added support for magery and chivalry, added "auto config", if out of bandages, halt. 
+;* V. 1.02  |    wed 14 april 04 Added SkillGainMonitor, Fixed dealays between messages and disarming 
+;* V. 1.1   |    wed 14 april 04 Added Menusystem, panic button , arrow collector, fixed some issues with disarm 
+;* V. 1.11  |    thur 15 april 04 Added Now arrow collect is visible only if you train archery. Fixed menu issues 
+;* V. 1. 12 |    thur 15 april 04 Added Stop button, wrestling skill 
+;* V. 1.13  |    thur 15 april 04 Fixed paperdoll/backpack issue, where sometimes i did not get right id (then i wont find weps or bandages) 
+;* V. 1.14  |    fri 16 april 04    Fixed disarm issue, where it did not arm/disarm 2 handed swords or anything else than bows 
+;*                                            Added bytcher knife to swords 
+;* V. 1.2   |    sat 17 april 04 Complete rewrite of everything, almost 
+;* V. 1.22  |   sun 18 april 04 Bandage Counter added, added Lumberjacking support 
+;* V. 1.23  |   thus 20 april 04 Tweaked some delays to make it more secure, added little this and that ;d 
+;* V. 1.3   |    wed 21 april 04 Added Gain/hour system Also calculating bandage use per hour, runtime, statusbar capture, changed second menu size to much smaller  
+;* V. 1.31  |    wed 21 april 04 Tweaked heal/disarm timers 
+;* V. 1.35  |    sunday 16 May 04 Added Tactics monitoring and fixed few things :D 
+;*         Added On-The-Fly controlls for whentoheal disarm and rearm. Added Arrow collector 
+;*         Fixed AXE bug, when axes would not arm and disarm.. should now work. 
+;* V. 1.36   |   Added Cleaver to swords list    
+;************************************************************************************************************************************* 
+INITEVENTS 
+SET #MENUBUTTON N/A 
+SET *903 no 
+event sysmessage Conheca o portal de UO da TkS Guild.
+event sysmessage  www.tksguild.com.br
+;*Should be all wep/shield types 
+
+SET %WepArcheryList PPO_WOH_USF_LMH_QPO 
+SET %WepFencingList TSF_VRH_OPO_CUO_XRH_MTF_RRH 
+SET %WepSwordsList CNF_FUO_ATF_NPO_JPH_NMH_JTF_SOH_BPH_HSF_ZTO_BUO_XTH_GUO_GMH_HNF    ;ZTO bladed staff fenc or swords? BUO d bladed stuff 
+SET %WepAxeList LSF_BSF_NSF_ZRF_RMH_LPH_UOH 
+SET %WepMaceList VTH_YSF_BUH_AUO_TRH_ZTH 
+;SET %ShieldList GIK_FIK_CIK_NIK_AIK_MIK_HLK_CLK ; Not needed yet 
+
+;************************** 
+;************************** 
+;************************** 
+; CHANGE THESE SETTINGS IF YOU THINK THAT HEALING OR DISARMING SHOULD BE STARTED EARLIER OR LATER 
+; IF YOU USE MAGERY YOU SHOULD SET %WhenToHeal to 60's, cos it heals LOT faster and allwasy succeed if magery good.. 
+;And remember to keep disarm lower than heal 
+
+SET %WhenToDisarm 75 
+SET %WhenToReArm 90 
+SET %WhenToHeal 90 
+
+;************************** 
+;************************** 
+;************************** 
+
+SET %HealDudeDelay 80 
+SET %HealSelfDelay 200 
+SET %DisarmDelay 20 
+SET %BandagesUsed 0 
+
+SET %StartTime #SCNT 
+
+;*Start Gosubbing :D ( i like subs ) 
+   GOSUB InfoText clear_all 
+   GOSUB Menu1 
+   GOSUB GetMenu1Answer 
+   GOSUB ChangeNumbersToSkills 
+   GOSUB Menu2 
+   GOSUB InitUoConts 
+   GOSUB InfoText Target_your_sparring_Dude_now! 
+   GOSUB GetDudesID 
+   GOSUB InfoText clear_all 
+   GOSUB SkillMonitor %SkillToTrainShort anat tact heal mage chiv lumb 
+   GOSUB StartSkillsToMenu 
+   GOSUB SkillMonitor %SkillToTrainShort anat tact heal mage chiv lumb 
+   GOSUB SkillsGainAndNowToMenu 
+   GOSUB Heal 
+   GOSUB HealSelf 
+   GOSUB InitTitlebar 
+   GOSUB Attack 
+   GOSUB InfoText disable 
+
+
+
+
+MainLoop: 
+
+   GOSUB IsItTimeToYellAllGuardMe 
+   GOSUB FindDude 
+
+IF %SkillToTrain <> wrestling 
+      GOSUB DisarmWhenDudeIsLowHp 
+
+   GOSUB Heal 
+   GOSUB HealSelf 
+
+    IF *903 = no | | %SkillToTrain = wrestling 
+      GOSUB CheckWep 
+
+   GOSUB CheckMenuButtons 
+   GOSUB SkillMonitor %SkillToTrainShort anat tact heal mage chiv lumb 
+   GOSUB SkillsGainAndNowToMenu 
+   GOSUB InitTitlebar 
+
+GOTO MainLoop 
+
+
+
+
+; ======================================================================    
+;  ******SUBS START HERE, DO NOT EDIT OR ALTER THESE UNLESS YOU ARE 
+;  ***** FAMILIAR WITH EUO LANGUAGE.       
+; ====================================================================== 
+
+;========================================== 
+;*******  Starts the menu system     
+;========================================== 
+
+SUB Menu2 
+   menu Clear 
+   menu Window Title Piece Of Cake Sparring | V: 1.35 | by una 
+   menu Window Color Highlight 
+   menu Window Size 480 280 
+   menu Font Transparent #true 
+   menu Font Align Right 
+   menu Font Name Fixedsys 
+   menu Font Size 8 
+   menu Font Style 
+   menu Font Color Silver 
+   menu Font Align Left 
+   menu Font BGColor Highlight 
+   menu Text EUOLabel2 200 20 Name: 
+   menu Font Align Right 
+   menu Text skilltotraintext 250 72 %SkillToTrain : 
+   menu Text anatomytext 250 92 Anatomy: 
+
+
+IF %HowToHeal = bandage 
+   { 
+   menu Text healingtext 250 132 Healing: 
+   menu Text bandagetext 250 172 Bandages Used: 
+   } 
+IF %HowToHeal = magery 
+   menu Text magerytext 250 132 Magery: 
+
+IF %HowToHeal = Chivalry 
+   menu Text chivalrytext 250 132 Chivalry: 
+
+IF %SkillToTrain = lumberjacking 
+   menu Text lumbertext 250 152 Lumberjacking: 
+
+
+
+   menu Text timeusedtext 250 192 Time Used: 
+   menu Text skilltacticstext 250 112 Tactics: 
+   menu Font Align Left 
+   menu Text skillstarttext 274 52 Start: 
+   menu Text skillgaintext 342 52 Gain: 
+   menu Text skillnowtext 390 52 Now: 
+   menu Text skillperhourtext 440 52 /h 
+
+;ill keep these here, dunno reason, but... but..  :D 
+;   menu Text chivalrystart 400 152 Now: 
+;   menu Text magerygain 460 132 Now: 
+;   menu Text magerystart 400 132 Now: 
+;   menu Text healinggain 460 112 Now: 
+;   menu Text healingstart 400 112 Now: 
+;   menu Text anagain 460 92 Now: 
+;   menu Text anastart 400 92 Now: 
+;   menu Text sttgain 460 72 Now: 
+;   menu Text sttstart 400 72 Now: 
+;   menu Text healingnow 520 112 Now: 
+;   menu Text sttnow 520 72 Now: 
+;   menu Text ananow 520 92 Now: 
+;   menu Text chivalrynow 520 152 Now: 
+;   menu Text chivalrygain 460 152 Now: 
+;   menu Text magerynow 520 132 Now: 
+
+   menu Text namehere 250 20 #CHARNAME 
+   menu Font Color WindowText 
+   menu Font BGColor Red 
+   menu Button panic 8 12 113 73 PANIC 
+   menu Font Size 12 
+   menu Font Color Silver 
+   menu Font BGColor Background 
+   menu Button Exit 8 220 169 41 EXIT 
+   menu Font Size 8 
+
+   IF %SkillToTrain = archery 
+      menu Button arrows 8 104 169 41 Collect arrows/bolts 
+
+   menu Edit edit_1 8 150 35 %WhenToHeal 
+   menu Edit edit_2 8 170 35 %WhenToDisarm 
+   menu Edit edit_3 8 190 35 %WhenToReArm 
+   menu text heal 45 150 HealDude! 
+   menu text disarm 45 170 Disarm 
+   menu text rearm 45 190 Rearm 
+   menu Show 400 270 
+
+return 
+SUB Menu1 
+   menu Clear 
+   menu HideEUO 
+   menu Window Title Piece Of Cake Sparring |  V: 1.35 | by una 
+   menu Window Color Highlight 
+   menu Window Size 590 365 
+   menu Font Transparent #true 
+   menu Font Align Right 
+   menu Shape EUOShape1 12 268 385 5 3 7 1 Black 7 White 
+   menu Shape EUOShape2 404 12 5 245 3 7 1 Black 7 White 
+   menu Font Name Fixedsys 
+   menu Font Size 8 
+   menu Font Style 
+   menu Font Color Silver 
+   menu Font Align Left 
+   menu Font BGColor Highlight 
+   menu Text latestupdates 20 20 Latest Updates: 
+   menu Text updatetext 20 40 16 May 04  Rewrited the script$ 
+            + 16 5 04 Added Tactics monitor$ 
+   menu Text help 20 152 Help: 
+   menu Text helptext 20 172 Select your training things from comboboxes$ 
+            +Be sure to select from both,$ 
+            +or start button wont appear$ 
+   menu Font Name Fixedsys 
+   menu Font Color WindowText 
+   menu Font BGcolor  window 
+   menu Combo Create SkillToTrain 420 36 150 
+   menu Combo Add SkillToTrain Archery 
+   menu Combo Add SkillToTrain Fencing 
+   menu Combo Add SkillToTrain Swordmanship 
+   menu Combo Add SkillToTrain Mace Fighting 
+   menu Combo Add SkillToTrain Wrestling 
+   menu Combo Add SkillToTrain Lumberjacking 
+   menu Combo Create HowToHeal 420 84 150 
+   menu Combo Add HowToHeal Bandage 
+   menu Combo Add HowToHeal Magery 
+   menu Combo Add HowToHeal Chivalry 
+   menu Font Name Fixedsys 
+   menu Font Size 9 
+   menu Font Style 
+   menu Button EXIT 12 320 113 25 Exit 
+   menu Font Size 8 
+   menu Font Color Silver 
+   menu Font BGColor Highlight 
+   menu Check titlebarcheck 424 148 161 29 %UseTitlebarDisplay Capture TitleBar 
+   menu Show 400 270 
+return 
+
+
+
+
+SUB GetMenu1Answer 
+
+
+
+_MenuQ1Loop: 
+
+   MENU GET titlebarcheck 
+         SET %UseTitlebarDisplay #MENURES 
+   MENU GET SkillToTrain 
+      IF %SkillToTrain <> #MENURES 
+             SET %SkillToTrain #MENURES 
+   MENU GET HowToHeal 
+      IF %HowToHeal <> #MENURES 
+         SET %HowToHeal #MENURES 
+
+   IF %SkillToTrain <> 0 && %HowToHeal <> 0 
+      { 
+      IF %CheckQ1 <> 1 
+         { 
+         menu Font Name Fixedsys 
+         menu Font Size 14 
+         menu Font Style b 
+         menu Font Color WindowText 
+         menu Font BGColor BtnFace 
+         menu Button START 448 304 121 41 Start 
+         SET %CheckQ1 1 
+         } 
+      } 
+   IF #MENUBUTTON = EXIT 
+      HALT 
+   IF #MENUBUTTON = START 
+      { 
+      SET #MENUBUTTON N/A 
+      GOTO _OutFromQ1Loop 
+      } 
+
+GOTO _MenuQ1Loop 
+_OutFromQ1Loop: 
+RETURN 
+;========================================== 
+;*******  Ends the menu system     
+;========================================== 
+
+
+;========================================== 
+;** Changes number that combo menu gives to skill 
+;========================================== 
+
+
+SUB ChangeNumbersToSkills 
+
+
+IF %SkillToTrain = 1 
+   { 
+   SET %SkillToTrain archery 
+   SET %SkillToTrainShort arch 
+   } 
+IF %SkillToTrain = 2 
+   { 
+   SET %SkillToTrain fencing 
+   SET %SkillToTrainShort fenc 
+   } 
+
+IF %SkillToTrain = 3 
+   { 
+   SET %SkillToTrain swords 
+   SET %SkillToTrainShort swor 
+   } 
+IF %SkillToTrain = 4 
+   { 
+   SET %SkillToTrain mace 
+   SET %SkillToTrainShort mace 
+   } 
+IF %SkillToTrain = 5 
+   { 
+   SET %SkillToTrain wrestling 
+   SET %SkillToTrainShort wres 
+   } 
+IF %SkillToTrain = 6 
+   { 
+   SET %SkillToTrain lumberjacking 
+   SET %SkillToTrainShort lumb 
+   } 
+
+
+IF %HowToHeal = 1 
+   SET %HowToHeal bandage 
+
+IF %HowToHeal = 2 
+   SET %HowToHeal magery 
+
+IF %HowToHeal = 3 
+   SET %HowToHeal chivalry 
+
+RETURN 
+
+
+
+
+;========================================== 
+;******* Getting those ID:s and stuff    
+;========================================== 
+
+SUB InitUoConts 
+
+;*Close  Pdoll, inventory and statbar 
+EVENT MACRO 9 1 
+EVENT MACRO 9 2 
+EVENT MACRO 9 7 
+
+
+PaperdollLoop: 
+;*Paperdoll 
+EVENT MACRO 8 1 
+WAIT 10 
+
+IF #CONTNAME = paperdoll_gump 
+   { 
+   SET %PaperdollId #CONTID 
+   GOTO OutFromPaperdollLoop 
+   } 
+GOTO paperdollLoop 
+OutFromPaperdollLoop: 
+
+GOSUB InfoText Place_paperdoll 
+
+WAIT 3s 
+
+
+
+BackPackLoop: 
+;**Backpack 
+EVENT MACRO 8 7 
+WAIT 10 
+
+IF #CONTNAME = container_gump 
+   { 
+   SET %BackPackID #CONTID 
+   GOTO OutFromBackPackLoop 
+   } 
+GOTO BackPackLoop 
+OutFromBackPackLoop: 
+
+GOSUB InfoText Place_backpack 
+WAIT 3s 
+
+
+;**Statusbar 
+EVENT MACRO 8 2 
+GOSUB InfoText Place_statusbar 
+WAIT 3s 
+
+GOSUB InfoText clear_all 
+RETURN 
+
+
+;========================================== 
+;******* info text sub       
+;========================================== 
+;pass in sentence and ill show it to you in menu.. ok ? deal. 
+;%1 sentence 
+;IF %1 is clear_all, it clears all messages 
+SUB InfoText 
+   IF %1 = clear_all 
+      { 
+      menu delete infotext 
+      menu font color silver 
+      SET %msg3 _ 
+      SET %msg2 _ 
+      SET %msg1 _ 
+      SET %1 _ 
+      } 
+   IF %1 = disable 
+      { 
+      SET %InfoDisabler on 
+      menu delete infotext 
+      } 
+IF %InfoDisabler <> on 
+   { 
+   SET %msg3 %msg2 
+   SET %msg2 %msg1 
+   SET %msg1 %1 
+   menu Font Size 8 
+   menu Font Color black 
+   menu delete infotext 
+   menu text infotext 200 217 %msg1 
+   menu font color silver 
+   menu text infotext 200 237 %msg2 
+   menu text infotext 200 257 %msg3 
+   } 
+
+RETURN 
+
+
+
+
+;========================== 
+;***** HEAL Sparring dude  
+;========================== 
+SUB Heal 
+
+IF #ENEMYHITS <= %WhenToHeal 
+{ 
+HealAgain: 
+IF %HowToHeal = magery 
+   { 
+   IF #MANA >= 11 
+      { 
+      EVENT MACRO 15 28 
+      SET #LTARGETID %SparringDudeId 
+      TARGET 
+      EVENT MACRO 22 0 
+      } 
+   ELSE 
+      { 
+      SET *903 yes 
+      } 
+   } 
+IF %HowToHeal = chivalry 
+   { 
+   EVENT MACRO 15 202 
+   SET #LTARGETID %SparringDudeId 
+   TARGET 
+   EVENT MACRO 22 0 
+   } 
+IF %HowToHeal = bandage 
+   { 
+   FINDITEM ZLF C_ , %BackpackID 
+   IF #FINDKIND <> -1 
+      { 
+      SET #LOBJECTID #FINDID 
+      SET #LTARGETID %SparringDudeID 
+      EVENT MACRO 17 0 
+      TARGET 
+      EVENT MACRO 22 0 
+      WAIT %HealDudeDelay 
+      SET %BandagesUsed %BandagesUsed + 1 
+      IF #ENEMYHITS <= %WhenToHeal 
+         GOTOHealAgain: 
+      } 
+   IF #FINDKIND = -1 
+      { 
+      DISPLAY OK You are out of bandages!$ 
+         + Go get some more and press start when ready$ 
+      PAUSE 
+      } 
+   } 
+} 
+HealDudeWait: 
+RETURN 
+
+;========================== 
+; ***** HEAL You    
+;========================== 
+
+SUB HealSelf 
+IF #HITS <= 50 
+{ 
+IF %HowToHeal = magery 
+   { 
+   IF #MANA > 11 
+      { 
+      EVENT MACRO 15 28 
+      TARGET 
+      EVENT MACRO 23 0 
+      } 
+   } 
+IF %HowToHeal = chivalry 
+   { 
+   EVENT MACRO 15 202 
+   TARGET 
+   EVENT MACRO 23 0 
+   } 
+
+
+IF %HowToHeal = bandage 
+   { 
+   FINDITEM ZLF C_ , %BackpackID 
+      IF #FINDKIND <> -1 
+         { 
+         SET #LOBJECTID #FINDID 
+         EVENT MACRO 17 0 
+         TARGET 
+         EVENT MACRO 23 0 
+         WAIT %HealSelfDelay 
+         SET %BandagesUsed %BandagesUsed + 1 
+         } 
+
+      IF #FINDKIND = -1 
+         { 
+         DISPLAY OK You are out of bandages!$ 
+            + Go get some more and press start when ready$ 
+         PAUSE 
+         } 
+
+   } 
+} 
+RETURN 
+
+
+;========================== 
+;***** Attack Tha DUDE     
+;========================== 
+
+SUB Attack 
+
+FINDITEM %SparringDudeID 
+   IF #FINDKIND <> -1 
+      { 
+      SET #LTARGETID %SparringDudeID 
+      MSG #smc All Follow Me$ 
+      WAIT 10 
+      MSG #smc All Guard Me$ 
+      WAIT 10 
+      EVENT MACRO 27 0 
+      WAIT 10 
+      MSG #smc All Follow Me$ 
+      WAIT 10 
+      MSG #smc All Guard Me$ 
+      WAIT 10 
+      MSG #smc All Guard Me$ 
+      WAIT 10 
+      } 
+   ELSE 
+      { 
+      Display Ok Im sorry but, your Dude is dead$ 
+         + Hire new and press start when you are ready$ 
+      PAUSE 
+      } 
+
+RETURN 
+
+;========================== 
+;*****  Disarms If needed    
+;========================== 
+
+SUB DisarmWhenDudeIsLowHp 
+
+IF #ENEMYHITS <= %WhenToDisarm 
+   { 
+   IF *903 = no 
+      { 
+      IF %SkillToTrain = lumberjacking 
+         { 
+         EVENT MACRO 24 1 
+         } 
+      ELSE 
+         { 
+         EVENT MACRO 24 2 
+         } 
+      WAIT %DisarmDelay 
+      set *903 yes 
+      } 
+   } 
+
+IF #ENEMYHITS >= %WhenToReArm 
+   { 
+   IF *903 = yes 
+      { 
+      IF %SkillToTrain = lumberjacking 
+         { 
+         EVENT MACRO 24 1 
+         } 
+      ELSE 
+         { 
+         EVENT MACRO 24 2 
+         } 
+      WAIT %DisarmDelay 
+      set *903 no 
+      } 
+   } 
+
+RETURN 
+
+;================================= 
+; ***** Search for weps and arm one  
+;================================= 
+
+SUB CheckWep 
+
+; First we look from Pdoll, if no wep there then we take a look at bag 
+
+IF %SkillToTrain = wrestling ;should not ever be needed, but just to be sure 
+   RETURN 
+ShouldBeArmedNow: 
+IF %SkillToTrain = archery 
+   FINDITEM %WepArcheryList C_ , %PaperdollId 
+IF %SkillToTrain = fencing 
+   FINDITEM %WepFencingList C_ , %PaperdollId 
+IF %SkillToTrain = swords 
+   FINDITEM %WepSwordsList C_ , %PaperdollId 
+IF %SkillToTrain = mace 
+   FINDITEM %WepMaceList C_ , %PaperdollId 
+IF %SkillToTrain = lumberjacking 
+   FINDITEM %WepAxeList C_ , %PaperdollId 
+
+IF #FINDKIND <> -1 
+   { 
+   SET %WepInUse #FINDID 
+   RETURN 
+   } 
+IF %SkillToTrain = archery 
+   FINDITEM %WepArcheryList C_ , %BackPackID 
+IF %SkillToTrain = fencing 
+   FINDITEM %WepFencingList C_ , %BackPackID 
+IF %SkillToTrain = swords 
+   FINDITEM %WepSwordsList C_ , %BackPackID 
+IF %SkillToTrain = mace 
+   FINDITEM %WepMaceList C_ , %BackPackID 
+IF %SkillToTrain = lumberjacking 
+   FINDITEM %WepAxeList C_ , %BackPackID 
+
+IF #FINDKIND <> -1 
+   { 
+   IF %SkillToTrain = lumberjacking 
+      { 
+      SET #LHANDID #FINDID 
+      EVENT MACRO 24 1 
+      } 
+   ELSE 
+      { 
+      SET #RHANDID #FINDID 
+      EVENT MACRO 24 2 
+      } 
+   WAIT %DisarmDelay 
+   GOTO ShouldBeArmedNow 
+   } 
+IF #FINDKIND = -1 
+   { 
+   DISPLAY OK You dont have any %SkillToTrain type weapon! $ 
+      + Go get some more and press play to continue $ 
+   PAUSE 
+   } 
+RETURN ; IF this works as intended this return has no use 
+
+
+
+
+;======================================== 
+;******** Get ID of Dudes    
+;======================================== 
+
+SUB GetDudesID 
+
+SET #TARGCURS 1 
+Loop: 
+IF #TARGCURS = 1 
+   GOTO Loop: 
+SET %SparringDudeID #LTARGETID 
+
+
+RETURN 
+
+
+
+;========================================= 
+;******* Finding dude           
+;========================================= 
+
+SUB FindDude 
+
+
+FINDITEM %SparringDudeID 
+   IF #FINDKIND = -1 
+      { 
+      DISPLAY OK Your sparring dude is dead/lost.$ 
+         + After you have got another Dude press start to resume$ 
+      PAUSE 
+      } 
+
+RETURN 
+
+
+
+;=============================================================================================== 
+; Script Name: Piece of Cake SkillMonitor 
+; Author: una 
+; Version:  V 1.0 
+; Client Tested with: 4.0.2a 
+; EUO version tested with: V1.42.007F 
+; Shard OSI / FS: OSI 
+; Update release:  
+; FirstPublic Release: SAT 17 april 04 
+; Global Variables Used: 
+; Purpose: Skill point parser :D  GOSUB  me with first 4 letter of skill and i give you the points of that skill in 0.0 form 
+;=============================================================================================== 
+
+SUB SkillMonitor 
+
+
+SET %Skill1 %1 
+SET %Skill2 %2 
+SET %Skill3 %3 
+SET %Skill4 %4 
+SET %Skill5 %5 
+SET %Skill6 %6 
+SET %Skill7 %7 
+SET %Skill8 %8 
+SET %Skill9 %9 
+SET %Skill10 %10 
+
+FOR %i 1 %0 
+   { 
+   CHOOSESKILL %Skill . %i 
+   SET %Skill . %i #SKILL 
+
+
+   IF %UseDot = yes 
+      { 
+      STR LEN %Skill . %i 
+         IF #STRRES = 2 
+            STR INS %Skill . %i #DOT 2 
+         IF #STRRES = 3 
+            STR INS %Skill . %i #DOT 3 
+         IF #STRRES = 4 
+            STR INS %Skill . %i #DOT 4 
+         SET %Skill . %i #STRRES 
+      } 
+    } 
+
+RETURN 
+
+
+;============================================== 
+;***** Skills have to be transfered to menu        
+;============================================== 
+
+
+SUB StartSkillsToMenu 
+
+;Skills that i ask from skillmonitor 
+;%SkillToTrainShort anat heal mage chiv 
+
+SET %MainSkillStart %Skill1 
+SET %SkillAnatomyStart %Skill2 
+SET %SkillTacticsStart %Skill3 
+SET %SkillHealingStart %Skill4 
+SET %SkillMageryStart %Skill5 
+SET %SkillChivalryStart %Skill6 
+SET %SkillLumberStart %Skill7 
+
+
+
+
+IF %SkillToTrain = lumberjacking 
+   menu text lumberstart 290 152 %SkillLumberStart 
+
+IF %HowToHeal = chivalry 
+   menu Text chivalrystart 290 132 %SkillChivalryStart 
+
+IF %HowToHeal = bandage 
+   menu Text healingstart 290 132 %SkillHealingStart 
+
+IF %HowToHeal = magery 
+   menu Text magerystart 290 132 %SkillMageryStart 
+
+   menu Text anastart 290 92 %SkillAnatomyStart 
+   menu Text sttstart 290 72 %MainSkillStart 
+   menu Text tactstart 290 112 %SkillTacticsStart 
+
+
+RETURN 
+
+
+
+;============================================== 
+;******** Inserts Gains and skillsnow stats to menu 
+;============================================== 
+
+SUB SkillsGainAndNowToMenu 
+
+SET #LPC 100 
+
+SET %MainSkillGained %Skill1 - %MainSkillStart 
+SET %SkillAnatomyGained %Skill2 - %SkillAnatomyStart 
+SET %SkillTacticsGained %Skill3 - %SkillTacticsStart 
+SET %SkillHealingGained %Skill4 - %SkillHealingStart 
+SET %SkillMageryGained %Skill5 - %SkillMageryStart 
+SET %SkillChivalryGained %Skill6 - %SkillChivalryStart 
+SET %SkillLumberGained %Skill7 - %SkillLumberStart 
+
+
+
+SET %MainSkillNow %Skill1 
+SET %SkillAnatomyNow %Skill2 
+SET %SkillTacticsNow %Skill3 
+SET %SkillHealingNow %Skill4 
+SET %SkillMageryNow %Skill5 
+SET %SkillChivalryNow %Skill6 
+SET %SkillLumberNow %Skill7 
+
+SET %TimeUsed ( #SCNT - %StartTime ) / 60 
+
+SET %MainGainInHour %MainSkillGained * 3600 / ( #SCNT - %StartTime ) 
+SET %SkillAnatomyInHour %SkillAnatomyGained * 3600 / ( #SCNT - %StartTime ) 
+SET %SkillTacticsInHour %SkillTacticsGained * 3600 / ( #SCNT - %StartTime ) 
+SET %SkillHealingInHour %SkillHealingGained * 3600 / ( #SCNT - %StartTime ) 
+SET %SkillMageryInHour %SkillMageryGained * 3600 / ( #SCNT - %StartTime ) 
+SET %SkillChivalryInHour %SkillChivalryGained * 3600 / ( #SCNT - %StartTime ) 
+SET %SkillLumberInHour %SkillLumberGained * 3600 / ( #SCNT - %StartTime ) 
+SET %BandagesInHour %BandagesUsed * 3600 / ( #SCNT - %StartTime ) 
+
+
+
+menu delete sttgain 
+menu delete anagain 
+menu delete healinggain 
+menu delete magerygain 
+menu delete chivalrygain 
+menu delete lumbergain 
+menu delete tacticsgain 
+
+menu delete tacticsnow 
+menu delete sttnow 
+menu delete ananow 
+menu delete healingnow 
+menu delete magerynow 
+menu delete chivalrynow 
+menu delete lumbernow 
+
+menu delete timeused 
+menu delete bandageused 
+
+menu delete maininhour 
+menu delete bandageinhour 
+menu delete mageryinhour 
+menu delete healinginhour 
+menu delete chivalryinhour 
+menu delete lumberinhour 
+menu delete anainhour 
+menu delete tacticsinhour 
+
+
+
+IF %HowToHeal = bandage 
+   { 
+   menu Text healinggain 350 132 %SkillHealingGained 
+   menu Text healingnow  395 132 %SkillHealingNow 
+   menu Text healinginhour 440 132 %SkillHealingInHour 
+   menu Text bandageused 290 172 %BandagesUsed 
+   menu Font Align right 
+   menu Text bandageinhour 440 172 %BandagesInHour 
+   menu Font Align left 
+   } 
+IF %HowToHeal =magery 
+   { 
+   menu Text magerygain 350 132 %SkillMageryGained 
+   menu Text magerynow 395 132 %SkillMageryNow 
+   menu text mageryinhour 440 132 %SkillMageryInHour 
+   } 
+IF %HowToHeal = chivalry 
+   { 
+   menu Text chivalrygain 350 132 %SkillChivalryGained 
+   menu Text chivalrynow 395 132 %SkillChivalryNow 
+   menu Text chivalryinhour 440 132 %SkillChivalryInHour 
+   } 
+IF %SkillToTrain = lumberjacking 
+   { 
+   menu Text lumbergain 350 152 %SkillLumberGained 
+   menu Text lumbernow 395 152 %SkillLumberNow 
+   menu Text lumberinhour 440 152 %SkillLumberInHour 
+   } 
+
+   menu Text sttgain 350 72 %MainSkillGained 
+   menu Text sttnow 395 72 %MainSkillNow 
+   menu Text ananow 395 92 %SkillAnatomyNow 
+   menu Text anagain 350 92 %SkillAnatomyGained 
+   menu Text tacticsgain 350 112 %SkillTacticsGained 
+   menu Text tacticsnow 395 112 %SkillTacticsNow 
+
+   menu Text timeused 290 192 %TimeUsed 
+
+   menu Text maininhour 440 72 %MainGainInHour 
+   menu Text anainhour 440 92 %SkillAnatomyInHour 
+   menu Text tacticsinhour 440 112 %SkillTacticsInHour 
+
+
+SET #LPC 10 
+
+RETURN 
+
+
+;=============================================== 
+;******** Checks if somebutton is pressed       
+;=============================================== 
+
+SUB CheckMenuButtons 
+
+
+menu GetNum edit_1 %WhenToHeal 
+   IF #MENURES <> %WhenToHeal 
+      SET %WhenToHeal #MENURES 
+
+menu GetNum edit_2 %WhenToDisarm 
+   IF #MENURES <> %WhenToDisarm 
+      SET %WhenToDisarm #MENURES 
+
+menu GetNum edit_1 %WhenToReArm 
+   IF #MENURES <> %WhenToReArm 
+      SET %WhenToReArm #MENURES 
+
+
+IF #MENUBUTTON = panic 
+   { 
+   panic: 
+   IF %SkillToTrain = lumberjacking 
+      { 
+      EVENT MACRO 24 1 
+      } 
+   ELSE 
+      { 
+      EVENT MACRO 24 2 
+      } 
+   WAIT %DisarmDelay 
+   SET *903 yes 
+   SET #MENUBUTTON = N/A 
+   } 
+
+
+IF #MENUBUTTON = exit 
+   { 
+   IF %SkillToTrain = lumberjacking 
+      { 
+      EVENT MACRO 24 1 
+      } 
+   ELSE 
+      { 
+      EVENT MACRO 24 2 
+      } 
+   WAIT %DisarmDelay 
+   MSG All Guard Me$ ; just to be sure that dude will not kill us :D 
+   HALT 
+   } 
+
+IF #MENUBUTTON = arrows 
+   { 
+   SET #MENUBUTTON = N/A 
+   paperdollLoop2: 
+   EVENT MACRO 9 1 
+   WAIT 20 
+   EVENT MACRO 8 1 
+   WAIT 10 
+   SET #CONTPOSX 800 
+   WAIT 20 
+   SET #CONTPOSY 0 
+   WAIT 20 
+
+   IF #CONTNAME = paperdoll_gump 
+      { 
+      SET %PaperdollId #CONTID 
+      GOTO OutFromPaperdollLoop2 
+      } 
+   GOTO paperdollLoop2 
+   OutFromPaperdollLoop2: 
+
+
+
+   Arrowloop: 
+   FINDITEM RWF G_2 
+   IF #FINDKIND <> -1 
+      { 
+      EVENT DRAG #FINDID 
+      WAIT 20 
+      IF #FINDSTACK >= 2 
+         { 
+         MSG $ 
+         WAIT 10 
+         CLICK 940 220 
+         } 
+      ELSE 
+         { 
+         CLICK 940 220 
+         WAIT 5 
+         } 
+      GOTO Arrowloop 
+      } 
+
+   } 
+
+RETURN 
+;======================================================== 
+;******* If capture title bar is allowed i throw some stats to there 
+;======================================================== 
+
+SUB InitTitlebar 
+
+IF %UseTitlebarDisplay = #true 
+   { 
+   SETUOTITLE Ultima Online - #CHARNAME |  You Started %SkillToTrain at: %MainSkillStart | Gained: %MainSkillGained | Gain/h: %MainGainInHour | Now: %MainSkillNow | RunTime: %TimeUsed 
+   } 
+
+RETURN 
+
+
+
+
+
+
+SUB IsItTimeToYellAllGuardMe 
+
+IF H IN #CHARSTATUS 
+   { 
+   EVENT MACRO 3 0 All Follow Me 
+   WAIT 10 
+   EVENT MACRO 3 0 All Guard Me 
+   } 
+
+FINDITEM %SparringDudeId G_10 
+IF #FINDDIST >= 2 || #FINDKIND = -1 
+   { 
+   EVENT MACRO 3 0 All Follow Me 
+   WAIT 10 
+   EVENT MACRO 3 0 All Guard Me 
+   } 
+
+RETURN

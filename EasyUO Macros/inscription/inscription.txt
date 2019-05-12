@@ -1,0 +1,67 @@
+initevents
+event sysmessage Conheca o portal de UO da TkS Guild.
+event sysmessage  www.tksguild.com.br
+; Open Paperdoll
+event macro 8 1
+wait 10
+
+; Open status
+event macro 8 2
+wait 10
+
+; Open backpack
+event macro 8 7
+wait 10
+; ========================CONFIGURAÇÕES INICIAIS - Variáveis=====================
+Set %Comida RUF_HND_FUD
+;======================== INSCRIPTION =======================================
+inscription:
+gosub comida
+finditem MMF
+set #LOBJECTID #FINDID
+if #mana < 5
+{
+goto medit
+}
+event macro 17
+wait 12
+click 63 68 d; 1ºclico ( 63 68 d) 
+wait 12
+click 63 68 d; clumsy (63 68 d) , Magic Arrow (229 65 d)
+wait 1s
+goto inscription
+
+medit:
+event macro 13 46 
+wait 4s 
+if #mana = #int 
+{
+goto inscription
+
+
+; ====================COMIDA====================
+sub comida
+
+finditem %Comida
+
+if #findkind = 0
+{
+set #LObjectID #FindID
+event macro 17 0
+return
+}
+
+if #findkind = 1
+{
+ignoreitem #FindID
+gosub comida
+return
+}
+
+if #findkind = -1
+{
+ignoreitem reset
+event sysmessage Comida nao encontrada
+return
+}
+return

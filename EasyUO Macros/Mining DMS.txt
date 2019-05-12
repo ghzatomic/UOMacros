@@ -1,0 +1,583 @@
+==--== INICIO ==--==
+initevents
+; =====================================================================
+; Macro de Miner V6.1 Feita por SoloYo com novo Delay - Editada por KaiserXP Versao 1.0
+; Servidor: Dimension
+; Distribuição: Gratúita
+; Descriçao:  Minera, quando estiver pesado volta até a forge configurada, smelta e depois guarda no banco
+;                                 Macro adequada a mina de minoc para o servidor Dimension.
+; ========================CONFIGURAÇÕES INICIAIS - UO=====================
+SetUOTitle Macro de Mining, Smelt e Bank | #charname | Life: #hits |
+; Open Paperdoll
+event ExMsg #charID 9 1 Macro de Mining com Smelt e manda pro Banco, mina de Minoc.
+event macro 8 1
+wait 10
+
+; Open status
+event macro 8 2
+wait 10
+
+; Open backpack
+event macro 8 7
+wait 10
+; ========================CONFIGURAÇÕES INICIAIS - Variáveis=====================
+set %Backpack #backpackid
+set %ore TVJ_GWJ_EWJ_DWJ
+set %ingot RMK_UVF_EVF_HVF_GVF_FVF_OVF_BVF_VUF
+Set %Comida RGG
+Set %Pickaxe NPF_QPF
+Set %Martelo TLH
+Set %Tentativa 4
+Set %TempoEspera 8
+Set %TempoPickaxe 2
+Set %Hammer TLH_OLH
+Set %ores DWJ_TVJ_GWJ_EWJ
+Set %color 
+Set %cnt 0
+Set %funcao 0
+
+Set %freq 0;Frequencia do movimento de guardar no banco
+Set %freq2 0;Frequencia do Smelt
+Set %freq3 0;Frequencia da Comid
+
+Set #ltargetid 0
+Set #ltargetz 0
+Set #ltargetkind 3
+
+; ========================CONFIGURAÇÕES INICIAIS - UO=====================
+; Open Paperdoll
+event macro 8 1
+wait 1s
+contpos 762 0
+wait 1s
+
+; Open Status
+Event Macro 8 2
+wait 1s
+contpos 742 330
+wait 1s
+
+;open Backpack
+Event Macro 8 7
+wait 1s
+contpos 765 480
+wait 1s
+
+;===================== Configuração do Banco ========================
+
+
+wait 1s
+msg $Bank
+key enter
+wait 1s
+contpos 0 0
+wait 1s
+
+finditem CUD
+set #LOBJECTID #FINDID
+set #findY #FINDID
+set #findX #FINDID
+if #findkind = 0
+
+set %X 0
+set %Y 0
+set %X %X + 66;Coordenada X da bag de Ingots
+set %Y %Y + 158;Coordenada Y da bag de Ingots
+
+
+;==================== FORGE ===================
+event sysmessage Vah para perto de um forge e aperte ENTER
+keyloop:
+onHotKey ENTER
+goto selforge:
+goto keyloop
+selforge:
+set %forgex #charposx
+set %forgey #charposy
+goto inicio
+
+
+; ====================INICIO====================
+Inicio:
+
+gosub comida
+
+gosub %cnt 1
+Set %cnt %cnt + 1
+
+if #hits < #maxhits
+{
+gosub guards
+gosub heal
+}
+if %cnt > 7
+{
+Set %cnt 0
+goto caminha
+}
+
+Set %Chance 0
+goto mine
+
+; ====================MINE====================
+mine:
+
+Set %Chance %Chance + 1
+if %Chance > %Tentativa
+{
+goto inicio
+}
+deletejournal
+gosub pickaxe
+Set #SCNT 0
+
+goto jornal
+
+; ====================JORNAL====================
+jornal:
+if #SCNT >= %TempoEspera
+{
+goto mine
+}
+
+scanjournal 1
+if esta_muito_pesado in #journal
+{
+gosub smeltar
+}
+if You_notice in #journal
+{
+gosub guards
+gosub heal
+}
+if TRYING_TO_STEAL in #journal
+{
+gosub guards
+gosub heal
+}
+if ATTACKING_YOU in #journal
+{
+gosub guards
+gosub heal
+}
+
+if HITS_YOU in #journal
+{
+gosub guards
+gosub heal
+}
+
+if play in #journal
+{
+goto espera
+}
+if nao_ha_nada in #journal
+{
+Set %Chance 0
+goto espera
+}
+if Tente_minerar in #journal
+{
+Set %Chance 0
+goto espera
+}
+if Voce_nao_tem_visao in #journal
+{
+Set %Chance 0
+goto espera
+}
+if Muito_distante in #journal
+{
+Set %Chance 0
+goto espera
+}
+if use_the_%s in #journal
+{
+Set %Chance 0
+goto espera
+}
+if targeting_cancelled in #journal
+{
+Set %Chance 0
+goto espera
+}
+if fail in #journal
+{
+goto espera
+}
+if your_pack in #journal
+{
+goto jogaore
+
+}
+goto jornal
+
+; ====================ESPERA====================
+espera:
+Set #SCNT 0
+espe:
+if #SCNT >= %TempoPickaxe
+{
+if %Chance = 0
+{
+goto inicio
+}
+goto mine
+}
+goto espe
+
+;======================Joga Ore Colorido Fora======
+
+jogaore:
+
+finditem %ores C_
+
+if #findcol > 1
+{
+event drag #findid
+msg $
+wait 10
+msg $
+wait 10
+click 298 233 p
+wait 10
+ignoreitem #findid
+goto jogaore
+}
+goto mine
+
+
+
+; ====================Caminhada====================
+caminha:
+gosub %funcao 2
+move #ltargetx #ltargety 0 1s
+event macro 13 21
+wait 1s
+Set %funcao %funcao + 1
+
+if %funcao > 7
+{
+Set %funcao 0
+}
+goto inicio
+
+; ====================Ajusta targets Automatico====================
+sub 0
+set #ltargetx #charposx
+set #ltargety #charposy - %1
+return
+
+sub 1
+set #ltargetx #charposx + %1
+set #ltargety #charposy - %1
+return
+
+sub 2
+set #ltargetx #charposx + %1
+set #ltargety #charposy
+return
+
+sub 3
+set #ltargetx #charposx + %1
+set #ltargety #charposy + %1
+return
+
+sub 4
+set #ltargetx #charposx
+set #ltargety #charposy + %1
+return
+
+sub 5
+set #ltargetx #charposx - %1
+set #ltargety #charposy + %1
+return
+
+sub 6
+set #ltargetx #charposx - %1
+set #ltargety #charposy
+return
+
+sub 7
+set #ltargetx #charposx - %1
+set #ltargety #charposy - %1
+return
+
+; ====================PICKAXE====================
+sub pickaxe
+finditem %Pickaxe
+
+if #findkind = 0
+{
+set #LObjectID #FindID
+event macro 17 0
+target
+event macro 22 0
+return
+}
+
+if #findkind = 1
+{
+ignoreitem #FindID
+gosub pickaxe
+return
+}
+
+if #findkind = -1
+{
+ignoreitem reset
+event sysmessage Pickaxe nao encontrada
+wait 3s
+return
+}
+return
+
+; ====================MARTELO====================
+sub martelo
+finditem %Martelo
+
+if #findkind = 0
+{
+set #LObjectID #FindID
+event macro 17 0
+target
+event macro 22 0
+return
+}
+
+if #findkind = 1
+{
+ignoreitem #FindID
+gosub martelo
+return
+}
+
+if #findkind = -1
+{
+ignoreitem reset
+event sysmessage Martelo nao encontrado
+wait 3s
+return
+}
+return
+
+; ====================COMIDA====================
+sub comida
+
+finditem %Comida
+
+if #findkind = 0
+{
+set #LObjectID #FindID
+event macro 17 0
+return
+}
+
+if #findkind = 1
+{
+ignoreitem #FindID
+gosub comida
+return
+}
+
+if #findkind = -1
+{
+ignoreitem reset
+event sysmessage Comida nao encontrada
+return
+}
+return
+
+sub smeltar
+finditem %Hammer
+wait 5s
+if #findkind = 0
+{
+set #LObjectID #FindID
+event macro 17 0
+target
+event macro 22 0
+event macro 23 0
+goto smeltar
+}
+
+if #findkind = 1
+{
+ignoreitem #FindID
+goto hammer
+}
+
+if #findkind = -1
+{
+ignoreitem reset
+event sysmessage Hammer nao encontrado
+wait 3s
+goto smeltar
+}
+set %ironore DWJ
+set %antigax #charposx
+set %antigay #charposy
+gogogo:
+if #charposx <> %forgex && #charposy <> %forgey
+{
+move %forgex %forgey 0 5s
+goto gogogo
+}
+gosub irons
+wait 5s
+return
+
+sub heal
+
+finditem ZLF
+if #findkind = -1 3
+   {
+      event sysmessage All out of bandages
+      pause
+   }
+   set #lobjectid #findid
+   event macro 17
+   target 5s
+   event macro 23
+   wait 3s
+}
+
+return
+
+sub irons
+Set %freq2 = 0
+
+;open Backpack
+Event Macro 8 7
+wait 3s
+contpos 765 480
+wait 1s
+
+find:
+if %freq2 > 15
+{
+;goto forge
+}
+
+set %freq2 %freq2 + 1
+
+finditem %ore C_ , %Backpack
+if #findkind = 0
+{
+set #LObjectID #FindID
+event macro 17 0
+wait 1s
+goto find
+}
+else
+{
+goto guardar_ingots
+}
+; ==================== Guardar ingots ====================
+guardar_ingots:
+
+
+key esc
+
+Set %freq = 0
+
+open Backpack
+Event Macro 8 7
+wait 3s
+set %Backpack #CONTID
+contpos 765 480
+wait 1s
+
+msg $Bank
+key enter
+set %Banco #CONTID
+wait 3s
+contpos 0 0
+wait 1s
+goto mover
+; ==================== Movendo ingots ====================
+mover:
+
+gosub protec
+
+if %freq > 15
+{
+goto forge
+}
+
+gosub protec
+set %freq %freq + 1
+
+finditem %ingot C_ , %Backpack
+if #findkind = 1
+{
+ignoreitem #findid
+goto mover
+}
+if #findkind = 0
+{
+event drag #findid
+wait 1s
+msg $
+wait 1s
+click %X %Y
+wait 1s
+;================Procura Ingots==========================
+goto mover
+}
+if #findkind = -1
+{
+wait 1s
+return
+
+sub susto
+set %random #random % 15
+if %random < 2
+  {
+  msg :S $
+  return
+  }
+if %random < 4
+  {
+  msg no flagra ueahuaehu $
+  return
+  }
+if %random < 6
+  {
+  msg OPA OPA OPA OPA OPA OPAAAAAA $
+  return
+  }
+if %random < 8
+  {
+  msg olha olha olha.... $
+  return
+  }
+if %random < 11
+  {
+  msg eae? ta se divertindo? $
+  return
+  }
+if %random < 13
+  {
+  msg ahhh para vai $
+  return
+  }
+if %random < 16
+  {
+  msg OE OE OE OOOOE! $
+  return
+  }
+return
+  
+sub guards
+
+wait 2s
+event macro 13 14 ;detect hidden
+gosub susto
+wait 2s
+msg guards $
+gosub heal
+wait 2s
+
+return
+; ==--== FIM ==--==

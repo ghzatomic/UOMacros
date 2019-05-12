@@ -1,0 +1,20 @@
+event macro 9 7
+wait 6
+event macro 8 7
+wait 6
+contpos 321 0
+
+smeltar:
+
+finditem DWJ C_ , #backpackid
+
+Exevent Drag #findid 1
+wait 6
+Exevent Dropc #backpackid 1 1
+wait 6
+finditem TVJ C_ , #backpackid
+set #LObjectID #FindID
+event macro 17 0
+wait 2s
+
+goto smeltar

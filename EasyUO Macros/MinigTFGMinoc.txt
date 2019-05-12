@@ -1,0 +1,286 @@
+|===========================================================================|
+| Macro: Mining TFG
+|===========================================================================|
+
+initevents
+
+; ========================CONFIGURAÇÕES INICIAIS - UO=====================
+; Open Paperdoll
+event macro 8 1
+wait 10
+
+; Open status
+event macro 8 2
+wait 10
+
+; Open backpack
+event macro 8 7
+wait 10
+; ========================CONFIGURAÇÕES INICIAIS - Variáveis=====================
+
+Set %Pickaxe NPF_QPF
+Set %Tentativa 3
+Set %TempoEspera 14
+Set %TempoPickaxe 2
+
+Set %cnt 0
+Set %funcao 0
+
+Set #ltargetid 0
+Set #ltargetz 0
+Set #ltargetkind 3
+
+; ====================INICIO====================
+inicio:
+msg .war_status$
+scanjornal 1
+if You_are_in_war in #SYSMSG
+{
+event ExMsg #CHARID 3 33 Desligar warmode
+event macro 6 0
+}
+gosub %cnt 1
+set %cnt %cnt + 1
+
+if %cnt > 7
+{
+set %cnt 0
+goto caminha
+}
+
+Set %Chance 0
+goto mine
+
+; ====================MINE====================
+mine:
+Set #SCNT 0
+
+Set %Chance %Chance + 1
+if %Chance > %Tentativa
+{
+goto inicio
+}
+gosub pickaxe
+Set #SCNT 0
+goto jornal
+
+; ====================JORNAL====================
+jornal:
+if #WEIGHT > #maxWeight - 30			;Verificação do peso para guardar. 
+{
+ set %x #CHARPOSX
+ set %y #CHARPOSY
+ set #SCNT 0
+ set %banco 0
+ goto banco
+}
+
+if #SCNT2 >= 60
+{
+   if #cliLogged = 1
+   {
+   event macro 1 0 guards
+   set #SCNT2 0
+   }
+}
+
+scanjournal 1
+if There_is_nothing in #SYSMSG
+{
+Set %Chance 0
+goto espera
+}
+if Try in #SYSMSG
+{
+Set %Chance 0
+goto espera
+}
+if You_have_no_line in #SYSMSG
+{
+Set %Chance 0
+goto espera
+}
+if away in #SYSMSG
+{
+Set %Chance 0
+goto espera
+}
+if You_loosen in #SYSMSG
+{
+Set %Chance 0
+goto espera
+}
+if You_decide in #SYSMSG
+{
+wait 2s
+goto mine
+}
+if You_cannot_mine in #SYSMSG
+{
+goto mine
+}
+if your_pack in #SYSMSG
+{
+goto mine
+}
+
+if Pickaxe_nao in #SYSMSG
+{
+goto banco
+}
+
+if #SCNT >= %TempoEspera
+{
+goto mine
+}
+deletejournal
+goto jornal
+; ====================ESPERA====================
+espera:
+Set #SCNT 0
+goto inicio
+
+banco:
+msg .disarm $
+move 2574 477
+move 2561 493 
+move 2557 503 
+move 2545 501 
+move 2525 501 
+move 2525 516 
+move 2509 516 
+move 2509 540 
+move 2514 540 
+move 2512 549 
+goto guarda
+ 
+mina:
+ move 2514 540
+ move 2509 540
+ move 2509 516
+ move 2525 516
+ move 2525 501
+ move 2545 501
+ move 2558 501
+ move 2561 492
+ move 2573 475
+ move 2573 458
+ 
+ move %x %y
+ set %banco 0
+ goto mine
+
+; ====================GUARDA====================
+guarda:
+ msg banker bank guards$
+ wait 10
+ contpos 0 500
+guardadenovo: 
+finditem DWJ_GWJ_EWJ_TVJ_EVF_VUF_GVF_FVF_HVF_UVF_OVF_BVF C
+
+if #findkind = -1
+{
+goto mina
+}
+set %ore #findid 
+event drag %ore
+key enter
+click 41 618
+wait 10
+if #SCNT >= 40
+{
+ set %banco 0
+ goto guardadenovo
+}
+goto guardadenovo
+
+; ====================Caminhada====================
+caminha:
+gosub %funcao 5
+move #ltargetx #ltargety 0 1s
+wait 1s
+Set %funcao %funcao + 1
+
+if %funcao > 7
+{
+Set %funcao 0
+}
+goto inicio
+
+; ====================Ajusta targets Automatico====================
+sub 0
+set #ltargetx #charposx
+set #ltargety #charposy - %1
+return
+
+sub 1
+set #ltargetx #charposx + %1
+set #ltargety #charposy - %1
+return
+
+sub 2
+set #ltargetx #charposx + %1
+set #ltargety #charposy
+return
+
+sub 3
+set #ltargetx #charposx + %1
+set #ltargety #charposy + %1
+return
+
+sub 4
+set #ltargetx #charposx
+set #ltargety #charposy + %1
+return
+
+sub 5
+set #ltargetx #charposx - %1
+set #ltargety #charposy + %1
+return
+
+sub 6
+set #ltargetx #charposx - %1
+set #ltargety #charposy
+return
+
+sub 7
+set #ltargetx #charposx - %1
+set #ltargety #charposy - %1
+return
+
+; ====================PICKAXE====================
+sub pickaxe
+finditem %Pickaxe
+
+if #findkind = 0
+{
+set #LObjectID #FindID
+event macro 17 0
+target
+event macro 22 0
+if #SCNT2 >= 60
+{
+   if #cliLogged = 1
+   {
+   event macro 1 0 guards
+   set #SCNT2 0
+   }
+}
+return
+}
+
+if #findkind = 1
+{
+ignoreitem #FindID
+gosub pickaxe
+return
+}
+
+if #findkind = -1
+{
+ignoreitem reset
+event sysmessage Pickaxe nao encontrada
+wait 3s
+return
+}
+return

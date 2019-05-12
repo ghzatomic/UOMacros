@@ -1,0 +1,181 @@
+; ==--== INICIO ==--==
+initevents
+; =====================================================================
+; Macro de Fishing
+; Servidor: Free
+; Distribuição: Gratúita
+; ========================CONFIGURAÇÕES INICIAIS - Variáveis=====================
+event sysmessage Conheca o portal de UO da TkS Guild.
+event sysmessage  www.tksguild.com.br
+Set %Comida RUD_FUD_HND_YRD
+Set %Pole XHF_KDF
+Set %Tentativa 4
+Set %Comando 1
+Set %ComandoX 1
+Set %msg Forward
+
+Set %cnt 0
+
+Set #ltargetid 0
+Set #ltargetz 200
+Set #ltargetkind 2
+
+; ========================CONFIGURAÇÕES INICIAIS - Variáveis=====================
+
+loop:
+Set %cnt %cnt + 1
+gosub %cnt
+
+ if %cnt > 7
+ {
+   Set %cnt 0
+   goto Move
+ }
+
+Set %Chance 0
+goto Fish
+
+; ====================FISH====================
+Fish:
+
+ gosub comida
+
+ Set %Chance %Chance + 1
+ if %Chance > %Tentativa
+ {
+   goto loop
+ }
+
+ gosub pole
+ wait 25
+ goto Fish
+
+; ====================MOVE====================
+Move:
+
+if %Comando = 1
+{
+msg Forward$
+}
+if %Comando = 2
+{
+msg Left$
+}
+if %Comando = 3
+{
+msg Backward$
+}
+if %Comando = 4
+{
+msg Right$
+}
+
+Set %ComandoX %ComandoX + 1
+
+IF %ComandoX > 6
+{
+Set %ComandoX 1
+Set %Comando %Comando + 1
+
+IF %Comando > 4
+{
+ Set %Comando 1
+}
+}
+
+wait 6s
+msg Stop $
+goto loop
+
+
+sub 1
+set #ltargetx #charposx - 2
+set #ltargety #charposy
+return
+
+sub 2
+set #ltargetx #charposx + 2
+set #ltargety #charposy
+return
+
+sub 3
+set #ltargetx #charposx - 2
+set #ltargety #charposy + 1
+return
+
+sub 4
+set #ltargetx #charposx + 2
+set #ltargety #charposy + 1
+return
+
+sub 5
+set #ltargetx #charposx - 2
+set #ltargety #charposy +2
+return
+
+sub 6
+set #ltargetx #charposx + 2
+set #ltargety #charposy + 2
+return
+
+sub 7
+set #ltargetx #charposx
+set #ltargety #charposy + 2
+return
+
+
+sub pole
+finditem %Pole
+ if #findkind = 0
+ {
+   set #LObjectID #FindID
+   event macro 17 0
+   target
+   event macro 25 0
+   event macro 22 0
+   return
+ }
+
+ if #findkind = 1
+ {
+   ignoreitem #FindID
+   gosub pole
+   return
+ }
+
+ if #findkind = -1
+ {
+   ignoreitem reset
+   event sysmessage Pole nao encontrado
+   wait 3s
+   return
+ }
+return
+
+; ====================COMIDA====================
+sub comida
+
+finditem %Comida
+
+ if #findkind = 0
+ {
+   set #LObjectID #FindID
+   event macro 17 0
+   return
+ }
+
+ if #findkind = 1
+ {
+   ignoreitem #FindID
+   gosub comida
+   return
+ }
+
+ if #findkind = -1
+ {
+   ignoreitem reset
+   event sysmessage Comida nao encontrada
+   return
+ }
+return
+; ==--== FIM  ==--==

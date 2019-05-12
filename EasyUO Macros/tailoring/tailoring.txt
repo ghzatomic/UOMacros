@@ -1,0 +1,270 @@
+; FWL
+; ==================== NOTAS==========================
+; Macro escrita em 02 / 10 / 2004
+; Macro escrita por Insano
+; Macro escrito para funcionar no Shard HellFire
+; ====================================================
+;
+; ==============  Tailoring Macro - X-Tailor =================
+;
+; ================ INSTRUÇÕES ========================
+; Tenha pano ao seu alcance no maximo 3 tiles de distancia.
+; Tenha 2 baus ao seu alcance.
+; Tenha Swing Kit em sua bag.
+; Tenha Comida em sua bag ou ao seu alcance, no maximo 3 tiles.
+;
+; Grave um macro no UO Assist.
+; Usando o Swing Kit em Pano com Target Item Type.
+; Faça o item com qual deseja macroar Tailoring.
+; Depois disso de STOP, NÃO coloque pause.
+; Siga as instruções que o macro dará
+;
+; ====================================================
+initevents
+; =========   VOCE SO PRECIZA ALTERAR ISSO =============
+; AQUI A QUANTIDADE DE MATERIAL QUE VOCE DESEJA PEGAR
+event sysmessage Conheca o portal de UO da TkS Guild.
+event sysmessage  www.tksguild.com.br
+set %qtd 100
+
+; NAO MECHA DAQUI PRA BAIXO
+; ===========  NAO O MECHA DAQUI PRA BAIXO ============
+
+set %bag MTKTJMD
+set %material RTI
+set %item FWL_DCI
+set %bagsid CKF
+set %qtdmin 20
+set %charx 924
+set %chary 192
+if #clixres = 800 && #cliyres = 600
+{
+set %charx 924
+set %chary 192
+}
+set %citem 0
+Set %ComerTempo #SCnt + 2
+gosub titulo
+
+Config:
+Display ok Clique 2x no bau onde estao as bags vazias e aperte ESC
+If #Dispres = Ok
+{
+a:
+OnHotKey ESC
+Goto a1
+Goto a
+A1:
+Set %baubags #LOBJECTID
+Event Sysmessage Ok bau de bags vazias gravado!  [ %baubags ]
+wait 2s
+}
+Display ok Agora deixe o seu mouse em cima dos baus onde serao descarregados as bags cheias e aperte ESC
+If #dispres = Ok
+{
+b:
+OnHotKey ESC
+Goto  b1
+Goto b
+b1:
+Set %bbagsx #cursorx
+set %bbagsy #cursory
+Event sysmessage Ok bau de bags cheias gravado!  [ %bbagsx %bbagsy ]
+wait 2s
+}
+Display ok Agora deixe o mouse em algum lugar do chao onde serao colocadas as bags vazias tiradas do bau e aperte ESC
+if #dispres = ok
+{
+c:
+OnHotKey ESC
+goto c1
+Goto c
+c1:
+set %bgrondx #cursorx
+set %bgrondy #cursory
+event sysmessage Ok local das bags vazias gravado!  [ %bgrondx %bgrondy ]
+wait 2s
+}
+
+event sysmessage Iniciando Macro
+event sysmessage --- X-Tailor ---
+
+Item:
+
+finditem %item C_ , %bag
+if #findkind = 0
+   {
+   if #FINDCNT > 40
+     {
+       gosub bagsitem
+     }
+   }
+
+
+
+finditem %material C_ , %bag
+if #findkind = -1
+{
+gosub pegarmaterial %qtd
+wait 30
+goto item
+}
+if #findstack < %qtdmin
+{
+set %qtdstack %qtd - #findstack
+gosub pegarmaterial %qtdstack
+}
+If %ComerTempo < #SCnt
+{
+Gosub Comer
+}
+key end
+wait 5s
+deletejournal
+Set %Time #SCNT + 20
+Goto Jornal
+
+Jornal:
+scanjournal 1
+if voce_colocou in #journal
+goto item
+if voce_falhou, in #journal
+goto item
+if you_can`t_make
+If %Time < #SCNT
+Goto Item
+goto Jornal
+
+sub PegarMaterial
+finditem %material g_3
+if #findkind = -1
+{
+setuotitle sem material... em #time
+shutdown
+}
+event drag #findid
+wait 20
+msg %1 $
+wait 20
+click %charx %chary
+wait 30
+return
+
+sub bagsitem
+bi:
+finditem %bagsid G_3
+if #findkind = -1
+{
+ignoreitem reset
+gosub pegarbags
+}
+if #findbagid = %bag
+{
+ignoreitem #findid
+goto bi
+}
+set #lobjectid #findid
+wait 20
+event macro 17 0
+wait 20
+contpos 606 474
+wait 20
+ignoreitem reset
+bi2:
+finditem %item C_ , %bag
+if #findkind = -1
+{
+return
+}
+set %citem %citem + 1
+if %citem > 199
+{
+set %citem 0
+gosub guardarbags
+wait 30
+return
+}
+event sysmessage Item de numero %citem sendo guardado!
+event drag #findid
+wait 10
+click 689 558
+wait 10
+goto bi2
+
+
+
+Sub guardarbags
+gb:
+finditem %bagsid G_3
+if #findkind = -1
+{
+ignoreitem reset
+return
+}
+if #findbagid = %bag
+{
+ignoreitem #findid
+goto gb
+}
+event drag #findid
+wait 30
+click %bbagsx %bbagsy
+wait 30
+ignoreitem reset
+return
+
+
+sub PegarBags
+finditem %baubags G_3
+if #findkind = -1
+{
+halt
+}
+set #lobjectid #findid
+wait 10
+event macro 17 0
+wait 10
+finditem %bagsid C_ , %baubags
+if #findkind = -1
+{
+halt
+}
+event drag #findid
+wait 20
+click %bgrondx %bgrondy
+wait 20
+return
+
+Sub Comer
+
+   Set %comidas BDF_GQE_IQE_ZPE_SQD_OQE_KPE_VQE_TQE_YSD_JQE_YWI_AXI_PQD_QQD_MQE_SPE_RQE_END_RGG_AQD_FUD_ZBG_WLI_QRD_
+YLI_NRD_PRD_XLI_ACG_IGI_GUD_HND_QSD
+   FindItem %comidas C _ , %bag
+
+   If #FindKind = -1
+   {
+Goto C2
+   }
+
+   Set #LObjectID #FindID
+   Event Macro 17 0
+   Wait 10
+   Set %ComerTempo #SCnt + 250
+   Wait 10
+   Return
+   C2:
+   FindItem %comidas G_3
+
+    If #FindKind = -1
+   {
+Event Sysmessage Voce nao tem comida em sua bag nem ao seu alcance ou a comida nao eh reconhecia pelo macro.
+Set %ComerTempo #SCnt + 300
+Return
+   }
+
+   Set #LObjectID #FindID
+   Event Macro 17 0
+   Wait 10
+   Set %ComerTempo #SCnt + 250
+   Wait 10
+   Return

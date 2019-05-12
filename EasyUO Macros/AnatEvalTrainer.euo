@@ -1,0 +1,116 @@
+; =============================================================
+; Script Name: Silmano's Anatomy & Eval Int. Trainer
+; Author: Silmano
+; Version: 1.0
+; Shard: FreeShard
+; Client Tested w/: 4.0.7b
+; EUO tested w/: 1.42 (build 009F)
+; Public Release: January 30, 2005
+; Purpose: Raise Anatomy or Eval Int. in Moonglow Zoo
+; =============================================================
+
+; Dont change NOTHING under this line.
+display yesno What do you wanna train?$Anatomy = yes$Eval Int = no
+if #dispRes = yes
+	set %skill 1
+if #dispRes = no
+	set %skill 16
+
+gosub setRail
+
+ignoreItem #charID 2
+
+set %spot 0
+changeSpot:
+gosub walkNextSpot
+set %counter 0
+mainLoop:
+findItem * G_5
+if #findKind <> 1
+	ignoreItem Reset 1
+if #findKind = 1
+{
+	set #lTargetID  #findID
+	set #lTargetKind 1
+	event Macro 13 %skill
+	target
+	event Macro 22 0
+	wait 1s
+	set %counter %counter + 1
+	ignoreItem #findID 1
+}
+if %counter > 50
+	goto changeSpot
+goto mainLoop
+
+
+sub walkNextSpot
+moveNext:
+set %spot %spot + 1
+gotoSpot:
+event PathFind %x . %spot %y . %spot %z . %spot
+wait 2s
+if #charPosX <> %x . %spot || #charPosY <> %y . %spot
+	goto gotoSpot
+if %spot = %endSpot
+	set %spot 0
+if %area . %spot <> #true
+	goto moveNext
+return
+
+sub setRail
+set %endspot 15
+set %x1 4511
+set %y1 1387
+set %z1 23
+set %area1 #true
+set %x2 4504
+set %y2 1387
+set %z2 23
+set %x3 4498
+set %y3 1387
+set %z3 23
+set %area3 #true
+set %x4 4494
+set %y4 1381
+set %z4 23
+set %area4 #true
+set %x5 4500
+set %y5 1377
+set %z5 23
+set %x6 4502
+set %y6 1369
+set %z6 23
+set %area6 #true
+set %x7 4502
+set %y7 1365
+set %z7 23
+set %x8 4508
+set %y8 1365
+set %z8 23
+set %area8 #true
+set %x9 4515
+set %y9 1365
+set %z9 23
+set %x10 4521
+set %y10 1365
+set %z10 23
+set %area10 #true
+set %x11 4525
+set %y11 1368
+set %z11 23
+set %area11 #true
+set %x12 4523
+set %y12 1377
+set %z12 23
+set %x13 4523
+set %y13 1382
+set %z13 23
+set %x14 4523
+set %y14 1386
+set %z14 23
+set %area14 #true
+set %x15 4518
+set %y15 1387
+set %z15 23
+return

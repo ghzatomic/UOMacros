@@ -1,0 +1,439 @@
+                          =-=-=-inicio-=-=-=
+initevents
+============================================================
+
+============================================================
+Set %Target 0
+Set %Comida RUD_FUD_HND
+Set %Tentativa 6
+Set %Machado ZRF_BPH_FSF_ASF_FFF_POH_BSF_KPH_LSF
+Set %Tempo 10
+Set %log ZLK
+===================================================%Machado%Machado%Machado=========
+
+
+
+cordenadas:
+MOVE 2489 544 0
+Arvore 1
+
+{
+
+}
+  ;GOSUB guards
+  MOVE 2488 548 0
+  GOSUB LUMBER 2488 549 3299
+  event sysmessage Arvore : 2!
+  Arvore 2
+{
+
+}
+  if ! (There_is_nothing in #journal)
+     wait 10s
+  ;GOSUB guards
+  MOVE 2488 550 0
+  GOSUB LUMBER 2488 549 3299
+  event sysmessage Arvore : 3!
+  Arvore 3
+{
+
+}
+  if ! (There_is_nothing in #journal)
+	   wait 10s
+  ;GOSUB guards
+  MOVE 2491 552 0
+  GOSUB LUMBER 2492 552 3290
+  event sysmessage Arvore : 4!
+  Arvore 4
+{
+
+}
+  if ! (There_is_nothing in #journal)
+    wait 10s
+  ;GOSUB guards
+  MOVE 2489 557 0
+  GOSUB LUMBER 2488 558 3302
+  event sysmessage Arvore : 5!
+  Arvore 5
+{
+
+}
+if ! (There_is_nothing in #journal)
+   wait 10s
+  ;GOSUB guards
+MOVE 2492 568 0
+GOSUB LUMBER 2492 567 3277
+event sysmessage Arvore : 6!
+Arvore 6
+{
+
+}
+if ! (There_is_nothing in #journal)
+   wait 10s
+  ;GOSUB guards
+MOVE 2496 571 0
+GOSUB LUMBER 2496 570 3291
+event sysmessage Arvore : 7!
+Arvore 7
+{
+
+}
+if ! (There_is_nothing in #journal)
+   wait 10s
+  ;GOSUB guards
+MOVE 2497 573 0
+GOSUB LUMBER 2496 573 3291
+event sysmessage Arvore : 8!
+Arvore 8
+{
+
+}
+if ! (There_is_nothing in #journal)
+   wait 10s
+  ;GOSUB guards
+MOVE 2497 579 0
+GOSUB LUMBER 2496 579 3277
+event sysmessage Arvore : 9!
+Arvore 9
+{
+
+}
+if ! (There_is_nothing in #journal)
+   wait 10s
+  ;GOSUB guards
+MOVE 2499 579 0
+GOSUB LUMBER 2500 579 3299
+event sysmessage Arvore : 10!
+Arvore 10
+{
+
+}
+if ! (There_is_nothing in #journal)
+   wait 10s
+  ;GOSUB guards
+MOVE 2495 584 0
+GOSUB LUMBER 2496 585 3296
+event sysmessage Arvore : 11!
+Arvore 11
+{
+
+}
+if ! (There_is_nothing in #journal)
+   wait 10s
+  ;GOSUB guards
+MOVE 2490 586 0
+MOVE 2491 613 0
+GOSUB LUMBER 2492 612 3296
+event sysmessage Arvore : 12!
+Arvore 12
+{
+
+}
+if ! (There_is_nothing in #journal)
+   wait 10s
+  ;GOSUB guards
+MOVE 2496 613 0
+GOSUB LUMBER 2496 612 3290
+event sysmessage Arvore : 13!
+Arvore 13
+{
+
+}
+if ! (There_is_nothing in #journal)
+   wait 10s
+  ;GOSUB guards
+MOVE 2496 614 0
+GOSUB LUMBER 2496 615 3299
+event sysmessage Arvore : 14!
+Arvore 14
+{
+
+}
+if ! (There_is_nothing in #journal)
+   wait 10s
+  ;GOSUB guards
+MOVE 2500 610 0
+GOSUB LUMBER 2500 609 3299
+event sysmessage Arvore : 15!
+Arvore 15
+{
+
+}
+if ! (There_is_nothing in #journal)
+   wait 10s
+  ;GOSUB guards
+MOVE 2504 614 0
+GOSUB LUMBER 2504 615 3293
+event sysmessage Arvore : 16!
+Arvore 16
+{
+
+}
+if ! (There_is_nothing in #journal)
+   wait 10s
+  ;GOSUB guards
+MOVE 2507 613 0
+GOSUB LUMBER 2508 612 3277
+event sysmessage Arvore : 17!
+Arvore 17
+{
+
+}
+if ! (There_is_nothing in #journal)
+   wait 10s
+  ;GOSUB guards
+MOVE 2508 614 0
+GOSUB LUMBER 2508 615 3283
+event sysmessage Arvore : 18!
+Arvore 18
+{
+
+}
+if ! (There_is_nothing in #journal)
+   wait 10s
+  ;GOSUB guards
+MOVE 2519 609 0
+GOSUB LUMBER 2520 609 3283
+event sysmessage Arvore : 19!
+Arvore 19
+{
+
+}
+if ! (There_is_nothing in #journal)
+   wait 10s
+  ;GOSUB guards
+MOVE 2523 609 0
+GOSUB LUMBER 2524 609 3293
+event sysmessage Arvore : 20!
+Arvore 20
+{
+
+}
+if ! (There_is_nothing in #journal)
+   wait 10s
+  ;GOSUB guards
+MOVE 2523 603 0
+GOSUB LUMBER 2524 603 3288
+event sysmessage Arvore : 21!
+Arvore 21
+{
+
+}
+if ! (There_is_nothing in #journal)
+   wait 10s
+  ;GOSUB guards
+MOVE 2524 598 0
+GOSUB LUMBER 2524 597 3277
+event sysmessage Arvore : 22!
+Arvore 22
+{
+
+}
+if ! (There_is_nothing in #journal)
+   wait 10s
+  ;GOSUB guards
+MOVE 2528 595 0
+GOSUB LUMBER 2528 594 3299
+event sysmessage Arvore : 23!
+Arvore 23
+{
+
+}
+if ! (There_is_nothing in #journal)
+   wait 10s
+  ;GOSUB guards
+MOVE 2532 592 0
+GOSUB LUMBER 2532 591 3291
+event sysmessage Arvore : 24!
+Arvore 24
+{
+
+}
+if ! (There_is_nothing in #journal)
+   wait 10s
+  ;GOSUB guards
+MOVE 2532 596 0
+GOSUB LUMBER 2532 597 3293
+event sysmessage Arvore : 25!
+Arvore 25
+
+MOVE 2498 560 0
+
+
+finditem ZLK
+set #findmod 17_3
+msg banker bank $
+wait 2s
+contpos 0 0
+wait 2s
+click #findx #findy g
+wait 4s
+Key Enter
+click 28 146 p
+wait 2s
+
+MOVE 2487 565 0
+
+
+goto cordenadas
+
+
+
+sub lumber
+comida:
+finditem %Comida
+if #findkind = -1
+{
+ignoreitem reset
+event sysmessage Comida nao encontrada!
+}
+
+{
+
+}
+
+if #findkind = 1
+{
+ignoreitem #findid
+goto comida
+}
+
+set #lobjectid #findid
+event macro 17 0
+
+Set %Chance 0
+inicio:
+
+if %Chance >= %Tentativa
+{
+return
+}
+{
+
+}
+
+Set %Chance %Chance + 1
+
+machado:
+finditem %Machado ZRF_BPH_FSF_ASF_FFF_POH_BSF
+if #findkind = -1
+{
+ignoreitem reset
+event sysmessage Machado nao encontrado!
+goto machado
+}
+
+if #findkind = 1
+{
+ignoreitem #findid
+goto machado
+}
+
+set #lobjectid #findid
+event macro 17 0
+
+
+set #lTargetX %1
+set #lTargetY %2
+set #lTargetZ 0
+set #lTargetKind 3
+set #lTargetTile %3
+
+target
+event macro 25 0
+event macro 22 0
+
+Set #SCNT 0
+
+delete journal
+  scanjournal
+
+  if #hits < #maxhits
+  {
+  msg Guards ! $
+  msg Sai fora pau no cu ! $
+  }
+  if ATTEMPTING_TO_PEEK_INTO_YOUR in #journal
+  {
+  msg Guards ! $
+  msg Sai fora pau no cu ! $
+  }
+  if ATTEMPTING_TO_STEAL in #journal
+  {
+  msg Guards ! $
+  msg Sai fora pau no cu ! $
+  }
+  if TRYING_TO_STEAL in #journal
+  {
+  msg Guards ! $
+  msg Sai fora pau no cu ! $
+  }
+  if ATTACKING_YOU in #journal
+  {
+  msg Guards ! $
+  msg Sai fora pau no cu ! $
+  }
+  if HITS_YOU in #journal
+  {
+  msg Guards ! $
+  msg Sai fora pau no cu ! $
+  }
+
+============================================================
+jornal:
+if #SCNT > %Tempo
+{
+goto inicio
+}
+
+delete journal
+scanjournal
+
+if nao_conseguiu in #journal
+{
+goto inicio
+}
+
+if chop in #journal
+{
+return
+}
+
+if put in #journal
+{
+goto inicio
+}
+if lumberjacking in #journal
+{
+goto inicio
+}
+if madeiras aqui in #journal
+{
+return
+}
+if immune in #journal
+{
+
+return
+}
+
+if foliage in #journal
+{
+return
+}
+
+if too_far in #journal
+{
+return
+}
+
+if fail in #journal
+{
+goto inicio
+}
+
+goto jornal
+
+
+
+=-=-=- FIM -=-=-=

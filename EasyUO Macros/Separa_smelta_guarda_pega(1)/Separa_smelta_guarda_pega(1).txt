@@ -1,0 +1,93 @@
+; Macro criado por Technoghost
+;Distribuição restrita
+;Servidor: Todos
+;Data de criação 21/11/2004
+;Data de manutenção -------
+
+initevents
+wait 1s
+event sysmessage Conheca o portal de UO da TkS Guild.
+event sysmessage  www.tksguild.com.br
+;===============Configurões iniciais do macro===============
+
+; Abre a bag NAO FECHE ELA
+event macro 8 7
+wait 1s
+contpos 806 308
+
+
+; Mude as coordenadas
+set %bau_oreX 276
+set %bau_oreY 190
+
+; Mude as coordenadas
+set %bau_ingotX 300
+set %bau_ingotY 256
+
+
+set %ore GWJ_EWJ_DWJ
+set %um_ore TVJ
+set %ingot RMK
+
+;=====================================================
+
+
+;===================Separa Ores====================
+separa:
+finditem %ore
+if #findkind = 0
+{
+event drag #findid
+wait 1s 
+msg 1$ 
+click 853 324
+wait 1s
+}
+goto smelta
+;==================================================
+
+
+
+;=================Smelta ores=======================
+smelta:
+finditem %um_ore
+if #findkind = 0
+{
+set #LObjectID  #FindID
+event macro 17 0
+goto separa
+}
+else
+{
+goto pega_ore
+}
+;==================================================
+
+
+
+
+;====================Pega mais ore e guarda os ingots==============
+pega_ore:
+finditem %ingot
+event drag #findid
+wait 1s
+msg $ 
+click %bau_ingotX %bau_ingotY
+wait 1s
+
+click %bau_oreX %bau_oreY d
+contpos 133 82
+wait 1 s
+
+finditem %ore
+event macro 8 7
+wait 1s
+contpos 806 308
+event drag #findid
+wait 1s 
+msg 300$ 
+click 934 404
+wait 1s
+click 914 89 r
+wait 1s
+;=============================================================

@@ -1,0 +1,1026 @@
+initevents
+event sysmessage Conheca o portal de UO da TkS Guild.
+event sysmessage  www.tksguild.com.br
+Set %Target 0
+Set %Comida RUD_FUD_HND_RGG
+Set %Tentativa 6
+Set %Machado ZRF_BPH_FSF_ASF_FFF_POH_BSF_KPH_LSF
+Set %Tempo 10
+
+cordenadas:
+
+; Configure suas cordenadas
+
+; Arvore 1
+MOVE 542 990 0
+GOSUB gs
+GOSUB LUMBER 540 990 3302
+
+; Arvore 2
+MOVE 536 985 0
+MOVE 523 986 0
+GOSUB gs
+GOSUB LUMBER 532 987 3302
+
+; Arvore 3
+MOVE 523 901 0
+GOSUB gs
+GOSUB LUMBER 528 990 3283
+
+; Arvore 4
+MOVE 515 974 0
+GOSUB gs
+GOSUB LUMBER 516 972 3296
+
+; Arvore 5
+MOVE 519 971 0
+GOSUB gs
+GOSUB LUMBER 520 969 3286
+
+; Arvore 6
+MOVE 519 964 0
+GOSUB gs
+GOSUB LUMBER 520 963 3286
+
+; Arvore 7
+MOVE 514 966 0
+GOSUB gs
+GOSUB LUMBER 512 966 3302
+
+; Arvore 8
+MOVE 510 970 0
+GOSUB gs
+GOSUB LUMBER 508 969 3280
+
+; Arvore 9
+MOVE 506 970 0
+MOVE 504 968 0
+GOSUB gs
+GOSUB LUMBER 504 966 3296
+
+; Arvore 10
+MOVE 501 971 0
+GOSUB gs
+GOSUB LUMBER 500 972 3290
+
+; Arvore 11
+MOVE 499 968 0
+GOSUB gs
+GOSUB LUMBER 500 966 3299
+
+; Arvore 12
+MOVE 495 964 0
+GOSUB gs
+GOSUB LUMBER 496 963 3280
+
+; Arvore 13
+MOVE 492 961 0
+GOSUB gs
+GOSUB LUMBER 492 960 3280
+
+; Arvore 14
+MOVE 494 958 0
+GOSUB gs
+GOSUB LUMBER 496 957 3280
+
+; Arvore 15
+MOVE 498 953 0
+GOSUB gs
+GOSUB LUMBER 500 954 3296
+
+; Arvore 16
+MOVE 494 949 0
+GOSUB gs
+GOSUB LUMBER 496 948 3283
+
+; Arvore 17
+MOVE 494 949 0
+GOSUB gs
+GOSUB LUMBER 492 951 3299
+
+; Arvore 18
+MOVE 494 949 0
+GOSUB gs
+GOSUB LUMBER 492 948 3299
+
+; Arvore 19
+MOVE 486 939 0
+GOSUB gs
+GOSUB LUMBER 484 939 3293
+
+; Arvore 20
+MOVE 484 941 0
+GOSUB gs
+GOSUB LUMBER 484 942 3280
+
+; Arvore 21
+MOVE 480 944 0
+GOSUB gs
+GOSUB LUMBER 480 945 3280
+
+; Arvore 22
+MOVE 478 939 0
+GOSUB gs
+GOSUB LUMBER 476 939 3293
+
+; Arvore 23
+MOVE 478 945 0
+GOSUB gs
+GOSUB LUMBER 476 945 3277
+
+; Arvore 24
+MOVE 478 948 0
+GOSUB gs
+GOSUB LUMBER 476 948 3283
+
+; Arvore 25
+MOVE 478 951 0
+GOSUB gs
+GOSUB LUMBER 476 951 3299
+
+; Arvore 26
+MOVE 478 960 0
+GOSUB gs
+GOSUB LUMBER 476 960 3280
+
+; Arvore 27
+MOVE 478 966 0
+GOSUB gs
+GOSUB LUMBER 476 966 3290
+
+; Arvore 28
+MOVE 478 972 0
+GOSUB gs
+GOSUB LUMBER 476 972 3286
+
+; Arvore 29
+MOVE 478 976 0
+GOSUB gs
+GOSUB LUMBER 476 975 3280
+
+; Arvore 30
+MOVE 473 983 0
+GOSUB gs
+GOSUB LUMBER 472 984 3302
+
+MOVE 508 978 0
+MOVE 536 978 0
+MOVE 542 990 0
+
+finditem ZLK
+set #findmod 17_3
+msg banker bank $
+wait 2s
+contpos 0 0
+wait 2s
+click #findx #findy g
+wait 4s
+Key Enter
+click 28 146 p
+wait 2s
+
+; Arvore 31
+  MOVE 471 977 0
+GOSUB gs
+GOSUB LUMBER 472 975 3280
+
+; Arvore 32
+MOVE 464 977 0
+GOSUB gs
+GOSUB LUMBER 464 978 3290
+
+; Arvore 33
+MOVE 464 977 0
+GOSUB gs
+GOSUB LUMBER 464 975 3283
+
+; Arvore 34
+MOVE 449 985 0
+MOVE 444 989 0
+GOSUB gs
+GOSUB LUMBER 444 990 3296
+
+; Arvore 35
+MOVE 441 969 0
+GOSUB gs
+GOSUB LUMBER 440 969 3302
+
+; Arvore 36
+MOVE 441 965 0
+GOSUB gs
+GOSUB LUMBER 440 966 3288
+
+; Arvore 37
+MOVE 441 965 0
+GOSUB gs
+GOSUB LUMBER 440 963 3293
+
+; Arvore 38
+MOVE 441 957 0
+GOSUB gs
+GOSUB LUMBER 440 957 3277
+
+; Arvore 39
+MOVE 438 953 0
+GOSUB gs
+GOSUB LUMBER 436 954 3283
+
+; Arvore 40
+MOVE 433 949 0
+GOSUB gs
+GOSUB LUMBER 432 951 3280
+
+; Arvore 41
+MOVE 429 950 0
+GOSUB gs
+GOSUB LUMBER 428 951 3280
+
+; Arvore 42
+MOVE 446 930 0
+MOVE 446 923 0
+GOSUB gs
+GOSUB LUMBER 448 921 3296
+
+; Arvore 43
+MOVE 447 917 0
+GOSUB gs
+GOSUB LUMBER 448 915 3277
+
+; Arvore 44
+MOVE 440 917 0
+GOSUB gs
+GOSUB LUMBER 440 915 3293
+
+; Arvore 45
+MOVE 446 915 0
+MOVE 450 907 0
+GOSUB gs
+GOSUB LUMBER 448 906 3277
+
+; Arvore 46
+MOVE 454 900 0
+GOSUB gs
+GOSUB LUMBER 452 900 3296
+
+; Arvore 47
+MOVE 454 900 0
+GOSUB gs
+GOSUB LUMBER 456 900 3293
+
+; Arvore 48
+MOVE 454 900 0
+GOSUB gs
+GOSUB LUMBER 456 897 3299
+
+; Arvore 49
+MOVE 455 887 0
+GOSUB gs
+GOSUB LUMBER 456 885 3280
+
+; Arvore 50
+MOVE 460 887 0
+GOSUB gs
+GOSUB LUMBER 460 888 3277
+
+; Arvore 51
+MOVE 460 884 0
+GOSUB gs
+GOSUB LUMBER 460 882 3293
+
+; Arvore 52
+MOVE 463 881 0
+GOSUB gs
+GOSUB LUMBER 464 879 3277
+
+; Arvore 53
+MOVE 467 881 0
+GOSUB gs
+GOSUB LUMBER 468 879 3293
+
+; Arvore 54
+MOVE 466 887 0
+GOSUB gs
+GOSUB LUMBER 464 888 3299
+
+; Arvore 55
+MOVE 466 891 0
+GOSUB gs
+GOSUB LUMBER 464 891 3290
+
+; Arvore 56
+MOVE 469 899 0
+GOSUB gs
+GOSUB LUMBER 468 900 3283
+
+; Arvore 57
+MOVE 476 902 0
+GOSUB gs
+GOSUB LUMBER 476 900 3290
+
+; Arvore 58
+MOVE 473 914 0
+GOSUB gs
+GOSUB LUMBER 472 915 3280
+
+; Arvore 59
+MOVE 479 915 0
+GOSUB gs
+GOSUB LUMBER 480 915 3293
+
+; Arvore 60
+MOVE 484 917 0
+GOSUB gs
+GOSUB LUMBER 484 918 3280
+
+MOVE 493 971 0
+MOVE 523 979 0
+MOVE 542 990 0
+
+finditem ZLK
+set #findmod 17_3
+msg banker bank $
+wait 2s
+contpos 0 0
+wait 2s
+click #findx #findy g
+wait 4s
+Key Enter
+click 28 146 p
+wait 2s
+
+; Arvore 61
+MOVE 484 917 0
+GOSUB gs
+GOSUB LUMBER 484 915 3288
+
+; Arvore 62
+MOVE 506 907 0
+GOSUB gs
+GOSUB LUMBER 508 906 3283
+
+; Arvore 63
+MOVE 510 911 0
+MOVE 512 909 0
+GOSUB gs
+GOSUB LUMBER 512 906 3286
+
+; Arvore 64
+MOVE 520 911 0
+GOSUB gs
+GOSUB LUMBER 520 909 3291
+
+; Arvore 65
+MOVE 531 918 0
+GOSUB gs
+GOSUB LUMBER 532 918 3296
+
+; Arvore 66
+MOVE 533 923 0
+GOSUB gs
+GOSUB LUMBER 532 924 3296
+
+; Arvore 67
+MOVE 535 919 0
+GOSUB gs
+GOSUB LUMBER 536 918 3283
+
+; Arvore 68
+MOVE 541 921 0
+MOVE 542 912 0
+GOSUB gs
+GOSUB LUMBER 544 912 3293
+
+; Arvore 69
+MOVE 545 905 0
+GOSUB gs
+GOSUB LUMBER 544 906 3302
+
+; Arvore 70
+MOVE 542 899 0
+GOSUB gs
+GOSUB LUMBER 540 900 3299
+
+; Arvore 71
+MOVE 556 908 0
+GOSUB gs
+GOSUB LUMBER 556 906 3293
+
+; Arvore 72
+MOVE 556 908 0
+GOSUB gs
+GOSUB LUMBER 556 909 3299
+
+; Arvore 73
+MOVE 571 916 0
+GOSUB gs
+GOSUB LUMBER 572 915 3277
+
+; Arvore 74
+MOVE 570 927 0
+GOSUB gs
+GOSUB LUMBER 568 927 3280
+
+; Arvore 75
+MOVE 576 932 0
+GOSUB gs
+GOSUB LUMBER 576 930 3286
+
+; Arvore 76
+MOVE 576 932 0
+GOSUB gs
+GOSUB LUMBER 576 933 3286
+
+; Arvore 77
+MOVE 581 932 0
+GOSUB gs
+GOSUB LUMBER 580 930 3283
+
+; Arvore 78
+MOVE 584 932 0
+MOVE 586 936 0
+GOSUB gs
+GOSUB LUMBER 584 936 3277
+
+; Arvore 79
+MOVE 601 947 0
+GOSUB gs
+GOSUB LUMBER 600 948 3283
+
+MOVE 604 980 0
+MOVE 544 978 0
+
+finditem ZLK
+set #findmod 17_3
+msg banker bank $
+wait 2s
+contpos 0 0
+wait 2s
+click #findx #findy g
+wait 4s
+Key Enter
+click 28 146 p
+wait 2s
+
+; Arvore 80
+MOVE 605 947 0
+GOSUB gs
+GOSUB LUMBER 604 945 3302
+
+; Arvore 81
+MOVE 608 953 0
+GOSUB gs
+GOSUB LUMBER 608 954 3293
+
+; Arvore 82
+MOVE 608 953 0
+GOSUB gs
+GOSUB LUMBER 608 951 3299
+
+; Arvore 83
+MOVE 622 948 0
+GOSUB gs
+GOSUB LUMBER 620 948 3286
+
+; Arvore 84
+MOVE 622 948 0
+GOSUB gs
+GOSUB LUMBER 620 945 3288
+
+; Arvore 85
+MOVE 628 953 0
+GOSUB gs
+GOSUB LUMBER 628 951 3296
+
+; Arvore 86
+MOVE 633 953 0
+GOSUB gs
+GOSUB LUMBER 632 951 3277
+
+; Arvore 87
+MOVE 637 953 0
+GOSUB gs
+GOSUB LUMBER 636 954 3296
+
+; Arvore 88
+MOVE 637 953 0
+GOSUB gs
+GOSUB LUMBER 636 951 3302
+
+; Arvore 89 - passando pelo BANCO antes
+MOVE 642 946 0
+MOVE 642 959 0
+GOSUB gs
+GOSUB LUMBER 640 957 3296
+
+; Arvore 90
+MOVE 642 959 0
+GOSUB gs
+GOSUB LUMBER 640 960 3302
+
+MOVE 642 959 0
+MOVE 552 959 0
+MOVE 542 989 0
+
+finditem ZLK
+set #findmod 17_3
+msg banker bank $
+wait 2s
+contpos 0 0
+wait 2s
+click #findx #findy g
+wait 4s
+Key Enter
+click 28 146 p
+wait 2s
+
+; Arvore 91
+MOVE 647 959 0
+GOSUB gs
+GOSUB LUMBER 648 957 3290
+
+; Arvore 92
+MOVE 659 966 0
+GOSUB gs
+GOSUB LUMBER 660 966 3290
+
+; Arvore 93
+MOVE 663 965 0
+GOSUB gs
+GOSUB LUMBER 664 966 3280
+
+; Arvore 94
+MOVE 662 957 0
+GOSUB gs
+GOSUB LUMBER660 957 3283
+
+; Arvore 95
+MOVE 670 954 0
+GOSUB gs
+GOSUB LUMBER 670 952 3296
+
+; Arvore 96
+MOVE 684 956 0
+GOSUB gs
+GOSUB LUMBER 684 957 3286
+
+; Arvore 97
+MOVE 689 956 0
+GOSUB gs
+GOSUB LUMBER 690 955 3280
+
+; Arvore 98
+MOVE 689 956 0
+GOSUB gs
+GOSUB LUMBER 688 957 3277
+
+; Arvore 99
+MOVE 691 962 0
+GOSUB gs
+GOSUB LUMBER 692 960 3296
+
+; Arvore 100
+MOVE 691 962 0
+GOSUB gs
+GOSUB LUMBER 692 963 3296
+
+; Arvore 101
+MOVE 695 968 0
+GOSUB gs
+GOSUB LUMBER 696 966 3302
+
+; Arvore 102
+MOVE 695 976 0
+GOSUB gs
+GOSUB LUMBER 696 975 3296
+
+; Arvore 103
+MOVE  695 982 0
+GOSUB gs
+GOSUB LUMBER 696 981 3302
+
+; Arvore 104
+MOVE 707 994 0
+GOSUB gs
+GOSUB LUMBER 708 993 3283
+
+; Arvore 105
+MOVE 711 994 0
+GOSUB gs
+GOSUB LUMBER 712 993 3293
+
+; Arvore 106
+MOVE 715 1004 0
+GOSUB gs
+GOSUB LUMBER 716 1005 3299
+
+; Arvore 107
+MOVE 714 1010 0
+GOSUB gs
+GOSUB LUMBER 712 1008 3299
+
+; Arvore 108
+MOVE 714 1010 0
+GOSUB gs
+GOSUB LUMBER 716 1011 3290
+
+; Arvore 109
+MOVE 707 1016 0
+GOSUB gs
+GOSUB LUMBER 708 1014 3286
+
+; Arvore 110
+MOVE 706 1027 0
+GOSUB gs
+GOSUB LUMBER 704 1026 3290
+
+; Arvore 111
+MOVE 706 1027 0
+GOSUB gs
+GOSUB LUMBER 708 1026 3299
+
+; Arvore 112
+MOVE 698 1018 0
+MOVE 683 1018 0
+MOVE 666 1019 0
+MOVE 652 1022 0
+GOSUB gs
+GOSUB LUMBER 652 1020 3299
+
+MOVE 548 1028 0
+MOVE 548 983 0
+MOVE 537 986 0
+
+finditem ZLK
+set #findmod 17_3
+msg banker bank $
+wait 2s
+contpos 0 0
+wait 2s
+click #findx #findy g
+wait 4s
+Key Enter
+click 28 146 p
+wait 2s
+
+
+; Arvore 113
+MOVE 652 1022 0
+GOSUB gs
+GOSUB LUMBER 652 1023 3302
+
+; Arvore 114
+MOVE 644 1022 0
+GOSUB gs
+GOSUB LUMBER 644 1023 3283
+
+; Arvore 115
+MOVE 642 1027 0
+GOSUB gs
+GOSUB LUMBER 640 1026 3283
+
+; Arvore 116
+MOVE 642 1027 0
+GOSUB gs
+GOSUB LUMBER 644 1029 3302
+
+; Arvore 117
+MOVE 642 1027 0
+GOSUB gs
+GOSUB LUMBER 644 1026 3277
+
+; Arvore 117A
+MOVE 638 1027 0
+GOSUB gs
+GOSUB LUMBER 636 1026 3277
+
+
+; Arvore 118
+MOVE 634 1027 0
+MOVE 644 1017 0
+MOVE 639 1016 0
+GOSUB gs
+GOSUB LUMBER 640 1017 3283
+
+; Arvore 119
+MOVE 639 1016 0
+GOSUB gs
+GOSUB LUMBER 640 1014 3280
+
+; Arvore 120
+MOVE 632 1016 0
+GOSUB gs
+GOSUB LUMBER 632 1014 3288
+
+MOVE 548 1028 0
+MOVE 548 983 0
+MOVE 537 986 0
+
+finditem ZLK
+set #findmod 17_3
+msg banker bank $
+wait 2s
+contpos 0 0
+wait 2s
+click #findx #findy g
+wait 4s
+Key Enter
+click 28 146 p
+wait 2s
+
+; Arvore 121
+MOVE 629 1019 0
+GOSUB gs
+GOSUB LUMBER 628 1020 3280
+
+; Arvore 122
+MOVE 623 1025 0
+GOSUB gs
+GOSUB LUMBER 624 1026 3280
+
+; Arvore 123
+MOVE 617 1025 0
+GOSUB gs
+GOSUB LUMBER 616 1026 3290
+
+; Arvore 124
+MOVE 617 1019 0
+GOSUB gs
+GOSUB LUMBER 616 1020 3283
+
+; Arvore 125
+MOVE 609 1016 0
+GOSUB gs
+GOSUB LUMBER 608 1017 3280
+
+; Arvore 126
+MOVE 596 1019 0
+GOSUB gs
+GOSUB LUMBER 596 1020 3283
+
+; Arvore 127
+MOVE 596 1019 0
+GOSUB gs
+GOSUB LUMBER 596 1017 3296
+
+; Arvore 128
+MOVE 586 1026 0
+GOSUB gs
+GOSUB LUMBER 588 1026 3299
+
+; Arvore 129
+MOVE 586 1026 0
+GOSUB gs
+GOSUB LUMBER 584 1026 3290
+
+; Arvore 130
+MOVE 571 1024 0
+GOSUB gs
+GOSUB LUMBER 572 1023 3299
+
+; Arvore 131
+MOVE 569 1022 0
+GOSUB gs
+GOSUB LUMBER 568 1023 3280
+
+; Arvore 132
+MOVE 558 1019 0
+GOSUB gs
+GOSUB LUMBER 556 1020 3288
+
+MOVE 548 1019 0
+MOVE 548 983 0
+MOVE 537 986 0
+
+finditem ZLK
+set #findmod 17_3
+msg banker bank $
+wait 2s
+contpos 0 0
+wait 2s
+click #findx #findy g
+wait 4s
+Key Enter
+click 28 146 p
+wait 2s
+
+goto cordenadas
+
+sub lumber
+comida:
+finditem %Comida
+if #findkind = -1
+{
+ignoreitem reset
+event sysmessage Comida nao encontrada!
+}
+GOSUB gs
+if #findkind = 1
+{
+ignoreitem #findid
+goto comida
+}
+GOSUB gs
+set #lobjectid #findid
+event macro 17 0
+GOSUB gs
+Set %Chance 0
+inicio:
+if %Chance >= %Tentativa
+{
+return
+}
+GOSUB gs
+Set %Chance %Chance + 1
+
+machado:
+GOSUB gs
+finditem %Machado C
+if #findkind = -1
+{
+ignoreitem reset
+event sysmessage Machado nao encontrado!
+goto machado
+}
+GOSUB gs
+if #findkind = 1
+{
+ignoreitem #findid
+goto machado
+}
+GOSUB gs
+set #lobjectid #findid
+event macro 17 0
+GOSUB gs
+
+set #lTargetX %1
+set #lTargetY %2
+set #lTargetZ 0
+set #lTargetKind 3
+set #lTargetTile %3
+GOSUB gs
+target
+event macro 25 0
+event macro 22 0
+Set #SCNT 0
+
+delete journal
+scanjournal
+
+if #hits < #maxhits
+{
+msg Guards ! $
+msg Sai fora pau no cu ! $
+}
+if ATTEMPTING_TO_PEEK_INTO_YOUR in #journal
+{
+msg Guards ! $
+msg Sai fora pau no cu ! $
+}
+if ATTEMPTING_TO_STEAL in #journal
+{
+msg Guards ! $
+msg Sai fora pau no cu ! $
+}
+if TRYING_TO_STEAL in #journal
+{
+msg Guards ! $
+msg Sai fora pau no cu ! $
+}
+if ATTACKING_YOU in #journal
+{
+msg Guards ! $
+msg Sai fora pau no cu ! $
+}
+if HITS_YOU in #journal
+{
+msg Guards ! $
+msg Sai fora pau no cu ! $
+}
+
+; ============================================================
+jornal:
+if #SCNT > %Tempo
+{
+goto inicio
+}
+
+delete journal
+scanjournal
+
+if #hits < #maxhits
+{
+msg Guards ! $
+}
+if ATTEMPTING_TO_PEEK_INTO_YOUR in #journal
+{
+msg Guards ! $
+}
+if ATTEMPTING_TO_STEAL in #journal
+{
+msg Guards ! $
+}
+if TRYING_TO_STEAL in #journal
+{
+msg Guards ! $
+}
+if ATTACKING_YOU in #journal
+{
+msg Guards ! $
+}
+if HITS_YOU in #journal
+{
+msg Guards ! $
+}
+
+if catou_gravetos_podres in #journal
+{
+goto inicio
+}
+
+if chop in #journal
+{
+return
+}
+
+if ai in #journal
+{
+return
+}
+
+if put in #journal
+{
+goto inicio
+}
+if lumberjacking in #journal
+{
+goto inicio
+}
+if no_logs in #journal
+{
+return
+}
+if Nao_a_madeiras in #journal
+{
+return
+}
+if You_can't in #journal
+{
+return
+}
+if immune in #journal
+{
+return
+}
+if foliage in #journal
+{
+return
+}
+if too_far in #journal
+{
+return
+}
+if fail in #journal
+{
+goto inicio
+}
+if errado in #journal
+{
+goto inicio
+}
+goto jornal
+
+; =-=-=- FIM -=-=-=
+
+
+sub gs
+;event sysmessage Testando gs.
+delete journal
+scanjournal
+
+if #hits < #maxhits
+{
+msg Guards  $
+}
+if ATTEMPTING_TO_PEEK_INTO_YOUR in #journal
+{
+msg Guards ! $
+}
+if ATTEMPTING_TO_STEAL in #journal
+{
+msg Guards ! $
+}
+if TRYING_TO_STEAL in #journal
+{
+msg Guards ! $
+}
+if ATTACKING_YOU in #journal
+{
+msg Guards ! $
+}
+if HITS_YOU in #journal
+{
+msg Guards ! $
+}
+;event sysmessage fim Testando gs.
+return
+end sub

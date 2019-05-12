@@ -1,0 +1,579 @@
+InitEvents
+---
+Menu Clear
+Menu Hideeuo
+Menu Window Title Super Macro
+Menu Window Color $FF1144
+Menu Window Size 200 500
+Menu Font BGColor $FF1144
+Menu Font Color White
+Menu Font Size 10
+Menu Font Style B I
+Menu Font Name Tahoma
+Menu Text Texto1 25 20 Selecione a skill a qual
+Menu Text Texto1 30 35 você deseja macroar
+Menu Button Anatomy 20 80 160 30 Anatomy
+Menu Button Animal 20 130 160 30 Animal Lore
+Menu Button Arms 20 180 160 30 Arms Lore
+Menu Button Evaluating 20 230 160 30 Evaluating Intelligence
+Menu Button Forensic 20 280 160 30 Forensic Evaluation
+Menu Button Item 20 330 160 30 Item Identification
+Menu Button Taste 20 380 160 30 Taste Identification
+Menu Font Color Yellow
+Menu Text Texto1 65 430 Crafted by
+Menu Text Texto1 45 445 Spirit
+Menu Show 0 0
+Set #MenuButton N/A
+
+;============================ Verificardor ============================;
+
+verificador:
+
+If #MenuButton = Anatomy
+{ 
+Set #MenuButton N/A
+Goto IAnatomy
+}
+
+If #MenuButton = Animal
+{
+Goto targetanimal
+}
+
+If #MenuButton = Arms
+{
+Goto IArms
+}
+
+If #MenuButton = Evaluating
+{
+Goto IEvaluating
+}
+
+If #MenuButton = Forensic
+{
+Goto IForensic
+}
+
+If #MenuButton = Item
+{
+Goto IItem
+}
+
+If #MenuButton = Taste
+{
+Goto ITaste
+}
+
+If #MenuButton = Closed
+{
+Goto Fim
+}
+
+Goto verificador
+
+;============================ Sub Loading ============================;
+
+
+Sub Loading
+
+Menu Clear
+Menu Window Title Loading
+Menu Window Color $FF1144
+Menu Window Size 200 500
+Menu Font BGColor $FF1144
+Menu Font Color White
+Menu Font Size 10
+Menu Font Style B
+Menu Font Name Tahoma
+Menu Text Texto1 50 100 l 
+Menu Text Texto1 50 115 l 
+Menu Text Texto1 50 130 l 
+Menu Text Texto1 50 145 l 
+Menu Text Texto1 50 160 l 
+Menu Text Texto1 50 175 l 
+Menu Text Texto1 50 190 l 
+Menu Text Texto1 50 205 l 
+Menu Text Texto1 50 220 l 
+Menu Text Texto1 50 235 l 
+Menu Text Texto1 50 250 l 
+Menu Text Texto1 50 265 l 
+Menu Text Texto1 50 280 l 
+Menu Text Texto1 50 295 l 
+Menu Text Texto1 50 310 l 
+Menu Text Texto1 50 325 l 
+Menu Text Texto1 50 340 l 
+Menu Text Texto1 50 355 l 
+Menu Text Texto1 50 370 l 
+Menu Text Texto1 50 385 l 
+Menu Text Texto1 50 400 l 
+Menu Text Texto1 150 100 l 
+Menu Text Texto1 150 115 l 
+Menu Text Texto1 150 130 l 
+Menu Text Texto1 150 145 l 
+Menu Text Texto1 150 160 l 
+Menu Text Texto1 150 175 l 
+Menu Text Texto1 150 190 l 
+Menu Text Texto1 150 205 l 
+Menu Text Texto1 150 220 l 
+Menu Text Texto1 150 235 l 
+Menu Text Texto1 150 250 l 
+Menu Text Texto1 150 265 l 
+Menu Text Texto1 150 280 l 
+Menu Text Texto1 150 295 l 
+Menu Text Texto1 150 310 l 
+Menu Text Texto1 150 325 l 
+Menu Text Texto1 150 340 l 
+Menu Text Texto1 150 355 l 
+Menu Text Texto1 150 370 l 
+Menu Text Texto1 150 385 l 
+Menu Text Texto1 150 400 l 
+Menu Text Texto1 53 84 ____________
+Menu Text Texto1 53 400 ____________
+Menu Font Size 20
+Menu Font Color Red
+Menu Text Texto2 45 30 Loading
+Menu Font Color Yellow
+Menu Font Size 10
+Menu Text Texto1 65 430 Crafted by
+Menu Text Texto1 45 445 Rafael Lancaster
+Menu Font Size 50
+Menu Font Color Red
+Menu Text Texto1 58 330 __
+wait 5
+Menu Text Texto1 58 320 __
+wait 5
+Menu Text Texto1 58 310 __
+wait 5
+Menu Text Texto1 58 300 __
+wait 5
+Menu Text Texto1 58 290 __
+wait 5
+Menu Text Texto1 58 280 __
+wait 5
+Menu Text Texto1 58 270 __
+wait 5
+Menu Text Texto1 58 260 __
+wait 5
+Menu Text Texto1 58 250 __
+wait 5
+Menu Text Texto1 58 240 __
+wait 5
+Menu Font Size 50
+Menu Font Color Yellow
+Menu Text Texto1 58 230 __
+wait 3
+Menu Text Texto1 58 220 __
+wait 3
+Menu Text Texto1 58 210 __
+wait 3
+Menu Text Texto1 58 200 __
+wait 3
+Menu Text Texto1 58 190 __
+wait 3
+Menu Text Texto1 58 180 __
+wait 3
+Menu Text Texto1 58 170 __
+wait 3
+Menu Text Texto1 58 160 __
+wait 3
+Menu Text Texto1 58 150 __
+wait 3
+Menu Text Texto1 58 140 __
+wait 3
+Menu Font Size 50
+Menu Font Color Green
+Menu Text Texto1 58 130 __
+Menu Text Texto1 58 120 __
+Menu Text Texto1 58 110 __
+Menu Font Size 10
+Menu Font Color White
+Menu Text Texto1 53 84 ____________
+Menu Font Size 50
+Menu Font Color Green
+Menu Text Texto1 58 100 __
+Menu Font Size 10
+Menu Font Color White
+Menu Text Texto1 53 84 ____________
+Menu Font Size 50
+Menu Font Color Green
+Menu Text Texto1 58 90 __
+Menu Font Size 10
+Menu Font Color White
+Menu Text Texto1 53 84 ____________
+Menu Font Size 50
+Menu Font Color Green
+Menu Text Texto1 58 80 __
+Menu Font Size 20
+Menu Font Color Red
+Menu Text Texto2 45 30 Loading
+Menu Font Size 10
+Menu Font Color White
+Menu Text Texto2 53 84 ____________
+Menu Font Size 50
+Menu Font Color Green
+Menu Text Texto1 58 70 __
+Menu Font Size 20
+Menu Font Color Red
+Menu Text Texto2 45 30 Loading
+Menu Font Size 10
+Menu Font Color White
+Menu Text Texto1 53 84 ____________
+Menu Font Size 50
+Menu Font Color Green
+Menu Text Texto1 58 60 __
+Menu Font Size 20
+Menu Font Color Red
+Menu Text Texto2 45 30 Loading
+Menu Font Size 10
+Menu Font Color White
+Menu Text Texto2 53 84 ____________
+Menu Font Size 50
+Menu Font Color Green
+Menu Text Texto1 58 50 __
+Menu Font Size 20
+Menu Font Color Red
+Menu Text Texto2 45 30 Loading
+Menu Font Size 10
+Menu Font Color White
+Menu Text Texto1 53 84 ____________
+Menu Font Size 50
+Menu Font Color Green
+Menu Text Texto1 58 40 __
+Menu Font Size 20
+Menu Font Color Red
+Menu Text Texto2 45 30 Loading
+Menu Font Size 10
+Menu Font Color White
+Menu Text Texto1 53 84 ____________
+Menu Font Size 50
+Menu Font Color Green
+Menu Text Texto1 58 30 __
+Menu Font Size 20
+Menu Font Color Red
+Menu Delete Texto2
+Menu Text Texto1 35 30 Complete
+Menu Font Size 10
+Menu Font Color White
+Menu Text Texto1 53 84 ____________
+Menu Show 0 0
+wait 2s
+return
+
+;============================ Sub Menu Macro ============================;
+
+
+Sub mmacro
+
+Menu Clear
+Menu Window Title %skill
+Menu Window Color $FF1144
+Menu Window Size 200 500
+Menu Font BGColor $FF1144
+Menu Font Color White
+Menu Font Size 15
+Menu Font Style B I
+Menu Font Name Tahoma
+Menu Text Texto1 50 20 Bom Dia : 
+Menu Font Size 10
+Menu Text Texto1 25 75 Você está Macroando :
+Menu Text Texto1 15 125 Atualmente você tem uma
+Menu Text Texto1 25 145 skill base dessa skill de :
+Menu Text Texto1 65 195 Desde as :
+Menu Text Texto1 20 245 Totalizando um tempo de 
+Menu Text Texto1 65 265 Macro de :
+Menu Text Texto1 45 315 Atualmente são :
+Menu Text Texto1 15 365 E você já subi sua skill em :
+Menu Font Color Yellow
+Menu Text Texto1 65 430 Crafted by
+Menu Text Texto1 45 445 Rafael Lancaster
+Menu Font Color Black
+Menu Font Size 12
+Menu Font Style B
+Menu Text Texto1 20 50 #Charname
+Menu Text Texto1 60 100 %skill
+Menu Text Texto2 10 170 %skillr1 pontos e %skillr3 décimos
+Menu Text Texto1 20 220 %tempo1 h / %tempo4 mim / %tempo6 s
+Menu Text Texto3 20 290 %macro3 h / %macro6 mim / %macro8 s
+Menu Text Texto4 20 340 %relogio1 h / %relogio4 mim / %relogio6 s
+Menu Text Texto5 10 390 %skillv1 pontos e %skillv2 décimos
+return
+
+;============================ Sub Atualizador ============================;
+
+Sub atualizador
+
+ChooseSkill Anat real
+Gosub skillr
+Menu Delete Texto2
+Menu Text Texto2 10 170 %skillr1 pontos e %skillr3 décimos
+Gosub macro
+Menu Delete Texto3
+Menu Text Texto3 20 290 %macro3 h / %macro6 mim / %macro8 s
+Gosub relogio
+Menu Delete Texto4
+Menu Text Texto4 20 340 %relogio1 h / %relogio4 mim / %relogio6 s
+Gosub skillv
+Menu Delete Texto5
+Menu Text Texto5 10 390 %skillv1 pontos e %skillv2 décimos
+wait 10
+return
+
+;============================ Sub Tempo ============================;
+
+Sub tempo
+
+Set %tempo1 #time / 10000
+Set %tempo2 %tempo1 * 10000
+Set %tempo3 #time - %tempo2
+Set %tempo4 %tempo3 / 100
+Set %tempo5 %tempo4 * 100
+Set %tempo6 %tempo3 - %tempo5
+return
+
+;============================ Sub Macro Tempo ============================;
+
+Sub macro
+
+Set %macro2 #SCNT - %macro1
+Set %macro3 %macro2 / 3600
+Set %macro4 %macro3 * 3600
+Set %macro5 %macro2 - %macro4
+Set %macro6 %macro5 / 60
+Set %macro7 %macro6 * 60
+Set %macro8 %macro5 - %macro7
+return
+
+;============================ Sub Relógio ============================;
+
+Sub relogio
+
+Set %relogio1 #time / 10000
+Set %relogio2 %relogio1 * 10000
+Set %relogio3 #time - %relogio2
+Set %relogio4 %relogio3 / 100
+Set %relogio5 %relogio4 * 100
+Set %relogio6 %relogio3 - %relogio5
+return
+
+;============================ Sub Skill Real ============================;
+
+Sub skillr
+
+Set %skillr1 #skill / 10
+Set %skillr2 %skillr1 * 10
+Set %skillr3 #skill - %skillr2
+return
+
+;============================ Sub Skill Inicial ============================;
+
+Sub skilli
+
+Set %skilli1 #skill / 10
+Set %skilli2 %skilli1 * 10
+Set %skilli3 #skill - %skilli2
+return
+
+;============================ Sub Skill Variável ============================;
+
+Sub skillv
+
+Set %skillv1 %skillr1 - %skilli1
+Set %skillv2 %skillr3 - %skilli3
+return
+
+;============================ Target Animal ============================;
+
+targetanimal:
+
+Menu Clear
+Menu Window Title Target do Animal
+Menu Window Color $FF1144
+Menu Window Size 200 200
+Menu Font BGColor $FF1144
+Menu Font Color White
+Menu Font Size 10
+Menu Font Style B I
+Menu Font Name Tahoma
+Menu Text Texto1 20 10 Click no botão abaixo p/
+Menu Text Texto1 30 25 usar animal lore 1x :
+Menu Button Animal2 20 50 160 30 Animal Lore
+Menu Text Texto1 20 90 Agora click no animal que
+Menu Text Texto1 15 105 deseja usar o animal lore e
+Menu Text Texto1 20 120 depois click em Macroar :
+Menu Button MacroarAnimal 20 150 160 30 Macroar
+Menu Show 0 0
+Set #MenuButton N/A
+
+;============================ Verificardor 2 ============================;
+
+verificador2:
+
+If #MenuButton = Animal2
+{
+Event Macro 13 2
+wait 2s
+Set #MenuButton N/A
+}
+
+If #MenuButton = MacroarAnimal
+{
+Goto IAnimal
+}
+
+Goto verificador2
+;============================ Anatomy ============================;
+
+
+IAnatomy:
+
+Gosub Loading
+Set %Skill Anatomy
+Set %macro1 #SCNT
+Gosub tempo
+ChooseSkill Anat real
+Gosub skilli
+Gosub mmacro
+Goto Anatomy
+
+Anatomy:
+gosub atualizador
+Event Macro 13 1
+Event Macro 25 0
+Event Macro 23 0
+gosub atualizador
+Goto Anatomy
+
+;============================ Animal Lore ============================;
+
+
+IAnimal:
+
+Set %animal #ltargetid
+Gosub Loading
+Set %Skill Animal Lore
+Set %macro1 #SCNT
+Gosub tempo
+ChooseSkill Anat real
+Gosub skilli
+Goto Animal
+
+Animal:
+
+Gosub relogio
+Gosub macro
+ChooseSkill Anil real
+Gosub skillr
+Gosub skillv
+Gosub mmacro
+Event Macro 13 2
+Event Macro 25 0
+Set #LTargetID %animal
+Event Macro 22 0
+Wait 1s
+Goto Animal
+
+CODE  
+
+
+Macro de magery q pode se usar medition ou potion de mana:
+ 
+
+
+; =-=-=- INICIO -=-=-=
+initevents
+; =====================================================================
+; Macro de Magery v2.0 por SoloYo (Medit ou Mana)
+; Servidor: Free
+; Distribuição: Gratúita
+; =====================================================================
+event sysmessage Conheca o portal de UO da TkS Guild.
+event sysmessage  www.tksguild.com.br
+; Mana minima para meditar ou tomar pocao
+Set %mana 40
+
+; Cor da Pocao
+Set %cor_pocao 1152
+
+; Tempo entre cada magia 
+Set %tempo_magia 1s
+
+; Tempo entre cada medit
+Set %tempo_medit 4s
+
+; Tempo apos pocao
+Set %tempo_medit 1s
+
+; =====================================================================
+
+; Open Paperdoll
+event macro 8 1
+wait 1s
+
+; Open status
+event macro 8 2
+wait 1s
+
+; Open backpack
+event macro 8 7
+wait 1s
+
+; =====================================================================
+
+loop:
+if #mana <= %mana
+{
+goto mana
+}
+
+event macro 15 4
+target
+event macro 25 0
+event macro 23 0
+wait %tempo_magia
+goto loop
+
+; =====================================================================
+
+medit:
+if #mana >= #int
+{
+goto loop
+}
+
+event macro 13 46
+wait %tempo_medit
+goto medit
+
+; =====================================================================
+
+mana:
+FindItem WUF
+
+if #findkind = 0
+{
+if #FINDCOL <> 1152
+{
+ignoreitem #FindID
+goto mana
+}
+
+set #LObjectID #FindID
+event macro 17 0
+wait %tempo_medit
+}
+
+if #findkind = 1
+{
+ignoreitem #FindID
+goto mana
+}
+
+if #findkind = -1
+{
+ignoreitem reset
+goto medit
+}
+
+; =-=-=- FIM -=-=-=
+

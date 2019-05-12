@@ -1,0 +1,391 @@
+;===================
+;===== Inicio ======
+;===================
+initevents
+;===================================
+;===== Configuracoes Iniciais ======
+;===================================
+in:
+; Open Paperdoll
+event macro 8 1
+wait 10
+
+; Open status
+event macro 8 2
+wait 10
+
+; Open backpack
+event macro 8 7
+wait 10
+set #SYSMSGCOL 65
+event sysmessage .::. Macro Mining Bank  .::. Versao: 1.0 .::.
+wait 3s
+
+
+;=====================================
+;===== Checagem 2 (nao remova!) ======
+;=====================================
+
+check:
+IF #CHARNAME <HighKo>
+{
+Display Adquirir: Macro Comunitario
+set #SYSMSGCOL 05
+Event sysmessage Este macro nao foi feito para voce!
+;
+halt
+}
+else
+}
+set #SYSMSGCOL 65
+event sysmessage Verificado com sucesso. Obrigado #CHARNAME  !!!
+{
+wait 4s
+goto rotas
+
+
+;===================================
+;===== CONFIGURACAO - MINERAR ======
+;===================================
+
+if #MAXHITS > #HITS 
+{ 
+msg Guards ! $ 
+Key Enter
+wait 8s 
+} 
+
+; Pickaxes
+set %pickaxe NPF_QPF_TWF_WWF
+
+; Numero de tentativas
+set %tentativas 2
+
+; Tempo maximo de espera em cada tentativa (em segundos)
+set %tempo_max_tentativa 10
+
+; Tempo entre cada tentativa (pode ser usado no lag ou em servidores que não aceitam minerar muito rapido)
+set %tempoPickaxe 10
+
+; Distancia maxima a minerar (distancia em tiles)
+; Padrao 2 (corresponde a 25 posições diferentes sem caminhar)
+set %target_max_distance 2
+
+; ==========  CONFIGURAÇÕES - ALIMENTAR
+
+; Alimentar? (Sim ou Nao)
+Set %alimentar Sim
+
+; Comidas
+Set %comida RUD_FUD_BDF_GQE_IQE_ZPE_SQD_OQE_KPE_VQE_TQE_YSD_JQE_YWI_AXI_PQD_QQD_MQE_SPE_RQE_END_RGG_AQD_FUD_ZBG_WLI_QRD_YLI_NRD_PRD_XLI_ACG_IGI_GUD_HND_QSD
+
+; ==========  CONFIGURAÇÕES - HIDING
+
+; Hiding? (Sim ou Nao)
+Set %hiding Nao
+
+; ==========  CONFIGURAÇÕES - ANDAR
+
+; Distancia a andar
+Set %distancia_andar 5
+
+; ==========  CONFIGURAÇÕES - FIXAS (nao alterar)
+
+Set %target_tmp_X %target_max_distance
+Set %target_tmp_Y %target_max_distance
+
+Set #ltargetid 0
+Set #ltargetz 0
+Set #ltargetkind 3
+
+; ========== Title Ultima - Status do Char e Skill
+
+sub title 
+set %delta #skill - %skill 
+setuotitle Mining Bank Macro | Skill: %Skill : ( Valor Base: %skillr1 pontos e %skillr3 décimos ) | Peso: #weight / #maxweight | .::. Mining Bank by ForSek .::.
+return
+
+; ==========  INICIO
+Inicio:
+gosub ajusta_target
+
+ChooseSkill %Skill
+GoSub comida
+GoSub skillr
+GoSub skillv
+Set %Skill Mining
+GoSub skilli
+
+Set %tentativa_atual 0
+
+goto mine
+
+; ==========  MINE
+mine:
+
+if #MAXHITS > #HITS 
+{ 
+msg Guards ! $ 
+Key Enter
+wait 8s 
+}
+
+gosub title
+
+hiding:
+if #charstatus <> H && %hiding = Sim
+{
+ event macro 13 21
+ wait 3s
+ goto hiding
+}
+
+wait %TempoPickaxe
+
+Set %tentativa_atual %tentativa_atual + 1
+
+if %tentativa_atual > %tentativas
+{
+ goto inicio
+}
+
+gosub pickaxe
+
+Set #SCNT 0
+
+goto jornal
+
+
+; ==========  JORNAL
+jornal:
+if #MAXHITS > #HITS 
+{ 
+msg Guards !$ 
+Key Enter
+wait 8s 
+} 
+deleteJournal
+scanJournal 1
+
+;quando atacado
+if #sysmsg = YOU_ARE_PREOCCUPIED_WITH_THOUGHTS_OF_BATTLE.
+{
+event Macro 6 0
+return
+}
+
+if #WEIGHT > 220
+{
+ goto banco
+}
+
+if #SCNT >= %tempo_max_tentativa
+{
+ goto mine
+}
+
+;mining_los
+if you_have_no_line_of_sight_to_that_location in #journal || voce_nao_tem_uma_linha_de_visao_para_essa_posicao in #journal
+{
+ goto inicio
+}
+
+;mining_reach
+if o_alvo_esta_muito in #journal
+{
+goto inicio
+}
+
+;mining_1
+if try_mining_elsewhere in #journal || tente_minerar_em_outro_lugar in #journal
+{
+ goto inicio
+}
+
+;mining_2
+if there_is_nothing_here_to_mine_for in #journal || nao_a_nada_aqui_para_minerar in #journal
+{
+ goto inicio
+}
+
+;mining_3
+if there_is_no_ore_here_to_mine in #journal || nao_a_minerio_aqui in #journal
+{
+ goto inicio
+}
+
+;mining_4
+if try_mining_in_rock in #journal || tente_minerar_na_rocha in #journal
+{
+ goto inicio
+}
+
+if #MAXHITS > #HITS 
+{ 
+msg Guards !$ 
+Key Enter
+wait 8s 
+} 
+
+if fail in #journal || nenhum_minerio_aproveitavel in #journal
+{
+ goto mine
+}
+
+if in_your_pack in #journal || em_sua_mochila in #journal
+{
+ goto mine
+}
+
+if increased in #journal
+{
+ goto mine
+}
+
+goto jornal
+
+; ====================Ajusta target====================
+sub ajusta_target
+
+if %target_tmp_Y < 0 - %target_max_distance
+{
+set %target_tmp_Y %target_max_distance
+set %target_tmp_X %target_tmp_X - 1
+}
+
+if #MAXHITS > #HITS 
+{ 
+msg Guards !$ 
+Key Enter
+wait 8s 
+} 
+
+if %target_tmp_X < 0 - %target_max_distance
+{
+set %target_tmp_X %target_max_distance
+
+ set %direcao %direcao + 1
+ set %anda_x #charposx
+ set %anda_y #charposy
+
+ if %direcao >= 4
+ {
+  set %anda_y #charposy - %distancia_andar
+  set %direcao 0
+ }
+ if %direcao = 3
+ {
+  set %anda_x #charposx - %distancia_andar
+ }
+ if %direcao = 2
+ {
+  set %anda_y #charposy + %distancia_andar
+ }
+ if %direcao = 1
+ {
+  set %anda_x #charposx + %distancia_andar
+ }
+
+ move %anda_x %anda_y 0 2s
+}
+
+set #ltargetx #charposx - %target_tmp_X
+set #ltargety #charposy - %target_tmp_Y
+
+set %target_tmp_Y %target_tmp_Y - 1
+
+return
+
+; ====================PICKAXE====================
+sub pickaxe
+
+if #MAXHITS > #HITS 
+{ 
+msg Guards !$ 
+Key Enter
+wait 8s 
+} 
+
+finditem %Pickaxe
+
+ if #findkind = 0
+ {
+   set #LObjectID #FindID
+   event macro 17 0
+   target
+   event macro 25 0
+   event macro 22 0
+   return
+ }
+
+ if #findkind = 1
+ {
+   ignoreitem #FindID
+   gosub pickaxe
+   return
+ }
+
+ if #findkind = -1
+ {
+   ignoreitem reset
+   event sysmessage Pickaxe nao encontrada
+   wait 3s
+   return
+ }
+return
+
+; ====================COMIDA====================
+sub comida
+IF %alimentar = Sim
+{
+finditem %Comida
+if #findkind = 0
+{
+ set #LObjectID #FindID
+ event macro 17 0
+}
+
+if #findkind = 1
+{
+ ignoreitem #FindID
+ gosub comida
+}
+
+if #findkind = -1
+{
+ ignoreitem reset
+ event sysmessage Comida nao encontrada
+}
+}
+return
+
+;============================ Sub Skill Real ============================;
+
+Sub skillr
+
+Set %skillr1 #skill / 10
+Set %skillr2 %skillr1 * 10
+Set %skillr3 #skill - %skillr2
+return
+
+;============================ Sub Skill Variável ============================;
+
+Sub skillv
+
+Set %skillv1 %skillr1 - %skilli1
+Set %skillv2 %skillr3 - %skilli3
+return
+
+;============================ Sub Skill Inicial ============================;
+
+Sub skilli
+
+Set %skilli1 #skill / 10
+Set %skilli2 %skilli1 * 10
+Set %skilli3 #skill - %skilli2
+return
+ _____________
+|=============|
+|==== FIM ====|
+|=============|
+---------------

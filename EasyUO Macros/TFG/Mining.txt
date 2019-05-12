@@ -1,0 +1,120 @@
+; =-=-=-=-=-=-=-=-=-=- 
+; ========== Facil Miner por SoloYo v.2.4 mod ========== 
+; =-=-=-=-=-=-=-=-=-=- 
+
+initevents 
+event sysmessage |||||||||| Facil Miner por SoloYo v.2.4 mod |||||||||| 
+wait 1s 
+
+set %cont1 0 
+set %funcao 0 
+set %tempg 1 
+
+; Abre status 
+event macro 8 2 
+wait 1s 
+; Abre backpack 
+event macro 8 7 
+wait 1s 
+
+inicio: 
+
+finditem RUD 
+set #LOBJECTID #FINDID 
+event macro 17 0 
+
+set #ltargetid 0 
+set #ltargetz 0 
+set #ltargetkind 2 
+gosub %cont1 1 
+
+Set %cont1 %cont1 + 1 
+
+if %cont1 > 7 
+{ 
+Set %cont1 0 
+goto caminha 
+} 
+
+mine: 
+set %tempo 0 
+
+{ 
+
+} 
+
+finditem NPF_QPF 
+set #lobjectid #findid 
+event macro 17 0 
+target 
+event macro 22 0 
+
+jornal: 
+deletejournal 
+scanjournal 1 
+if There_is_no_ore_here_to_mine. in #journal 
+{ 
+goto inicio 
+} 
+if Ore_in_your_pack in #journal 
+{ 
+goto mine 
+} 
+set %tempo %tempo + 1 
+if %tempo = 200 
+{ 
+goto inicio 
+} 
+goto jornal 
+
+caminha: 
+gosub %funcao 2 
+move #ltargetx #ltargety 0 2s 
+Set %funcao %funcao + 1 
+if %funcao > 7 
+{ 
+Set %funcao 0 
+} 
+goto inicio 
+
+sub 0 
+set #ltargetx #charposx 
+set #ltargety #charposy - %1 
+return 
+
+sub 1 
+set #ltargetx #charposx + %1 
+set #ltargety #charposy - %1 
+return 
+
+sub 2 
+set #ltargetx #charposx + %1 
+set #ltargety #charposy 
+return 
+
+sub 3 
+set #ltargetx #charposx + %1 
+set #ltargety #charposy + %1 
+return 
+
+sub 4 
+set #ltargetx #charposx 
+set #ltargety #charposy + %1 
+return 
+
+sub 5 
+set #ltargetx #charposx - %1 
+set #ltargety #charposy + %1 
+return 
+
+sub 6 
+set #ltargetx #charposx - %1 
+set #ltargety #charposy 
+return 
+
+sub 7 
+set #ltargetx #charposx - %1 
+set #ltargety #charposy - %1 
+return 
+
+; =-=-=-=-=-=-=-=-=-=- Fim -=-=-=-=-=-=-=-=-=-=
