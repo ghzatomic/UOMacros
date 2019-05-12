@@ -28,7 +28,7 @@ sub miningMinoc(); By GHZATOMIC (para Mina TfG)
    ; Wait(2800)
    ;uo.exec('useskill Hiding')
    ;Wait(3800)
-   IF (uo.weight >= 300) then #Peso maximo antes de comecar a guardar os Ores no Bank.
+   IF (uo.weight >= 340) then #Peso maximo antes de comecar a guardar os Ores no Bank.
       uo.print("Indo para o bank")
       IrAteBankMinoc()
       GuardarOres()
