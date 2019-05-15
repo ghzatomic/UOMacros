@@ -1,14 +1,81 @@
 
 var recalMinaString = '.recall 1 11';
 var recalBankString = '.recall 1 14';
+var recalReagentesString = '.recall 1 13';
 var containerDropId = 'UVDFKMD'
 var useTypePicareta='0x0E85';
 var shopListNamePicareta='shopPicareta'
+var shopListNameReagentes='shopReagentes'
+
+#  Adicionar o seguinte no xml do injection
+#        Dentro do </config>
+#        <shoplist name="shopPicareta">
+#		<shopitem name="buckler " type="0x0E85" color="0x0000" want="5"/>
+#	</shoplist>
+#  Parece que nao mas os nomes estao certos
+#<shoplist name="shopReagentes">
+#		<shopitem name="mortar and pestle" type="0x0F7A" color="0x0000" want="30"/>
+#		<shopitem name="Strength Potion" type="0x0F86" color="0x0000" want="30"/>
+#		<shopitem name="Lesser Explosion" type="0x0F7B" color="0x0000" want="30"/>
+#	</shoplist>
+#
+#
+#
+#
+
+
 
 sub localRecall()
    Caminhar(2558,500,0)
 end sub
 
+sub test()
+   UO.Exec("set finddistance 10")
+   UO.FindType('0x0191',"-1",'ground')
+   UO.GetName('finditem')
+   Caminhar(UO.GetX('finditem'),UO.GetY('finditem'),0)
+end sub
+
+sub ressa()
+   
+end sub
+
+sub verificaReagentesParaRecall()
+   Dim vendorType[2]
+   vendorType[1]='0x0190'
+   vendorType[2]='0x0191'
+   VAR x
+   uo.say(recalReagentesString) 
+   wait(7000)
+   if (uo.count(0x0F7B) <= 10) then #só verifico o bloodmoss
+      
+      UO.Exec("set finddistance 10")
+      UO.FindType('0x0191',"-1",'ground')
+      UO.GetName('finditem')
+      Caminhar(UO.GetX('finditem'),UO.GetY('finditem'),0)  
+      If (UO.GetName('finditem')==UO.GetName()) then
+         UO.Print('We delete the character name from the search list')
+         UO.Ignore('finditem')
+         UO.FindType(vendorType[2],"-1",'ground')
+         wait(500)
+      endIf
+      if UO.FindCount()>0 then
+         UO.Print('We buy regs from -> '+UO.GetName('finditem'))
+         wait(500)
+         UO.Say('Hi '+UO.GetName('finditem'))
+         wait(500)
+         uo.print("Comprando")
+         uo.buy(shopListNameReagentes)
+         wait(3000)
+         wait(500)
+         UO.Ignore('finditem')
+      EndIf
+      
+      UO.Exec("set finddistance 10")
+      UO.Ignorereset()
+      
+   end if
+end sub
 
 sub miningMinoc(); By GHZATOMIC (para Mina TfG)
    ;IrAteMinaMinoc()
@@ -187,7 +254,12 @@ sub comprarPicareta()
 end sub   
 
 sub buyPicareta() ## mod from Dearhell's script
+   UO.Exec("set finddistance 10")
+   UO.FindType('0x0191',"-1",'ground')
+   UO.GetName('finditem')
+   Caminhar(UO.GetX('finditem'),UO.GetY('finditem'),0)
    uo.buy(shopListNamePicareta)
+   #uo.print("Comprando a picareta")
    wait(1000)
 end sub
 
@@ -219,6 +291,7 @@ sub IrAteBankMinoc()
    uo.press(35);
    uo.press(35);
    localRecall()
+   verificaReagentesParaRecall()
    uo.say(recalBankString)
    wait(7000)
 end sub
