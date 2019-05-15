@@ -1,6 +1,6 @@
 var recalMinaString = '.recall 1 6';
 var recalBankString = '.recall 1 5';
-var recalReagentesString = '.recall 1 13';
+var recalReagentesString = '.recall 1 8';
 var containerDropId = 'LETYLMD'
 var useTypePicareta='0x0E85';
 var shopListNamePicareta='shopPicareta'
