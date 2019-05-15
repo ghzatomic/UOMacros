@@ -44,10 +44,9 @@ sub verificaReagentesParaRecall()
    vendorType[1]='0x0190'
    vendorType[2]='0x0191'
    VAR x
-   uo.say(recalReagentesString) 
-   wait(7000)
    if (uo.count(0x0F7B) <= 10) then #só verifico o bloodmoss
-      
+      uo.say(recalReagentesString) 
+      wait(7000)
       UO.Exec("set finddistance 10")
       UO.FindType('0x0191',"-1",'ground')
       UO.GetName('finditem')
@@ -76,6 +75,13 @@ sub verificaReagentesParaRecall()
    end if
 end sub
 
+sub usarPicareta()
+   uo.usetype('0x0E85')
+   if uo.count(useTypePicareta) <=0 then
+      uo.print("Acabou a picareta")
+      comprarPicareta()
+   endif
+end sub
 sub miningMinoc(); By GHZATOMIC (para Mina TfG)
    ;IrAteMinaMinoc()
    var t,x,y,dir,px,py
@@ -110,13 +116,11 @@ sub miningMinoc(); By GHZATOMIC (para Mina TfG)
       IrAteBankMinoc()
       GuardarOres()
       IrAteMinaMinoc()
-      uo.usetype('0x0E85')
    endif
    
    if uo.count(useTypePicareta) <=0 then
       uo.print("Acabou a picareta")
       comprarPicareta()
-      
    endif
    
    if UO.InJournal("You see: Energy Vortex|Energy Vortex") then
@@ -151,7 +155,7 @@ sub miningMinoc(); By GHZATOMIC (para Mina TfG)
             goto jump
          endif
          uo.waittargettile('#0x400', str(uo.GetX() + x), str(uo.GetY() + y), STR(UO.GetZ('self')))
-         uo.usetype('0x0E85')
+         usarPicareta()
          repeat
             #UO.print("Aguarde ...")
             If Not UO.ObjAtLayer('Rhand') Then
@@ -173,7 +177,7 @@ sub miningMinoc(); By GHZATOMIC (para Mina TfG)
          UO.print("Tentando novamente ...")
          If Not UO.ObjAtLayer('Rhand') Then
             uo.waittargettile('#0x400', str(uo.GetX() + x), str(uo.GetY() + y), STR(UO.GetZ('self')))
-            uo.usetype('0x0E85')
+            usarPicareta()
          endif
          jump:
       next
@@ -324,6 +328,7 @@ sub IrAteMinaMinoc()
    uo.press(39);
    uo.press(38);
    uo.press(39);
+   Caminhar(2577,462,0)
 end sub
 
 sub GuardarOres()
