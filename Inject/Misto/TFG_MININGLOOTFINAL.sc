@@ -1,4 +1,14 @@
 
+var recalMinaString = '.recall 1 11';
+var recalBankString = '.recall 1 14';
+var containerDropId = 'UVDFKMD'
+var useTypePicareta='0x0E85';
+var shopListNamePicareta='shopPicareta'
+
+sub localRecall()
+   Caminhar(2558,500,0)
+end sub
+
 
 sub miningMinoc(); By GHZATOMIC (para Mina TfG)
    ;IrAteMinaMinoc()
@@ -37,6 +47,12 @@ sub miningMinoc(); By GHZATOMIC (para Mina TfG)
       uo.usetype('0x0E85')
    endif
    
+   if uo.count(useTypePicareta) <=0 then
+      uo.print("Acabou a picareta")
+      comprarPicareta()
+      
+   endif
+   
    if UO.InJournal("You see: Energy Vortex|Energy Vortex") then
       uo.msg('guards all release guards !!!')
    end if 
@@ -72,6 +88,10 @@ sub miningMinoc(); By GHZATOMIC (para Mina TfG)
          uo.usetype('0x0E85')
          repeat
             #UO.print("Aguarde ...")
+            If Not UO.ObjAtLayer('Rhand') Then
+               uo.waittargettile('#0x400', str(uo.GetX() + x), str(uo.GetY() + y), STR(UO.GetZ('self')))
+               uo.usetype('0x0E85')
+            endif
             wait(200)  
          until UO.InJournal("You put|You cann|target canc|You loosen|There is nothing|You have no line|That is too|Try mining")
          if UO.InJournal("There is nothing|You have no line|That is too|Try mining") then
@@ -85,7 +105,10 @@ sub miningMinoc(); By GHZATOMIC (para Mina TfG)
             goto denovo
          endif
          UO.print("Tentando novamente ...")
-         uo.usetype('0x0E85')
+         If Not UO.ObjAtLayer('Rhand') Then
+            uo.waittargettile('#0x400', str(uo.GetX() + x), str(uo.GetY() + y), STR(UO.GetZ('self')))
+            uo.usetype('0x0E85')
+         endif
          jump:
       next
    next
@@ -154,49 +177,62 @@ sub ChecarLimiteMinoc(limite,passos)
    endif
 end sub
 
+sub comprarPicareta()
+   IrAteBankMinoc()
+   Caminhar(2473,570,0)
+   Caminhar(2473,561,0)
+   Caminhar(2469,560,0)
+   buyPicareta()   
+   IrAteMinaMinoc()
+end sub   
 
+sub buyPicareta() ## mod from Dearhell's script
+   uo.buy(shopListNamePicareta)
+   wait(1000)
+end sub
 
 sub IrAteBankMinoc()
+   uo.press(33);
+   uo.press(33);
+   uo.press(33);
+   uo.press(33);
+   uo.press(40);
+   uo.press(40);
+   uo.press(40);
+   uo.press(34);
+   uo.press(34);
+   uo.press(34);
+   uo.press(34);
+   uo.press(35);
+   uo.press(35);
+   uo.press(35);
+   uo.press(35);
+   uo.press(40);
+   uo.press(40);
+   uo.press(40);
+   uo.press(34);
+   uo.press(34);
+   uo.press(34);
+   uo.press(34);
+   uo.press(35);
+   uo.press(35);
+   uo.press(35);
+   uo.press(35);
    localRecall()
-   uo.press(33);
-   uo.press(33);
-   uo.press(33);
-   uo.press(33);
-   uo.press(40);
-   uo.press(40);
-   uo.press(40);
-   uo.press(34);
-   uo.press(34);
-   uo.press(34);
-   uo.press(34);
-   uo.press(35);
-   uo.press(35);
-   uo.press(35);
-   uo.press(35);
-   uo.press(40);
-   uo.press(40);
-   uo.press(40);
-   uo.press(34);
-   uo.press(34);
-   uo.press(34);
-   uo.press(34);
-   uo.press(35);
-   uo.press(35);
-   uo.press(35);
-   uo.press(35);
-   uo.say(".recall 1 14")
+   uo.say(recalBankString)
    wait(7000)
 end sub
 
 sub IrAteMinaMinoc()
    
-   uo.say(".recall 1 11")
+   uo.say(recalMinaString)
    wait(7000)
    uo.press(38);
    uo.press(38);
    uo.press(38);
    uo.press(38);
-   uo.press(39);uo.press(38);
+   uo.press(39);
+   uo.press(38);
    uo.press(39);
    uo.press(39);
    uo.press(39);
@@ -236,7 +272,7 @@ sub GuardarOres()
    
    uo.msg('banker bank')
    wait(1000)
-   uo.useobject('UVDFKMD')
+   uo.useobject(containerDropId)
    wait(1000)
    For n=5 To 12
       if uo.count(MID(ID[n], 0, 6)) >=1 then
@@ -251,7 +287,7 @@ sub GuardarOres()
       while uo.count(ID[n]) >= 1
          wait(1600)
          UO.FindType(ID[n],'-1')
-         uo.moveitem('finditem', '0', 'UVDFKMD')
+         uo.moveitem('finditem', '0', containerDropId)
       wend
    Next
 end sub
@@ -275,9 +311,6 @@ sub getLastContainer()
    uo.print(uo.getserial('lastcontainer'))
 end sub
 
-sub localRecall()
-   Caminhar(2557,500,0)
-end sub
 
 Sub Caminhar(x,y,dist)
    var c=0
@@ -384,3 +417,4 @@ sub healpassive() ; Funcao q permite que você se heale, ao perder life, Usa-se B
       wait(100)
    wend 
 end sub 
+
