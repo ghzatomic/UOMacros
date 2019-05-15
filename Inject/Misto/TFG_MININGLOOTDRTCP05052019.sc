@@ -1,3 +1,80 @@
+var recalMinaString = '.recall 1 6';
+var recalBankString = '.recall 1 5';
+var recalReagentesString = '.recall 1 13';
+var containerDropId = 'LETYLMD'
+var useTypePicareta='0x0E85';
+var shopListNamePicareta='shopPicareta'
+var shopListNameReagentes='shopReagentes'
+
+#  Adicionar o seguinte no xml do injection
+#        Dentro do </config>
+#        <shoplist name="shopPicareta">
+#		<shopitem name="buckler " type="0x0E85" color="0x0000" want="5"/>
+#	</shoplist>
+#  Parece que nao mas os nomes estao certos
+#<shoplist name="shopReagentes">
+#		<shopitem name="mortar and pestle" type="0x0F7A" color="0x0000" want="30"/>
+#		<shopitem name="Strength Potion" type="0x0F86" color="0x0000" want="30"/>
+#		<shopitem name="Lesser Explosion" type="0x0F7B" color="0x0000" want="30"/>
+#	</shoplist>
+#
+#
+#
+#
+
+
+
+sub localRecall()
+   Caminhar(2558,500,0)
+end sub
+
+sub test()
+   UO.Exec("set finddistance 10")
+   UO.FindType('0x0191',"-1",'ground')
+   UO.GetName('finditem')
+   Caminhar(UO.GetX('finditem'),UO.GetY('finditem'),0)
+end sub
+
+sub ressa()
+   
+end sub
+
+sub verificaReagentesParaRecall()
+   Dim vendorType[2]
+   vendorType[1]='0x0190'
+   vendorType[2]='0x0191'
+   VAR x
+   uo.say(recalReagentesString) 
+   wait(7000)
+   if (uo.count(0x0F7B) <= 10) then #só verifico o bloodmoss
+      
+      UO.Exec("set finddistance 10")
+      UO.FindType('0x0191',"-1",'ground')
+      UO.GetName('finditem')
+      Caminhar(UO.GetX('finditem'),UO.GetY('finditem'),0)  
+      If (UO.GetName('finditem')==UO.GetName()) then
+         UO.Print('We delete the character name from the search list')
+         UO.Ignore('finditem')
+         UO.FindType(vendorType[2],"-1",'ground')
+         wait(500)
+      endIf
+      if UO.FindCount()>0 then
+         UO.Print('We buy regs from -> '+UO.GetName('finditem'))
+         wait(500)
+         UO.Say('Hi '+UO.GetName('finditem'))
+         wait(500)
+         uo.print("Comprando")
+         uo.buy(shopListNameReagentes)
+         wait(3000)
+         wait(500)
+         UO.Ignore('finditem')
+      EndIf
+      
+      UO.Exec("set finddistance 10")
+      UO.Ignorereset()
+      
+   end if
+end sub
 
 sub miningMinoc(); By GHZATOMIC (para Mina TfG)
    ;IrAteMinaMinoc()
@@ -33,6 +110,13 @@ sub miningMinoc(); By GHZATOMIC (para Mina TfG)
       IrAteBankMinoc()
       GuardarOres()
       IrAteMinaMinoc()
+      uo.usetype('0x0E85')
+   endif
+   
+   if uo.count(useTypePicareta) <=0 then
+      uo.print("Acabou a picareta")
+      comprarPicareta()
+      
    endif
    
    if UO.InJournal("You see: Energy Vortex|Energy Vortex") then
@@ -70,6 +154,10 @@ sub miningMinoc(); By GHZATOMIC (para Mina TfG)
          uo.usetype('0x0E85')
          repeat
             #UO.print("Aguarde ...")
+            If Not UO.ObjAtLayer('Rhand') Then
+               uo.waittargettile('#0x400', str(uo.GetX() + x), str(uo.GetY() + y), STR(UO.GetZ('self')))
+               uo.usetype('0x0E85')
+            endif
             wait(200)  
          until UO.InJournal("You put|You cann|target canc|You loosen|There is nothing|You have no line|That is too|Try mining")
          if UO.InJournal("There is nothing|You have no line|That is too|Try mining") then
@@ -83,6 +171,10 @@ sub miningMinoc(); By GHZATOMIC (para Mina TfG)
             goto denovo
          endif
          UO.print("Tentando novamente ...")
+         If Not UO.ObjAtLayer('Rhand') Then
+            uo.waittargettile('#0x400', str(uo.GetX() + x), str(uo.GetY() + y), STR(UO.GetZ('self')))
+            uo.usetype('0x0E85')
+         endif
          jump:
       next
    next
@@ -151,49 +243,68 @@ sub ChecarLimiteMinoc(limite,passos)
    endif
 end sub
 
+sub comprarPicareta()
+   IrAteBankMinoc()
+   Caminhar(2473,570,0)
+   Caminhar(2473,561,0)
+   Caminhar(2469,560,0)
+   buyPicareta()   
+   IrAteMinaMinoc()
+end sub   
 
+sub buyPicareta() ## mod from Dearhell's script
+   UO.Exec("set finddistance 10")
+   UO.FindType('0x0191',"-1",'ground')
+   UO.GetName('finditem')
+   Caminhar(UO.GetX('finditem'),UO.GetY('finditem'),0)
+   uo.buy(shopListNamePicareta)
+   #uo.print("Comprando a picareta")
+   wait(1000)
+end sub
 
 sub IrAteBankMinoc()
+   uo.press(33);
+   uo.press(33);
+   uo.press(33);
+   uo.press(33);
+   uo.press(40);
+   uo.press(40);
+   uo.press(40);
+   uo.press(34);
+   uo.press(34);
+   uo.press(34);
+   uo.press(34);
+   uo.press(35);
+   uo.press(35);
+   uo.press(35);
+   uo.press(35);
+   uo.press(40);
+   uo.press(40);
+   uo.press(40);
+   uo.press(34);
+   uo.press(34);
+   uo.press(34);
+   uo.press(34);
+   uo.press(35);
+   uo.press(35);
+   uo.press(35);
+   uo.press(35);
    localRecall()
-   uo.press(33);
-   uo.press(33);
-   uo.press(33);
-   uo.press(33);
-   uo.press(40);
-   uo.press(40);
-   uo.press(40);
-   uo.press(34);
-   uo.press(34);
-   uo.press(34);
-   uo.press(34);
-   uo.press(35);
-   uo.press(35);
-   uo.press(35);
-   uo.press(35);
-   uo.press(40);
-   uo.press(40);
-   uo.press(40);
-   uo.press(34);
-   uo.press(34);
-   uo.press(34);
-   uo.press(34);
-   uo.press(35);
-   uo.press(35);
-   uo.press(35);
-   uo.press(35);
-   uo.say(".recall 1 5")
+   verificaReagentesParaRecall()
+   uo.say(recalBankString)
    wait(7000)
 end sub
 
 sub IrAteMinaMinoc()
    
-   uo.say(".recall 1 6")
+   uo.say(recalMinaString)
    wait(7000)
    uo.press(38);
    uo.press(38);
    uo.press(38);
    uo.press(38);
-   uo.press(39);uo.press(38);
+   uo.press(39);
+   uo.press(38);
    uo.press(39);
    uo.press(39);
    uo.press(39);
@@ -233,7 +344,7 @@ sub GuardarOres()
    
    uo.msg('banker bank')
    wait(1000)
-   uo.useobject('LETYLMD')
+   uo.useobject(containerDropId)
    wait(1000)
    For n=5 To 12
       if uo.count(MID(ID[n], 0, 6)) >=1 then
@@ -248,7 +359,7 @@ sub GuardarOres()
       while uo.count(ID[n]) >= 1
          wait(1600)
          UO.FindType(ID[n],'-1')
-         uo.moveitem('finditem', '0', 'LETYLMD')
+         uo.moveitem('finditem', '0', containerDropId)
       wend
    Next
 end sub
@@ -272,9 +383,6 @@ sub getLastContainer()
    uo.print(uo.getserial('lastcontainer'))
 end sub
 
-sub localRecall()
-   Caminhar(2558,499,0)
-end sub
 
 Sub Caminhar(x,y,dist)
    var c=0
@@ -381,3 +489,4 @@ sub healpassive() ; Funcao q permite que você se heale, ao perder life, Usa-se B
       wait(100)
    wend 
 end sub 
+
