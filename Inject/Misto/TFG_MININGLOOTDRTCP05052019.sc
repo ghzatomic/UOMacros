@@ -76,10 +76,11 @@ sub verificaReagentesParaRecall()
 end sub
 
 sub usarPicareta()
-   uo.usetype('0x0E85')
    if uo.count(useTypePicareta) <=0 then
       uo.print("Acabou a picareta")
       comprarPicareta()
+   else 
+      uo.usetype(useTypePicareta)
    endif
 end sub
 sub miningMinoc(); By GHZATOMIC (para Mina TfG)
@@ -328,7 +329,7 @@ sub IrAteMinaMinoc()
    uo.press(39);
    uo.press(38);
    uo.press(39);
-   Caminhar(2577,462,0)
+   Caminhar(2582,471,0)
 end sub
 
 sub GuardarOres()
