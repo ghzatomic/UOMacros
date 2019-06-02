@@ -1,12 +1,67 @@
 var INIMIGO = 0;
-
 var autobandage;
+var  arma ;
+
+sub autoload()
+   uo.SetEasyUO(1,"0") ;usaarma
+   ArmaSet()
+   usaArma()
+end sub
+
+
+sub ArmaSet()
+   uo.addobject('arma')
+   while uo.targeting()
+      wait(100)
+   wend
+   
+   #uo.addobject('escudo')
+   # while uo.targeting()
+   #    wait(100)
+   # wend
+   
+   # uo.addobject('bow')
+   #while uo.targeting()
+   #   wait(100)
+   #wend
+end sub
+
+
+
+sub usaArma()
+   var  objInimigoX =uo.getserial('INIMIGO') ;
+   while not UO.Dead()
+      if (uo.GetEasyUO(1) == "1")  then 
+         arma = uo.getserial('arma');
+         If Not UO.ObjAtLayer('Lhand') == arma Then
+            uo.equip('Lhand',arma)
+         end if
+         objInimigoX =uo.getserial('INIMIGO')
+         UO.Set('lasttarget',objInimigoX) 
+         uo.attack( objInimigoX ) 
+         wait(200)
+      end if
+   wend 
+end sub
 
 sub usaBomba();0x0E73
-   
+   ##//cast 'Magic Arrow' ; waittargettype 0x0F0E
    UO.UseObject('0x0E73') 
    
 end sub
+
+sub equip()           
+   if (uo.GetEasyUO(1) == "0") then
+      uo.SetEasyUO(1,"1")
+   else
+      arma = uo.getserial('arma');
+      uo.equip('Lhand',arma)
+      uo.SetEasyUO(1,"0") 
+   end if
+   UO.print(uo.GetEasyUO(1))
+end sub
+
+
 
 sub recall();0x0E73
    
@@ -26,10 +81,13 @@ end sub
 
 sub CureBandsHeal();CuraPoison
    uo.deletejournal();
+   UO.AddObject ('arma')
+   
    while NOT UO.Dead() 
       repeat 
          ;uo.deletejournal();
          desparaliza();
+         verificaManaETomaPotionOuMedita() 
          uo.deletejournal();
          If UO.Poisoned() then
             verificaECuraPoison() ;
@@ -74,28 +132,6 @@ sub CheckLag()
    
 end sub
 
-sub move2(keycode,dir,numberOfTiles)
-   var x = 0
-   for x = 0 to numberOfTiles
-      if UO.GetDir()<>dir then 
-         UO.Press(keycode) 
-      endif 
-      UO.Press(keycode) 
-   next
-end sub
-
-
-sub anda(passos,direcao) ; Comeca do 30
-   while (passos >= 0)
-      wait(100)
-      if (direcao == 2) then 
-         send_step(36,6)
-      else
-         uo.press(30+direcao)
-      end if
-      passos=passos-1
-   wend
-end sub
 
 #north -- send_step(33,0)
 #north east -- send_step(39,1)
@@ -224,138 +260,6 @@ End Sub
 
 #----Inicio macros de mining----
 
-sub usaPicareta(x,y)
-   uo.waittargettile('#0x400', str(uo.GetX() + x), str(uo.GetY() + y), STR(UO.GetZ('self')))
-   uo.usetype('0x0E85')
-end sub
-
-sub mining() ; By ChavinhO (para Mina de Minoc DMS)
-   var t,x,y,dir,px,py,contadordeloop
-   uo.msg('bank')
-   UO.AddObject ('CONTAINER')
-   While UO.Targeting()
-      Wait(100)
-   Wend
-   inicio:
-   t=3 #Quantos tiles seu char vai andar depois que minerar tudo a sua volta.
-   ChecarLimite(488,6) #Limite X ou Y da Mina. #Quantos tiles seu char vai andar pra voltar depois de ultrapassar do limite.
-   IF (uo.weight >= 350) then #Peso maximo antes de comecar a guardar os Ores no Bank.
-      GuardarOres()
-   endif
-   for x = -2 to 2
-      for y = -2 to 2
-         denovo:
-         UO.DeleteJournal()
-         if ((y == 0) and (x == 0)) or ((num(x) == 2) and (num(y) == 2)) then
-            goto jump
-         endif
-         usaPicareta(x,y)
-         contadordeloop = 0
-         repeat
-            wait(200)
-            contadordeloop = contadordeloop+1
-         until UO.InJournal("aqui para minerar|Nao ha|Voce pos|Tente miner|Voce nao") or contadordeloop == 55 
-         if not UO.InJournal("Tente minerar|Nao ha|uma linha|You cannot") then
-            goto denovo
-         endif
-         jump:
-      next
-   next
-   walk:
-   px=UO.GetX('self')
-   py=UO.GetY('self')
-   dir=UO.Random(8)
-   while (t >= 0)
-      uo.press(dir+33)
-      wait(100)
-      t=t-1
-   wend
-   if (px == UO.GetX('self')) and (py == UO.GetY('self')) then
-      t=3
-      goto walk
-   endif
-   goto inicio
-end sub
-
-Sub num(X)
-   if X>0 then
-      return X
-   else
-      return (-X)
-   end if
-end sub
-
-sub ChecarLimite(limite,passos)
-   IF (UO.GetY('self') >= limite) then
-      uo.press(33)
-      wait(100)
-      uo.press(33)
-      while (passos >= 0)
-         wait(100)
-         uo.press(39)
-         passos=passos-1
-      wend
-   endif
-end sub
-
-sub GuardarOres()
-   var n
-   DIM ID[14]
-   ID[1]='0x19B9'
-   ID[2]='0x19B8'
-   ID[3]='0x19BA'
-   ID[4]='0x19B7'
-   ID[5] = '0x0F16 CONTAINER'; amesthysts		('CONTAINER' para guardar no bank ou 'ground' para jogar fora)
-   ID[6] = '0x0F10 CONTAINER'; emerald		('CONTAINER' para guardar no bank ou 'ground' para jogar fora)
-   ID[7] = '0x0F0F CONTAINER'; star sapphire	('CONTAINER' para guardar no bank ou 'ground' para jogar fora)
-   ID[8] = '0x0F18 CONTAINER'; tourmaline		('CONTAINER' para guardar no bank ou 'ground' para jogar fora)
-   ID[9] = '0x0F26 CONTAINER'; diamond		('CONTAINER' para guardar no bank ou 'ground' para jogar fora)
-   ID[10] = '0x0F11 CONTAINER'; sapphire		('CONTAINER' para guardar no bank ou 'ground' para jogar fora)
-   ID[11] = '0x0F15 CONTAINER'; citrine		('CONTAINER' para guardar no bank ou 'ground' para jogar fora)
-   ID[12] = '0x0F13 CONTAINER'; rubi		('CONTAINER' para guardar no bank ou 'ground' para jogar fora)
-   ID[13] = '0x19b9 ground'; IRON		('CONTAINER' para guardar no bank ou 'ground' para jogar fora)
-   ID[14] = '0x19b9 ground'; CERAMIC		('CONTAINER' para guardar no bank ou 'ground' para jogar fora)
-   
-   uo.msg('bank')
-   wait(1000)
-   uo.useobject('CONTAINER')
-   wait(1000)
-   For n=5 To 12
-      if uo.count(MID(ID[n], 0, 6)) >=1 then
-         if n >= 6 then
-            wait(1600)
-         endif
-         UO.FindType(MID(ID[n], 0, 6),'-1','my') ;
-         uo.moveitem('finditem', '0', MID(ID[n], 7, 9))
-      endif
-   Next
-   For n=1 To 4
-      while uo.count(ID[n]) >= 1
-         wait(1600)
-         UO.FindType(ID[n],'-1','my')
-         uo.moveitem('finditem', '0', 'CONTAINER')
-      wend
-   Next
-end sub
-
-sub DropOre(cor)
-   var n
-   DIM OREID[4]
-   OREID[1]='0x19BA'
-   OREID[2]='0x19B8'
-   OREID[3]='0x19B7'
-   OREID[4]='0x19b9'
-   For n=1 to 4
-      if uo.count(OREID[n],cor) >=1 then
-         UO.FindType(OREID[n],cor,'my')
-         UO.MoveItem('finditem','-1','ground')
-      endif
-   Next
-end sub
-
-#-----Fim macros de mining-----
-
-
 
 sub tracking() ; Tracking
    uo.print('%autoload by SmaCk')
@@ -411,7 +315,8 @@ sub desparaliza2()
    
    
    uo.deletejournal();
-   UO.Cast('Magic Arrow','self')
+   uo.waittargetobject('0x0F02')
+   UO.Cast('Magic Arrow','0x0F02')
    
 end sub
 
@@ -472,6 +377,7 @@ sub verificaHeal();CuraPoison
       Else
          UO.Cast('Heal','self')
       End If 
+      #uo.equip('Rhand',arma)
    End If
 end sub
 
@@ -503,7 +409,7 @@ end sub
 # ----------------------------------------------------------------------------------------------
 
 sub verificaManaETomaPotionOuMedita()
-   if UO.Mana < UO.int then
+   if UO.Mana < UO.int-50 then
       If UO.Count('0x0f0e','0x0480')>0 then
          UO.UseType('0x0f0e','0x0480');
       Else
@@ -528,13 +434,14 @@ sub marcaTarget();CuraPoison
 end Sub
 
 sub castClumsyNoInimigo() 
-   uo.Print("1")
+   uo.SetEasyUO(1,"0")
    var  objInimigo = uo.getserial('INIMIGO');
    ; verificaManaETomaPotionOuMedita();
    uo.cast('Magic Arrow',objInimigo);
 end sub
 
 sub castWeakenNoInimigo() 
+   uo.SetEasyUO(1,"0")
    uo.Print("1")
    var  objInimigo = uo.getserial('INIMIGO');
    ;verificaManaETomaPotionOuMedita();
@@ -542,6 +449,7 @@ sub castWeakenNoInimigo()
 end sub
 
 sub castEBNoInimigo() 
+   uo.SetEasyUO(1,"0")
    var  objInimigo = uo.getserial('INIMIGO');
    UO.Set('lasttarget',objInimigo) 
    ;verificaManaETomaPotionOuMedita();
@@ -552,40 +460,25 @@ sub castEBNoInimigo()
    Else
       UO.Cast('Energy Bolt',objInimigo)
    End If
-   uo.Print("1")
-   wait(1000)
-   uo.Print("2")
-   wait(1000)
-   uo.Print("3")
-   wait(1000)
-   uo.Print("ALAAAAAAAAa 4")
-   wait(1000)
-   uo.Print("PAAAAAAAAAA 5")
+   
 end sub
 
 sub castPoisonNoInimigo() 
+   uo.SetEasyUO(1,"0")
    var  objInimigo = uo.getserial('INIMIGO');
    ;verificaManaETomaPotionOuMedita();
    uo.cast('Poison',objInimigo);
-   uo.Print("1")
-   wait(1000)
-   uo.Print("ALAAAAAAAAAA 2")
-   wait(1000)
-   uo.Print("PAAAAAAAAAAA 3")
 end sub
 
 sub castParalyzeNoInimigo() 
+   uo.SetEasyUO(1,"0")
    var  objInimigo = uo.getserial('INIMIGO');
    ;verificaManaETomaPotionOuMedita();
    uo.cast('Paralyze',objInimigo);
-   uo.Print("1")
-   wait(1000)
-   uo.Print("ALAAAAAAAAa 2")
-   wait(800)
-   uo.Print("PAAAAAAAAAA 3")
 end sub
 
 sub castFSNoInimigo()
+   uo.SetEasyUO(1,"0")
    var  objInimigo = uo.getserial('INIMIGO');
    If UO.Count('0x1F5F')>0 then
       UO.Set('lasttarget',objInimigo) 
@@ -596,23 +489,15 @@ sub castFSNoInimigo()
    Else
       UO.Cast('Flame Strike',objInimigo);
    End If
-   uo.Print("1")
-   wait(1000)
-   uo.Print("ALAAAAAAAAa 2")
-   wait(1000)
-   uo.Print("ALAAAAAAAAa 3")
 end Sub
 
 sub castLightningNoInimigo() 
+   uo.SetEasyUO(1,"0")
    var  objInimigo = uo.getserial('INIMIGO');
    UO.Set('lasttarget',objInimigo) 
    ;verificaManaETomaPotionOuMedita();
    var scroll = uo.getserial('0x1F56');
    UO.Cast('Lightning',objInimigo)
-   uo.Print("1")
-   wait(1000)
-   wait(2500)
-   uo.Print("PAAAAAAAAAA 5")
 end sub
 
 # ----------------------------------------------------------------------------------------------
@@ -783,29 +668,7 @@ sub leparrow()
    UO.bandageself()
 endsub
 
-sub ArmaSet()
-   uo.addobject('arma')
-   while uo.targeting()
-      wait(100)
-   wend
-   
-   uo.addobject('escudo')
-   while uo.targeting()
-      wait(100)
-   wend
-   
-   uo.addobject('bow')
-   while uo.targeting()
-      wait(100)
-   wend
-end sub
 
-sub arma()
-   UO.bandageself()
-   uo.UseObject('arma')
-   uo.UseObject('escudo')
-   UO.WarMode(1)
-end sub
 
 sub pff() ; Solta Paralyse Field em /
    Uo.waittargettile("400",str(Uo.getx("self")),str(Uo.gety("self")),str(Uo.getz("self"))) 
@@ -1101,9 +964,9 @@ end sub
 sub autolootGHZ()
    VAR i, n
    VAR w = 500  ; the delay after a move
-   VAR razmer = 9  ; the size of the DIM
+   VAR razmer = 10 ; the size of the DIM
    
-   DIM Loot[9]
+   DIM Loot[10]
    Loot[1] = '0x0EED'
    Loot[2] = '0x1BD1'
    Loot[3] = '0x0F87'
@@ -1113,8 +976,10 @@ sub autolootGHZ()
    Loot[7] = '0x0F51'
    Loot[8] = '0x0F51'
    Loot[9] = '0x0F06'
+   Loot[9] = '0x1F31'
    
-   if uo.getdistance( 'lastcorpse' ) < 3 then
+   
+   if uo.getdistance( 'lastcorpse' ) < 5 then
       uo.deletejournal()
       repeat
          uo.findtype( '-1', '-1', 'lastcorpse' ) 

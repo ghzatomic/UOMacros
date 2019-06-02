@@ -1,15 +1,15 @@
 
 
 sub teste()
-   
+   uo.CancelMenu()
    #uo.print(str(uo.mana))
-   uo.info()
+   #uo.info()
    
 end sub
 sub fzBlankScroll()
    uo.CancelMenu()
    uo.Automenu('Carpentry',"blank scroll")
-   uo.Automenu("Blank Scrolls","10 blank scroll") 
+   uo.Automenu("Blank Scrolls","blank scroll") 
    var log = '0x1BDD'
    while NOT UO.Dead()
       uo.deletejournal()
